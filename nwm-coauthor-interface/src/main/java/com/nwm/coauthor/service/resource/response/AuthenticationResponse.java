@@ -3,21 +3,21 @@ package com.nwm.coauthor.service.resource.response;
 import com.nwm.coauthor.service.resource.BaseResource;
 
 public class AuthenticationResponse extends BaseResource {
-	private String token;
+	private String coToken;
 
 	public AuthenticationResponse(){
 		
 	}
 	
-	public AuthenticationResponse(String token){
-		this.token = token;
-	}
-	
-	public String getToken() {
-		return token;
+	public AuthenticationResponse(String coToken){
+		this.setCoToken(coToken);
 	}
 
-	public void setToken(String token) {
-		this.token = token;
+	public String getCoToken() {
+		return coToken;
+	}
+
+	public void setCoToken(String coToken) {
+		this.coToken = coToken;
 	}
 }

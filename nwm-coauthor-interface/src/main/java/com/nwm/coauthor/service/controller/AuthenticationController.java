@@ -1,6 +1,7 @@
 package com.nwm.coauthor.service.controller;
 
 import com.nwm.coauthor.exception.SomethingWentWrongException;
+import com.nwm.coauthor.service.resource.request.AuthenticateFBRequest;
 import com.nwm.coauthor.service.resource.request.AuthenticationRequest;
 import com.nwm.coauthor.service.resource.response.AuthenticationResponse;
 import org.springframework.http.ResponseEntity;
@@ -15,5 +16,5 @@ import org.springframework.http.ResponseEntity;
 // - TODO: auto documentation
 
 public interface AuthenticationController {
-	public ResponseEntity<AuthenticationResponse> authenticate(AuthenticationRequest authResource) throws SomethingWentWrongException;
+	public ResponseEntity<AuthenticationResponse> authenticateFB(AuthenticateFBRequest authResource) throws SomethingWentWrongException;
 }

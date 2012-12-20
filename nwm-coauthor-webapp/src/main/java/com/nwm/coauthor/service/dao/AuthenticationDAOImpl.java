@@ -13,12 +13,11 @@ public class AuthenticationDAOImpl {
 	@Qualifier("mongoTemplate")
 	private MongoTemplate mongoTemplate;
 	
-	public String authenticateUsernamePassword(String username, String password){
-		// (query(where("username").is(username).and("password").is(password)), Authentication.class);
-		return null;
+	public void login(String coToken, Integer fbId){
+		throw new UnsupportedOperationException();
 	}
-	
-	public String authenticateToken(String token){
-		return null;
+
+	public Integer authenticateCOToken(String coToken) {
+		throw new UnsupportedOperationException();
 	}
 }
