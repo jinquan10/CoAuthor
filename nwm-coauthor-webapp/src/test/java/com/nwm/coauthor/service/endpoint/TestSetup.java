@@ -12,13 +12,13 @@ import com.mongodb.Mongo;
 public class TestSetup {
 	@BeforeClass
 	public static void beforeClass() throws IOException{
-		MongoTemplate mongoTemplate = new MongoTemplate(new Mongo("localhost", 27017), "service", new UserCredentials("", ""));
+		MongoTemplate mongoTemplate = new MongoTemplate(new Mongo("localhost", 27017), "coauthor", new UserCredentials("", ""));
 		
 		mongoTemplate.getDb().dropDatabase();
 
 		Person person = new Person();
 		person.setFirstName("John");
-		person.setLastName("æˆ‘èƒ½å�žä¸‹çŽ»ç’ƒè€Œ");
+		person.setLastName("Zhuang");
 
 		mongoTemplate.insert(person);
 	}

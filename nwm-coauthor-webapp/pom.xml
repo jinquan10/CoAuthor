@@ -8,7 +8,7 @@
 	</parent>
 	<artifactId>nwm-coauthor-webapp</artifactId>
 	<packaging>war</packaging>
-	<name>service-webapp</name>
+	<name>nwm-coauthor-webapp</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -67,7 +67,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>service-webapp</finalName>
+		<finalName>nwm-coauthor-webapp</finalName>
 
 		<plugins>
 			<plugin>
