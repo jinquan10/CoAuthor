@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>nwm-coauthor</artifactId>
+		<groupId>com.nwm.coauthor</groupId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>nwm-coauthor-webapp</artifactId>
+	<packaging>war</packaging>
+	<name>service-webapp</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<sl4j>1.7.2</sl4j>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${sl4j}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${sl4j}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.nwm.coauthor</groupId>
+			<artifactId>nwm-coauthor-interface</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.nwm.coauthor</groupId>
+			<artifactId>nwm-coauthor-client</artifactId>
+			<version>1.0-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-mongodb</artifactId>
+			<version>1.1.1.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>3.2.0.RELEASE</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>service-webapp</finalName>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat6-maven-plugin</artifactId>
+				<version>2.1-SNAPSHOT</version>
+
+				<executions>
+					<execution>
+						<id>tomcat6-process-classes</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+
+						<configuration>
+							<fork>true</fork>
+							<port>8081</port>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>tomcat6-install</id>
+						<phase>install</phase>
+						<goals>
+							<goal>shutdown</goal>
+							<goal>run</goal>
+						</goals>
+
+						<configuration>
+							<fork>false</fork>
+							<port>8081</port>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
