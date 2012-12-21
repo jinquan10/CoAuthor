@@ -20,8 +20,8 @@
 
 	<root>
 		<level value="debug" />
-		<!-- <appender-ref ref="console" /> -->
-		<appender-ref ref="daily" />
+		<appender-ref ref="console" />
+<!-- 		<appender-ref ref="daily" /> -->
 	</root>
 
 </log4j:configuration>

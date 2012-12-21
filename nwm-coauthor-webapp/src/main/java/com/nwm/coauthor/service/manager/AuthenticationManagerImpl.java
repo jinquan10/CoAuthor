@@ -2,6 +2,7 @@ package com.nwm.coauthor.service.manager;
 
 import java.util.UUID;
 
+import com.nwm.coauthor.exception.FBTokenInvalidException;
 import com.nwm.coauthor.service.client.FacebookClientImpl;
 import com.nwm.coauthor.service.dao.AuthenticationDAOImpl;
 import com.nwm.coauthor.service.model.FBUser;
@@ -14,20 +15,15 @@ public class AuthenticationManagerImpl {
 	@Autowired private AuthenticationDAOImpl authenticationDAO;
 	@Autowired private FacebookClientImpl fbClient;
 	
-	public String authenticateUsernamePassword(String username, String password){
-		return "This will be a token returned by validation username/password";
-//		return authenticationDAO.authenticateUsernamePassword(username, password);
-	}
-	
-	public Integer authenticateCOToken(String coToken){
-		return authenticationDAO.authenticateCOToken(coToken);
-	}
+//	public String authenticateCOToken(String coToken){
+//		return authenticationDAO.authenticateCOToken(coToken);
+//	}
 
-	public String authenticateFB(String fbToken) {
+	public String authenticateFB(String fbToken) throws FBTokenInvalidException {
 		FBUser fbUser = fbClient.validate(fbToken);
-		String coToken = UUID.randomUUID().toString(); 
+		String coToken = UUID.randomUUID().toString() + UUID.randomUUID().toString() + UUID.randomUUID().toString() + UUID.randomUUID().toString(); 
 		
-		authenticationDAO.login(coToken.toString(), fbUser.getId());
+		authenticationDAO.login(coToken, fbUser.getId());
 		
 		return coToken; 
 	}

@@ -1,25 +1,43 @@
 package com.nwm.coauthor.service.endpoint;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 
 import org.junit.BeforeClass;
-import com.nwm.coauthor.service.collection.Person;
 import org.springframework.data.authentication.UserCredentials;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.http.ResponseEntity;
 
 import com.mongodb.Mongo;
+import com.nwm.coauthor.exception.FBTokenInvalidException;
+import com.nwm.coauthor.exception.SomethingWentWrongException;
+import com.nwm.coauthor.service.client.AuthenticationClient;
+import com.nwm.coauthor.service.resource.request.AuthenticateFBRequest;
+import com.nwm.coauthor.service.resource.response.AuthenticationResponse;
 
 public class TestSetup {
+	protected static MongoTemplate mongoTemplate = null;
+	protected static String coToken = null;
+	
 	@BeforeClass
-	public static void beforeClass() throws IOException{
-		MongoTemplate mongoTemplate = new MongoTemplate(new Mongo("localhost", 27017), "coauthor", new UserCredentials("", ""));
+	public static void beforeClass() throws IOException, SomethingWentWrongException, FBTokenInvalidException{
+		initMongo();
+		authenticateForCoToken();
+	}
+	
+	private static void initMongo() throws UnknownHostException{
+		mongoTemplate = new MongoTemplate(new Mongo("localhost", 27017), "coauthor", new UserCredentials("", ""));
+		mongoTemplate.getDb().dropDatabase();		
+	}
+	
+	private static void authenticateForCoToken() throws SomethingWentWrongException, FBTokenInvalidException{
+		AuthenticationClient client = new AuthenticationClient();
+		String fbToken = System.getProperty("fbToken");
 		
-		mongoTemplate.getDb().dropDatabase();
-
-		Person person = new Person();
-		person.setFirstName("John");
-		person.setLastName("Zhuang");
-
-		mongoTemplate.insert(person);
+		ResponseEntity<AuthenticationResponse> response = client.authenticateFB(new AuthenticateFBRequest(fbToken));
+		
+		coToken = response.getBody().getCoToken();
+		
+		System.out.println(coToken);
 	}
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.nwm.coauthor.exception.FBTokenInvalidException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.service.manager.AuthenticationManagerImpl;
 import com.nwm.coauthor.service.resource.request.AuthenticateFBRequest;
@@ -20,7 +21,7 @@ public class AuthenticationControllerImpl extends BaseControllerImpl implements 
 	private AuthenticationManagerImpl authenticationManager = null;
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<AuthenticationResponse> authenticateFB(@RequestBody AuthenticateFBRequest authResource) throws SomethingWentWrongException {
+	public ResponseEntity<AuthenticationResponse> authenticateFB(@RequestBody AuthenticateFBRequest authResource) throws SomethingWentWrongException, FBTokenInvalidException {
 		String coToken = authenticationManager.authenticateFB(authResource.getFbToken());
 	
 		return new ResponseEntity<AuthenticationResponse>(new AuthenticationResponse(coToken), HttpStatus.OK);
