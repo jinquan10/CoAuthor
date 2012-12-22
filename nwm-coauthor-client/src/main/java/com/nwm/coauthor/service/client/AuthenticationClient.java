@@ -3,7 +3,7 @@ package com.nwm.coauthor.service.client;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
-import com.nwm.coauthor.exception.FBTokenInvalidException;
+import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.mapping.ExceptionMapper;
 import com.nwm.coauthor.service.controller.AuthenticationController;
@@ -14,7 +14,7 @@ public class AuthenticationClient extends BaseClient implements AuthenticationCo
 	private static final String AUTHENTICATE_ENDPOINT = "/authenticate";
 	
 	@Override
-	public ResponseEntity<AuthenticationResponse> authenticateFB(AuthenticateFBRequest authResource) throws SomethingWentWrongException, FBTokenInvalidException {
+	public ResponseEntity<AuthenticationResponse> authenticateFB(AuthenticateFBRequest authResource) throws SomethingWentWrongException, AuthenticationUnauthorizedException {
 		ResponseEntity<AuthenticationResponse> response = null;
 		
 		try{
@@ -25,7 +25,7 @@ public class AuthenticationClient extends BaseClient implements AuthenticationCo
 			if(em.getClazz() == SomethingWentWrongException.class){
 				throw new SomethingWentWrongException();
 			}else{
-				throw new FBTokenInvalidException();
+				throw new AuthenticationUnauthorizedException();
 			}
 		}
 		

@@ -1,10 +1,10 @@
 package com.nwm.coauthor.exception.mapping;
 
-import com.nwm.coauthor.exception.FBTokenInvalidException;
+import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 
 public enum ExceptionMapper {
-	FB_TOKEN_INVALID(FBTokenInvalidException.class),
+	AUTHENTICATION_UNAUTHORIZED_EXCEPTION(AuthenticationUnauthorizedException.class),
 	SOMETHING_WENT_WRONG_EXCEPTION(SomethingWentWrongException.class);
 	
 	private Class<? extends Throwable> clazz;

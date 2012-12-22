@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.ResponseEntity;
 
 import com.mongodb.Mongo;
-import com.nwm.coauthor.exception.FBTokenInvalidException;
+import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.service.client.AuthenticationClient;
 import com.nwm.coauthor.service.resource.request.AuthenticateFBRequest;
@@ -20,7 +20,7 @@ public class TestSetup {
 	protected static String coToken = null;
 	
 	@BeforeClass
-	public static void beforeClass() throws IOException, SomethingWentWrongException, FBTokenInvalidException{
+	public static void beforeClass() throws IOException, SomethingWentWrongException, AuthenticationUnauthorizedException{
 		initMongo();
 		authenticateForCoToken();
 	}
@@ -30,7 +30,7 @@ public class TestSetup {
 		mongoTemplate.getDb().dropDatabase();		
 	}
 	
-	private static void authenticateForCoToken() throws SomethingWentWrongException, FBTokenInvalidException{
+	private static void authenticateForCoToken() throws SomethingWentWrongException, AuthenticationUnauthorizedException{
 		AuthenticationClient client = new AuthenticationClient();
 		String fbToken = System.getProperty("fbToken");
 		
