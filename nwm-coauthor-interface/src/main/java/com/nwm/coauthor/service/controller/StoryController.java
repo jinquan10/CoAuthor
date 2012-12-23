@@ -5,5 +5,5 @@ import org.springframework.http.ResponseEntity;
 import com.nwm.coauthor.service.resource.request.CoAuthorRequest;
 
 public interface StoryController {
-	public ResponseEntity<?> createStory();
+	public ResponseEntity<String> createStory(String userId);
 }

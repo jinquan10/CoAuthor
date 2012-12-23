@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
@@ -30,8 +30,12 @@ public class AuthenticationFilter extends OncePerRequestFilter{
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 		try {
-			String userId = authenticationManager.authenticateCOToken(request.getHeader(CO_TOKEN_HEADER));
-			request = new CustomHttpHeadersRequest(request, userId);
+			String coToken = request.getHeader(CO_TOKEN_HEADER);
+			
+			if(StringUtils.hasText(coToken)){
+				String userId = authenticationManager.authenticateCOToken(coToken);
+				request = new CustomHttpHeadersRequest(request, userId);
+			}
 		} catch (AuthenticationUnauthorizedException e) {
 			response.setStatus(e.getStatusCode());
 			response.getWriter().write(Singletons.objectMapper.writeValueAsString(e));
