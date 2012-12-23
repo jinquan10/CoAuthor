@@ -27,7 +27,7 @@ public class BaseControllerImpl {
 	
 	protected ResponseEntity<BaseException> getSomethingWentWrongExceptionBody(Throwable t){
 		if(t.getMessage() != null){
-			logger.error(t.getMessage());			
+			logger.error(t.getMessage(), t);
 		}
 		
 		SomethingWentWrongException body = new SomethingWentWrongException();

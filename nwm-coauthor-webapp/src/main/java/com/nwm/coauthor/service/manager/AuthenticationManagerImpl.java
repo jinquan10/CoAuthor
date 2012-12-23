@@ -22,7 +22,7 @@ public class AuthenticationManagerImpl {
 	 * @throws AuthenticationUnauthorizedException 
 	 */
 	public String authenticateCOToken(String coToken) throws AuthenticationUnauthorizedException{
-		String userId = authenticationDAO.authenticateCOToken(coToken);
+		String userId = authenticationDAO.authenticateCOToken(coToken).get_id();
 		
 		if(userId == null){
 			throw new AuthenticationUnauthorizedException();

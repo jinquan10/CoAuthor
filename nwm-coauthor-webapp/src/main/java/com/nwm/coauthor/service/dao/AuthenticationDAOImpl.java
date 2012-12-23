@@ -21,7 +21,7 @@ public class AuthenticationDAOImpl {
 		mongoTemplate.upsert(query(where("fbId").is(fbId)), update("coToken", coToken), LoginModel.class);
 	}
 
-	public String authenticateCOToken(String coToken) {
-		return mongoTemplate.findOne(query(where("coToken").is(coToken)), String.class);
+	public LoginModel authenticateCOToken(String coToken) {
+		return mongoTemplate.findOne(query(where("coToken").is(coToken)), LoginModel.class);
 	}
 }

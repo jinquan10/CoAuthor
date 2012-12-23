@@ -37,7 +37,5 @@ public class TestSetup {
 		ResponseEntity<AuthenticationResponse> response = client.authenticateFB(new AuthenticateFBRequest(fbToken));
 		
 		coToken = response.getBody().getCoToken();
-		
-		System.out.println(coToken);
 	}
 }

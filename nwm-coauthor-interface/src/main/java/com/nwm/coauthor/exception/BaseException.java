@@ -1,5 +1,7 @@
 package com.nwm.coauthor.exception;
 
+import java.util.Map;
+
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -23,7 +25,18 @@ public class BaseException extends Exception{
 	
 	@JsonProperty("statusCode")
 	private int statusCode;
+
+	@JsonProperty("batchErrors")
+	private Map<String, String> batchErrors;
 	
+	public Map<String, String> getBatchErrors() {
+		return batchErrors;
+	}
+
+	public void setBatchErrors(Map<String, String> batchErrors) {
+		this.batchErrors = batchErrors;
+	}
+
 	public String getDescription() {
 		return description;
 	}
