@@ -42,7 +42,7 @@ public class StoryClient extends BaseClient implements StoryController{
 		ResponseEntity<GetPrivateStoriesResponseWrapper> response = null;
 		
 		try{
-			response = restTemplate.exchange(urlResolver(GET_PRIVATE_STORIES_ENDPOINT), HttpMethod.GET, null, GetPrivateStoriesResponseWrapper.class);
+			response = restTemplate.exchange(urlResolver(GET_PRIVATE_STORIES_ENDPOINT), HttpMethod.GET, httpEntity(null, coToken), GetPrivateStoriesResponseWrapper.class);
 		}catch(HttpStatusCodeException e){
 			ExceptionMapper em = convertToExceptionMapper(e);
 			

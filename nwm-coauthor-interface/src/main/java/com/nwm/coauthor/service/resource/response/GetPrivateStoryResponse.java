@@ -6,6 +6,7 @@ import com.nwm.coauthor.service.resource.BaseResource;
 import com.nwm.coauthor.service.resource.StoryEntryResource;
 
 public class GetPrivateStoryResponse extends BaseResource {
+	private String leaderFbId;
 	private String title;
 	private Integer numCharacters;
 	private List<StoryEntryResource> entries;
@@ -48,5 +49,11 @@ public class GetPrivateStoryResponse extends BaseResource {
 	}
 	public void setEntries(List<StoryEntryResource> entries) {
 		this.entries = entries;
+	}
+	public String getLeaderFbId() {
+		return leaderFbId;
+	}
+	public void setLeaderFbId(String leaderFbId) {
+		this.leaderFbId = leaderFbId;
 	}
 }

@@ -1,4 +1,4 @@
-package com.nwm.coauthor.service.endpoint;
+package com.nwm.coauthor.service.builder;
 
 import java.util.ArrayList;
 import java.util.List;

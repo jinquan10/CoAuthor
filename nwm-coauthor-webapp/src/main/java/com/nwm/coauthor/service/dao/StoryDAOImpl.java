@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Component;
 
 import com.nwm.coauthor.service.model.StoryModel;
@@ -24,6 +25,9 @@ public class StoryDAOImpl {
 	}
 	
 	public List<GetPrivateStoryResponse> getStoriesByFbId(String fbId){
-		return mongoTemplate.find(query(where("fbId").is(fbId).orOperator(where("fbFriends").is(fbId))), GetPrivateStoryResponse.class, "storyModel");
+		Criteria c = new Criteria();
+		c.orOperator(where("leaderFbId").is(fbId), where("fbFriends").is(fbId));
+		
+		return mongoTemplate.find(query(c), GetPrivateStoryResponse.class, "storyModel");
 	}
 }

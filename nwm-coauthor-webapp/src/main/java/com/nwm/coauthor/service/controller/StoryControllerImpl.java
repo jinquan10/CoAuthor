@@ -47,7 +47,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 
 	@Override
 	@RequestMapping(value = "/private", method = RequestMethod.GET)
-	public ResponseEntity<GetPrivateStoriesResponseWrapper> getPrivateStories(String coToken) throws AuthenticationUnauthorizedException {
+	public ResponseEntity<GetPrivateStoriesResponseWrapper> getPrivateStories(@RequestHeader("Authorization") String coToken) throws AuthenticationUnauthorizedException {
 		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
 		
 		GetPrivateStoriesResponseWrapper wrapper = new GetPrivateStoriesResponseWrapper(storyManager.getStoriesByFbId(fbId));

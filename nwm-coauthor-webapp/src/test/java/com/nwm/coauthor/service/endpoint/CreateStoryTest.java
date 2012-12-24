@@ -9,12 +9,13 @@ import org.springframework.http.ResponseEntity;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.CreateStoryBadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
+import com.nwm.coauthor.service.builder.CreateStoryBuilder;
 import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
 
 public class CreateStoryTest extends TestSetup{
 	@Test
 	public void createStorySuccessTest() throws SomethingWentWrongException, AuthenticationUnauthorizedException, CreateStoryBadRequestException{
-		ResponseEntity<String> response = client.createStory(coToken, CreateStoryBuilder.createValidStory());
+		ResponseEntity<String> response = storyClient.createStory(coToken, CreateStoryBuilder.createValidStory());
 		
 		Assert.assertTrue(response.getStatusCode() == HttpStatus.NO_CONTENT);
 	}
@@ -22,7 +23,7 @@ public class CreateStoryTest extends TestSetup{
 	@Test
 	public void createStoryBadRequestListTest() throws SomethingWentWrongException, AuthenticationUnauthorizedException{
 		try{
-			client.createStory(coToken, new CreateStoryRequest());
+			storyClient.createStory(coToken, new CreateStoryRequest());
 		}catch(CreateStoryBadRequestException e){
 			Map<String, String> batchErrors = e.getBatchErrors();
 			
@@ -34,7 +35,7 @@ public class CreateStoryTest extends TestSetup{
 	@Test
 	public void createStoryNullResourceTest() throws SomethingWentWrongException, AuthenticationUnauthorizedException, CreateStoryBadRequestException{
 		try{
-			client.createStory(coToken, null);
+			storyClient.createStory(coToken, null);
 		}catch(CreateStoryBadRequestException e){
 			Map<String, String> batchErrors = e.getBatchErrors();
 			
@@ -47,6 +48,6 @@ public class CreateStoryTest extends TestSetup{
 	public void createStoryLengthyTitleTest() throws SomethingWentWrongException, AuthenticationUnauthorizedException, CreateStoryBadRequestException{
 		CreateStoryRequest request = CreateStoryBuilder.createValidStory();
 		request.setTitle("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
-		client.createStory(coToken, request);
+		storyClient.createStory(coToken, request);
 	}
 }
