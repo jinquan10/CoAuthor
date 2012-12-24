@@ -7,6 +7,7 @@ import static org.springframework.data.mongodb.core.query.Update.update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import com.nwm.coauthor.service.model.LoginModel;
@@ -21,7 +22,11 @@ public class AuthenticationDAOImpl {
 		mongoTemplate.upsert(query(where("fbId").is(fbId)), update("coToken", coToken), LoginModel.class);
 	}
 
-	public LoginModel authenticateCOToken(String coToken) {
-		return mongoTemplate.findOne(query(where("coToken").is(coToken)), LoginModel.class);
+	public String authenticateCOTokenForFbId(String coToken) {
+		Query query = new Query();
+		query.addCriteria(where("coToken").is(coToken));
+		query.fields().include("fbId");
+		
+		return mongoTemplate.findOne(query, LoginModel.class).getFbId();
 	}
 }

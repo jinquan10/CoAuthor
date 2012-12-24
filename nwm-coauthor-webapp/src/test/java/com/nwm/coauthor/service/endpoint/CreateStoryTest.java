@@ -6,17 +6,12 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.CreateStoryBadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
-import com.nwm.coauthor.service.client.StoryClient;
 import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
 
-
 public class CreateStoryTest extends TestSetup{
-	private StoryClient client = new StoryClient();
-	
 	@Test
 	public void createStorySuccessTest() throws SomethingWentWrongException, AuthenticationUnauthorizedException, CreateStoryBadRequestException{
 		ResponseEntity<String> response = client.createStory(coToken, CreateStoryBuilder.createValidStory());
@@ -53,5 +48,5 @@ public class CreateStoryTest extends TestSetup{
 		CreateStoryRequest request = CreateStoryBuilder.createValidStory();
 		request.setTitle("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
 		client.createStory(coToken, request);
-	}	
+	}
 }

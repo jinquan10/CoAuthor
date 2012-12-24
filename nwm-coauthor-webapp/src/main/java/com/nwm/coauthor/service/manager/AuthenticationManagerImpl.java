@@ -21,14 +21,14 @@ public class AuthenticationManagerImpl {
 	 * @return mongo objectId
 	 * @throws AuthenticationUnauthorizedException 
 	 */
-	public String authenticateCOToken(String coToken) throws AuthenticationUnauthorizedException{
-		String userId = authenticationDAO.authenticateCOToken(coToken).get_id();
+	public String authenticateCOTokenForFbId(String coToken) throws AuthenticationUnauthorizedException{
+		String fbId = authenticationDAO.authenticateCOTokenForFbId(coToken);
 		
-		if(userId == null){
+		if(fbId == null){
 			throw new AuthenticationUnauthorizedException();
 		}
 		
-		return userId;
+		return fbId;
 	}
 
 	public String authenticateFB(String fbToken) throws AuthenticationUnauthorizedException {

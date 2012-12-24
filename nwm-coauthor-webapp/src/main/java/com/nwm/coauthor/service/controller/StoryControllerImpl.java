@@ -1,6 +1,8 @@
 package com.nwm.coauthor.service.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +20,10 @@ import com.nwm.coauthor.exception.CreateStoryBadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.service.manager.AuthenticationManagerImpl;
 import com.nwm.coauthor.service.manager.StoryManagerImpl;
-import com.nwm.coauthor.service.model.CreateStoryModel;
+import com.nwm.coauthor.service.model.StoryEntryModel;
+import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
+import com.nwm.coauthor.service.resource.response.GetPrivateStoriesResponseWrapper;
 
 @Controller
 @RequestMapping(value = "/story", produces = "application/json", consumes = "application/json")
@@ -35,19 +39,34 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 	public ResponseEntity<String> createStory(@RequestHeader("Authorization") String coToken, @RequestBody CreateStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, CreateStoryBadRequestException {
 		validateCreateStoryRequest(createStoryRequest);
 		
-		String userId = authenticationManager.authenticateCOToken(coToken);
-		storyManager.createStory(createStoryModelFromRequest(userId, createStoryRequest));
+		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
+		storyManager.createStory(createStoryModelFromRequest(fbId, createStoryRequest));
 		
 		return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 	}
-	
-	protected CreateStoryModel createStoryModelFromRequest(String userId, CreateStoryRequest request){
-		CreateStoryModel model = new CreateStoryModel();
-		model.setEntry(request.getEntry());
+
+	@Override
+	@RequestMapping(value = "/private", method = RequestMethod.GET)
+	public ResponseEntity<GetPrivateStoriesResponseWrapper> getPrivateStories(String coToken) throws AuthenticationUnauthorizedException {
+		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
+		
+		GetPrivateStoriesResponseWrapper wrapper = new GetPrivateStoriesResponseWrapper(storyManager.getStoriesByFbId(fbId));
+		
+		return new ResponseEntity<GetPrivateStoriesResponseWrapper>(wrapper, HttpStatus.OK);
+	}
+
+	protected StoryModel createStoryModelFromRequest(String fbId, CreateStoryRequest request){
+		List<StoryEntryModel> entries = new ArrayList<StoryEntryModel>();
+		entries.add(new StoryEntryModel(fbId, request.getEntry()));
+		
+		StoryModel model = new StoryModel();
+		model.setEntries(entries);
 		model.setFbFriends(request.getFbFriends());
+		model.setIsPublished(false);
+		model.setLastFriendEntry(fbId);
+		model.setLeaderFbId(fbId);
 		model.setNumCharacters(request.getNumCharacters());
 		model.setTitle(request.getTitle());
-		model.setUserId(userId);
 		
 		return model;
 	}
