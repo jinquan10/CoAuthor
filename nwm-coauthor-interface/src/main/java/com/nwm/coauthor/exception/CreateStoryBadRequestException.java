@@ -1,6 +1,8 @@
 package com.nwm.coauthor.exception;
 
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.nwm.coauthor.exception.mapping.ExceptionMapper;
 
@@ -25,5 +27,17 @@ public class CreateStoryBadRequestException extends BaseException {
 		setDescription(e.getDescription());
 		setStatusCode(e.getStatusCode());
 		setBatchErrors(e.getBatchErrors());
+	}
+	
+	@Override
+	public String toString(){
+		Set<Entry<String, String>> entries = getBatchErrors().entrySet();
+		
+		String batchErrors = "";
+		for(Entry<String, String> entry : entries){
+			batchErrors += entry.getKey() + ":" + entry.getValue() + " ";
+		}
+		
+		return "id: " + getId() + " description: " + getDescription() + " statusCode " + getStatusCode() + " errors: " + batchErrors;
 	}
 }

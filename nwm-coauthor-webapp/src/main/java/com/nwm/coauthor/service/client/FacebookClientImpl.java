@@ -7,14 +7,13 @@ import com.nwm.coauthor.service.model.FBUser;
 
 @Component
 public class FacebookClientImpl {
+	private String fbValidationUrl = "https://graph.facebook.com/me?access_token=";
+	private RestTemplate restTemplate = new RestTemplate();
+	
 	public FBUser validate(String fbToken) throws AuthenticationUnauthorizedException{
-		String fbValidationUrl = "https://graph.facebook.com/me?access_token=" + fbToken;
-		
-		RestTemplate restTemplate = new RestTemplate();
-		
 		FBUser fbUser = null;
 		try{
-			fbUser = restTemplate.getForObject(fbValidationUrl, FBUser.class);
+			fbUser = restTemplate.getForObject(fbValidationUrl + fbToken, FBUser.class);
 		}catch(Throwable e){
 			throw new AuthenticationUnauthorizedException();
 		}finally{

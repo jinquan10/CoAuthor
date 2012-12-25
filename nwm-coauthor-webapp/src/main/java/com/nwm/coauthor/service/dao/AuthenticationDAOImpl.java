@@ -22,11 +22,11 @@ public class AuthenticationDAOImpl {
 		mongoTemplate.upsert(query(where("fbId").is(fbId)), update("coToken", coToken), LoginModel.class);
 	}
 
-	public String authenticateCOTokenForFbId(String coToken) {
+	public LoginModel authenticateCOTokenForFbId(String coToken) {
 		Query query = new Query();
 		query.addCriteria(where("coToken").is(coToken));
 		query.fields().include("fbId");
 		
-		return mongoTemplate.findOne(query, LoginModel.class).getFbId();
+		return mongoTemplate.findOne(query, LoginModel.class);
 	}
 }

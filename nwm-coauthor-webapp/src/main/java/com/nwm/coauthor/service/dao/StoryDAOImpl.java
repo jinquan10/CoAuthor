@@ -1,7 +1,6 @@
 package com.nwm.coauthor.service.dao;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Query.query;
 
 import java.util.List;
 
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import com.nwm.coauthor.service.model.StoryModel;
@@ -28,6 +28,10 @@ public class StoryDAOImpl {
 		Criteria c = new Criteria();
 		c.orOperator(where("leaderFbId").is(fbId), where("fbFriends").is(fbId));
 		
-		return mongoTemplate.find(query(c), GetPrivateStoryResponse.class, "storyModel");
+		Query q = new Query();
+		q.fields().slice("entries", 1);
+		q.addCriteria(c);
+		
+		return mongoTemplate.find(q, GetPrivateStoryResponse.class, "storyModel");
 	}
 }

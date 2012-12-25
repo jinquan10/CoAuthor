@@ -6,6 +6,7 @@ import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.service.client.FacebookClientImpl;
 import com.nwm.coauthor.service.dao.AuthenticationDAOImpl;
 import com.nwm.coauthor.service.model.FBUser;
+import com.nwm.coauthor.service.model.LoginModel;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,13 +23,13 @@ public class AuthenticationManagerImpl {
 	 * @throws AuthenticationUnauthorizedException 
 	 */
 	public String authenticateCOTokenForFbId(String coToken) throws AuthenticationUnauthorizedException{
-		String fbId = authenticationDAO.authenticateCOTokenForFbId(coToken);
+		LoginModel loginModel = authenticationDAO.authenticateCOTokenForFbId(coToken);
 		
-		if(fbId == null){
+		if(loginModel == null){
 			throw new AuthenticationUnauthorizedException();
 		}
 		
-		return fbId;
+		return loginModel.getFbId();
 	}
 
 	public String authenticateFB(String fbToken) throws AuthenticationUnauthorizedException {

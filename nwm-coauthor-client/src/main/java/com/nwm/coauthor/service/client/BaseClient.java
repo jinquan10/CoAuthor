@@ -15,7 +15,6 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import com.nwm.coauthor.exception.BaseException;
-import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.mapping.ExceptionMapper;
 
 public class BaseClient {
@@ -31,8 +30,11 @@ public class BaseClient {
 	protected void initRestTemplate(){
 		List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
 		messageConverters.add(new MappingJacksonHttpMessageConverter());
+		HttpComponentsClientHttpRequestFactory httpClient = new HttpComponentsClientHttpRequestFactory();
+		httpClient.setReadTimeout(0);
+		
 		restTemplate.setMessageConverters(messageConverters);
-		restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+		restTemplate.setRequestFactory(httpClient);
 	}
 	
 	protected String urlResolver(String endpoint){

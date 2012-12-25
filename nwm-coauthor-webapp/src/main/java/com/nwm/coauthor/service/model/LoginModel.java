@@ -25,4 +25,9 @@ public class LoginModel{
 	public void setCoToken(String coToken) {
 		this.coToken = coToken;
 	}
+	
+	@Override
+	public String toString(){
+		return "fbId: " + fbId + " coToken: " + coToken;
+	}
 }
