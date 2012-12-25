@@ -19,7 +19,7 @@ public class GetPrivateStoriesTest extends TestSetup{
 	public void getPrivateStoriesSuccess() throws SomethingWentWrongException, AuthenticationUnauthorizedException, CreateStoryBadRequestException{
 		for(int i = 0; i < users.size(); i++){
 			storyClient.createStory(users.get(i).getCoToken(), CreateStoryBuilder.createValidStory(users, i));
-		}
+		}		
 		
 		for(int i = 0; i < users.size(); i++){
 			ResponseEntity<GetPrivateStoriesResponseWrapper> response = storyClient.getPrivateStories(users.get(i).getCoToken());
@@ -44,5 +44,10 @@ public class GetPrivateStoriesTest extends TestSetup{
 				Assert.assertTrue(StringUtils.hasText(story.getLeaderFbId()));
 			}
 		}
+	}
+	
+	@Test
+	public void getPrivateStories_UserShouldSeeOneEntry_WhenMoreThanOneEntryIsSubmitted(){
+		
 	}
 }

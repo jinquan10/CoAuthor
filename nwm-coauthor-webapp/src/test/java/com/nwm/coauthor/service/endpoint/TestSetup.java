@@ -23,7 +23,7 @@ import com.nwm.coauthor.service.resource.response.AuthenticationResponse;
 
 public class TestSetup {
 	protected static MongoTemplate mongoTemplate = null;
-	protected StoryClient storyClient = new StoryClient();
+	protected static StoryClient storyClient = new StoryClient();
 	
 	protected static List<LoginModel> users;
 	
