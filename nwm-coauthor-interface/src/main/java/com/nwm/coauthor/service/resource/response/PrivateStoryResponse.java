@@ -5,7 +5,7 @@ import java.util.List;
 import com.nwm.coauthor.service.resource.BaseResource;
 import com.nwm.coauthor.service.resource.StoryEntryResource;
 
-public class GetPrivateStoryResponse extends BaseResource {
+public class PrivateStoryResponse extends BaseResource {
 	private String _id;
 	private String leaderFbId;
 	private String title;
@@ -14,6 +14,7 @@ public class GetPrivateStoryResponse extends BaseResource {
 	private List<String> fbFriends;
 	private String lastFriendEntry;
 	private Boolean isPublished;
+	private Integer version;
 	
 	public String getTitle() {
 		return title;
@@ -62,5 +63,11 @@ public class GetPrivateStoryResponse extends BaseResource {
 	}
 	public void set_id(String _id) {
 		this._id = _id;
+	}
+	public Integer getVersion() {
+		return version;
+	}
+	public void setVersion(Integer version) {
+		this.version = version;
 	}
 }

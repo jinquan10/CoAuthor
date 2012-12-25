@@ -3,6 +3,7 @@ package com.nwm.coauthor.service.model;
 import java.util.List;
 
 public class StoryModel extends BaseModel{
+	private String _id;
 	private String leaderFbId;
 	private String title;
 	private Integer numCharacters;
@@ -10,6 +11,7 @@ public class StoryModel extends BaseModel{
 	private List<String> fbFriends;
 	private String lastFriendEntry;
 	private Boolean isPublished;
+	private Integer version;
 	
 	public String getTitle() {
 		return title;
@@ -52,6 +54,18 @@ public class StoryModel extends BaseModel{
 	}
 	public void setLeaderFbId(String leaderFbId) {
 		this.leaderFbId = leaderFbId;
+	}
+	public Integer getVersion() {
+		return version;
+	}
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	public String get_id() {
+		return _id;
+	}
+	public void set_id(String _id) {
+		this._id = _id;
 	}
 	
 }

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ import com.nwm.coauthor.service.manager.StoryManagerImpl;
 import com.nwm.coauthor.service.model.StoryEntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
-import com.nwm.coauthor.service.resource.response.GetPrivateStoriesResponseWrapper;
+import com.nwm.coauthor.service.resource.response.PrivateStoriesResponseWrapper;
 
 @Controller
 @RequestMapping(value = "/story", produces = "application/json", consumes = "application/json")
@@ -40,19 +41,19 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 		validateCreateStoryRequest(createStoryRequest);
 		
 		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
-		storyManager.createStory(createStoryModelFromRequest(fbId, createStoryRequest));
+		String storyId = storyManager.createStory(createStoryModelFromRequest(fbId, createStoryRequest));
 		
-		return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<String>(storyId, HttpStatus.CREATED);
 	}
 
 	@Override
 	@RequestMapping(value = "/private", method = RequestMethod.GET)
-	public ResponseEntity<GetPrivateStoriesResponseWrapper> getPrivateStories(@RequestHeader("Authorization") String coToken) throws AuthenticationUnauthorizedException {
+	public ResponseEntity<PrivateStoriesResponseWrapper> getPrivateStories(@RequestHeader("Authorization") String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException{
 		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
 		
-		GetPrivateStoriesResponseWrapper wrapper = new GetPrivateStoriesResponseWrapper(storyManager.getStoriesByFbId(fbId));
+		PrivateStoriesResponseWrapper wrapper = new PrivateStoriesResponseWrapper(storyManager.getStoriesByFbId(fbId));
 		
-		return new ResponseEntity<GetPrivateStoriesResponseWrapper>(wrapper, HttpStatus.OK);
+		return new ResponseEntity<PrivateStoriesResponseWrapper>(wrapper, HttpStatus.OK);
 	}
 
 	protected StoryModel createStoryModelFromRequest(String fbId, CreateStoryRequest request){
@@ -60,6 +61,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 		entries.add(new StoryEntryModel(fbId, request.getEntry()));
 		
 		StoryModel model = new StoryModel();
+		model.set_id(new ObjectId().toString());
 		model.setEntries(entries);
 		model.setFbFriends(request.getFbFriends());
 		model.setIsPublished(false);
@@ -67,6 +69,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 		model.setLeaderFbId(fbId);
 		model.setNumCharacters(request.getNumCharacters());
 		model.setTitle(request.getTitle());
+		model.setVersion(0);
 		
 		return model;
 	}

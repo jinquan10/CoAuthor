@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.CreateStoryBadRequestException;
@@ -19,7 +20,9 @@ public class CreateStoryTest extends TestSetup{
 		for(int i = 0; i < users.size(); i++){
 			ResponseEntity<String> response = storyClient.createStory(users.get(i).getCoToken(), CreateStoryBuilder.createValidStory(users, i));
 			
-			Assert.assertTrue(response.getStatusCode() == HttpStatus.NO_CONTENT);
+			Assert.assertTrue(response.getStatusCode() == HttpStatus.CREATED);
+			Assert.assertNotNull(response.getBody());
+			Assert.assertTrue(StringUtils.hasText(response.getBody()));
 		}
 	}
 	
@@ -50,7 +53,7 @@ public class CreateStoryTest extends TestSetup{
 			} catch (CreateStoryBadRequestException e) {
 				Map<String, String> batchErrors = e.getBatchErrors();
 
-				Assert.assertTrue(batchErrors.toString(), batchErrors.size() == 3);
+				Assert.assertTrue(e.toString(), batchErrors.size() == 3);
 				Assert.assertTrue(e.getStatusCode() == HttpStatus.BAD_REQUEST.value());
 			}
 		}

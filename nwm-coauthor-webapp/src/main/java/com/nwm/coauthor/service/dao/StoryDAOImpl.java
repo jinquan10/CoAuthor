@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import com.nwm.coauthor.service.model.StoryModel;
-import com.nwm.coauthor.service.resource.response.GetPrivateStoryResponse;
+import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
 @Component
 public class StoryDAOImpl {
@@ -24,7 +24,7 @@ public class StoryDAOImpl {
 		mongoTemplate.insert(storyModel);
 	}
 	
-	public List<GetPrivateStoryResponse> getStoriesByFbId(String fbId){
+	public List<PrivateStoryResponse> getStoriesByFbId(String fbId){
 		Criteria c = new Criteria();
 		c.orOperator(where("leaderFbId").is(fbId), where("fbFriends").is(fbId));
 		
@@ -32,6 +32,6 @@ public class StoryDAOImpl {
 		q.fields().slice("entries", 1);
 		q.addCriteria(c);
 		
-		return mongoTemplate.find(q, GetPrivateStoryResponse.class, "storyModel");
+		return mongoTemplate.find(q, PrivateStoryResponse.class, "storyModel");
 	}
 }

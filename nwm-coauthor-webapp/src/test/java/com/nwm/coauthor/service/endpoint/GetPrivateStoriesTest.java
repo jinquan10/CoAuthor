@@ -11,8 +11,8 @@ import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.CreateStoryBadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.service.builder.CreateStoryBuilder;
-import com.nwm.coauthor.service.resource.response.GetPrivateStoriesResponseWrapper;
-import com.nwm.coauthor.service.resource.response.GetPrivateStoryResponse;
+import com.nwm.coauthor.service.resource.response.PrivateStoriesResponseWrapper;
+import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
 public class GetPrivateStoriesTest extends TestSetup{
 	@Test
@@ -22,19 +22,20 @@ public class GetPrivateStoriesTest extends TestSetup{
 		}		
 		
 		for(int i = 0; i < users.size(); i++){
-			ResponseEntity<GetPrivateStoriesResponseWrapper> response = storyClient.getPrivateStories(users.get(i).getCoToken());
+			ResponseEntity<PrivateStoriesResponseWrapper> response = storyClient.getPrivateStories(users.get(i).getCoToken());
 
-			GetPrivateStoriesResponseWrapper body = response.getBody();
+			PrivateStoriesResponseWrapper body = response.getBody();
 			Assert.assertNotNull(body);
 
-			List<GetPrivateStoryResponse> stories = body.getStories();
+			List<PrivateStoryResponse> stories = body.getStories();
 			Assert.assertNotNull(stories);
 
 			Assert.assertTrue(stories.size() == users.size());
 
 			for(int j = 0; j < users.size(); j++){
-				GetPrivateStoryResponse story = stories.get(j);
+				PrivateStoryResponse story = stories.get(j);
 	
+				Assert.assertTrue(StringUtils.hasText(story.get_id()));
 				Assert.assertTrue(StringUtils.hasText(story.getLastFriendEntry()));
 				Assert.assertFalse(story.getIsPublished());
 				Assert.assertNotNull(story.getEntries());
@@ -42,6 +43,7 @@ public class GetPrivateStoriesTest extends TestSetup{
 				Assert.assertNotNull(story.getFbFriends());
 				Assert.assertNotNull(story.getNumCharacters());
 				Assert.assertTrue(StringUtils.hasText(story.getLeaderFbId()));
+				Assert.assertTrue(story.getVersion() == 0);
 			}
 		}
 	}

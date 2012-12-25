@@ -7,18 +7,19 @@ import org.springframework.stereotype.Component;
 
 import com.nwm.coauthor.service.dao.StoryDAOImpl;
 import com.nwm.coauthor.service.model.StoryModel;
-import com.nwm.coauthor.service.resource.response.GetPrivateStoryResponse;
+import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
 @Component
 public class StoryManagerImpl {
 	@Autowired
 	private StoryDAOImpl storyDAO;
 	
-	public void createStory(StoryModel createStoryModel){
+	public String createStory(StoryModel createStoryModel){
 		storyDAO.createStory(createStoryModel);
+		return createStoryModel.get_id();
 	}
 	
-	public List<GetPrivateStoryResponse> getStoriesByFbId(String fbId){
+	public List<PrivateStoryResponse> getStoriesByFbId(String fbId){
 		return storyDAO.getStoriesByFbId(fbId);
 	}
 }

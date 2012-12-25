@@ -10,7 +10,7 @@ import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.mapping.ExceptionMapper;
 import com.nwm.coauthor.service.controller.StoryController;
 import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
-import com.nwm.coauthor.service.resource.response.GetPrivateStoriesResponseWrapper;
+import com.nwm.coauthor.service.resource.response.PrivateStoriesResponseWrapper;
 
 public class StoryClient extends BaseClient implements StoryController{
 	private static final String CREATE_STORY_ENDPOINT = "/story";
@@ -38,16 +38,18 @@ public class StoryClient extends BaseClient implements StoryController{
 	}
 
 	@Override
-	public ResponseEntity<GetPrivateStoriesResponseWrapper> getPrivateStories(String coToken) throws AuthenticationUnauthorizedException {
-		ResponseEntity<GetPrivateStoriesResponseWrapper> response = null;
+	public ResponseEntity<PrivateStoriesResponseWrapper> getPrivateStories(String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException{
+		ResponseEntity<PrivateStoriesResponseWrapper> response = null;
 		
 		try{
-			response = restTemplate.exchange(urlResolver(GET_PRIVATE_STORIES_ENDPOINT), HttpMethod.GET, httpEntity(null, coToken), GetPrivateStoriesResponseWrapper.class);
+			response = restTemplate.exchange(urlResolver(GET_PRIVATE_STORIES_ENDPOINT), HttpMethod.GET, httpEntity(null, coToken), PrivateStoriesResponseWrapper.class);
 		}catch(HttpStatusCodeException e){
 			ExceptionMapper em = convertToExceptionMapper(e);
 			
 			if(em.getClazz() == AuthenticationUnauthorizedException.class){
 				throw new AuthenticationUnauthorizedException();
+			}else{
+				throw new SomethingWentWrongException();
 			}
 		}
 		
