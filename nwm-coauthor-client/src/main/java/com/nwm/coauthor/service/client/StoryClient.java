@@ -9,12 +9,14 @@ import com.nwm.coauthor.exception.CreateStoryBadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.mapping.ExceptionMapper;
 import com.nwm.coauthor.service.controller.StoryController;
+import com.nwm.coauthor.service.resource.request.AddEntryRequest;
 import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
 import com.nwm.coauthor.service.resource.response.PrivateStoriesResponseWrapper;
 
 public class StoryClient extends BaseClient implements StoryController{
 	private static final String CREATE_STORY_ENDPOINT = "/story";
 	private static final String GET_PRIVATE_STORIES_ENDPOINT = "/story/private";
+	private static final String ADD_ENTRY_ENDPOINT = "/story/entry/";
 
 	@Override
 	public ResponseEntity<String> createStory(String coToken, CreateStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, CreateStoryBadRequestException {
@@ -54,5 +56,10 @@ public class StoryClient extends BaseClient implements StoryController{
 		}
 		
 		return response;
+	}
+
+	@Override
+	public void addEntry(String coToken, AddEntryRequest entry) throws SomethingWentWrongException {
+		restTemplate.exchange(urlResolver(ADD_ENTRY_ENDPOINT) + entry.getStoryId(), HttpMethod.POST, httpEntity(entry, coToken), String.class);
 	}
 }
