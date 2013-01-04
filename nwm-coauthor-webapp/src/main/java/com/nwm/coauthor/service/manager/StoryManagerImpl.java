@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.nwm.coauthor.service.dao.StoryDAOImpl;
 import com.nwm.coauthor.service.model.StoryModel;
+import com.nwm.coauthor.service.resource.request.AddEntryRequest;
 import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
 @Component
@@ -21,5 +22,9 @@ public class StoryManagerImpl {
 	
 	public List<PrivateStoryResponse> getStoriesByFbId(String fbId){
 		return storyDAO.getStoriesByFbId(fbId);
+	}
+	
+	public void addEntry(String fbId, AddEntryRequest request){
+		storyDAO.addEntry(fbId, request);
 	}
 }

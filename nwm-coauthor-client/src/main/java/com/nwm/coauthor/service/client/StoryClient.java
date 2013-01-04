@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
 
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
-import com.nwm.coauthor.exception.CreateStoryBadRequestException;
+import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.mapping.ExceptionMapper;
 import com.nwm.coauthor.service.controller.StoryController;
@@ -19,7 +19,7 @@ public class StoryClient extends BaseClient implements StoryController{
 	private static final String ADD_ENTRY_ENDPOINT = "/story/entry/";
 
 	@Override
-	public ResponseEntity<String> createStory(String coToken, CreateStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, CreateStoryBadRequestException {
+	public ResponseEntity<String> createStory(String coToken, CreateStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
 		ResponseEntity<String> response = null;
 		
 		try{
@@ -29,8 +29,8 @@ public class StoryClient extends BaseClient implements StoryController{
 			
 			if(em.getClazz() == SomethingWentWrongException.class){
 				throw new SomethingWentWrongException();
-			}else if(em.getClazz() == CreateStoryBadRequestException.class){
-				throw new CreateStoryBadRequestException(em.getBaseException());
+			}else if(em.getClazz() == BadRequestException.class){
+				throw new BadRequestException(em.getBaseException());
 			}else{
 				throw new AuthenticationUnauthorizedException();
 			}

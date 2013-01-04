@@ -17,12 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
-import com.nwm.coauthor.exception.CreateStoryBadRequestException;
+import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.service.manager.AuthenticationManagerImpl;
 import com.nwm.coauthor.service.manager.StoryManagerImpl;
 import com.nwm.coauthor.service.model.StoryEntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
+import com.nwm.coauthor.service.resource.request.AddEntryRequest;
 import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
 import com.nwm.coauthor.service.resource.response.PrivateStoriesResponseWrapper;
 
@@ -37,7 +38,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 	
 	@Override
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<String> createStory(@RequestHeader("Authorization") String coToken, @RequestBody CreateStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, CreateStoryBadRequestException {
+	public ResponseEntity<String> createStory(@RequestHeader("Authorization") String coToken, @RequestBody CreateStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
 		validateCreateStoryRequest(createStoryRequest);
 		
 		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
@@ -56,6 +57,18 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 		return new ResponseEntity<PrivateStoriesResponseWrapper>(wrapper, HttpStatus.OK);
 	}
 
+	@Override
+	@RequestMapping(value = "/entry")
+	public void addEntry(String coToken, AddEntryRequest entry) throws SomethingWentWrongException, AuthenticationUnauthorizedException {
+		validateAddEntryRequest(entry);
+		
+		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
+	}	
+	
+	protected void validateAddEntryRequest(AddEntryRequest entry){
+//		entry
+	}
+	
 	protected StoryModel createStoryModelFromRequest(String fbId, CreateStoryRequest request){
 		List<StoryEntryModel> entries = new ArrayList<StoryEntryModel>();
 		entries.add(new StoryEntryModel(fbId, request.getEntry()));
@@ -74,7 +87,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 		return model;
 	}
 	
-	protected void validateCreateStoryRequest(CreateStoryRequest createStoryRequest) throws CreateStoryBadRequestException{
+	protected void validateCreateStoryRequest(CreateStoryRequest createStoryRequest) throws BadRequestException{
 		boolean isError = false;
 		Map<String, String> batchErrors = new HashMap<String, String>();  
 		
@@ -110,7 +123,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 		}
 		
 		if(isError){
-			throw new CreateStoryBadRequestException(batchErrors);
+			throw new BadRequestException(batchErrors);
 		}
 	}
 }

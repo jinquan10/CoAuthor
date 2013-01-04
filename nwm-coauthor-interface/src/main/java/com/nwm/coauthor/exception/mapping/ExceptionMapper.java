@@ -2,13 +2,13 @@ package com.nwm.coauthor.exception.mapping;
 
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BaseException;
-import com.nwm.coauthor.exception.CreateStoryBadRequestException;
+import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 
 public enum ExceptionMapper {
 	AUTHENTICATION_UNAUTHORIZED_EXCEPTION(AuthenticationUnauthorizedException.class),
 	SOMETHING_WENT_WRONG_EXCEPTION(SomethingWentWrongException.class),
-	CREATE_STORY_BAD_REQUEST_EXCEPTION(CreateStoryBadRequestException.class);
+	BAD_REQUEST_EXCEPTION(BadRequestException.class);
 	
 	private Class<? extends BaseException> clazz;
 	private BaseException baseException;

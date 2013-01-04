@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
-import com.nwm.coauthor.exception.CreateStoryBadRequestException;
+import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.service.builder.CreateStoryBuilder;
 import com.nwm.coauthor.service.resource.response.PrivateStoriesResponseWrapper;
@@ -16,7 +16,7 @@ import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
 public class GetPrivateStoriesTest extends TestSetup{
 	@Test
-	public void getPrivateStoriesSuccess() throws SomethingWentWrongException, AuthenticationUnauthorizedException, CreateStoryBadRequestException{
+	public void getPrivateStoriesSuccess() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException{
 		for(int i = 0; i < users.size(); i++){
 			storyClient.createStory(users.get(i).getCoToken(), CreateStoryBuilder.createValidStory(users, i));
 		}		
