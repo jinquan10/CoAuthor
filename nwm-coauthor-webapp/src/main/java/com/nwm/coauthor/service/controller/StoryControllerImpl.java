@@ -25,6 +25,7 @@ import com.nwm.coauthor.service.model.StoryEntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.resource.request.AddEntryRequest;
 import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
+import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
 import com.nwm.coauthor.service.resource.response.PrivateStoriesResponseWrapper;
 
 @Controller
@@ -38,13 +39,13 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 	
 	@Override
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<String> createStory(@RequestHeader("Authorization") String coToken, @RequestBody CreateStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
+	public ResponseEntity<CreateStoryResponse> createStory(@RequestHeader("Authorization") String coToken, @RequestBody CreateStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
 		validateCreateStoryRequest(createStoryRequest);
 		
 		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
 		String storyId = storyManager.createStory(createStoryModelFromRequest(fbId, createStoryRequest));
 		
-		return new ResponseEntity<String>(storyId, HttpStatus.CREATED);
+		return new ResponseEntity<CreateStoryResponse>(new CreateStoryResponse(storyId), HttpStatus.CREATED);
 	}
 
 	@Override

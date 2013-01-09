@@ -13,16 +13,17 @@ import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.service.builder.CreateStoryBuilder;
 import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
+import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
 
 public class CreateStoryTest extends TestSetup{
 	@Test
 	public void createStorySuccessTest() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException{
 		for(int i = 0; i < users.size(); i++){
-			ResponseEntity<String> response = storyClient.createStory(users.get(i).getCoToken(), CreateStoryBuilder.createValidStory(users, i));
+			ResponseEntity<CreateStoryResponse> response = storyClient.createStory(users.get(i).getCoToken(), CreateStoryBuilder.createValidStory(users, i));
 			
 			Assert.assertTrue(response.getStatusCode() == HttpStatus.CREATED);
 			Assert.assertNotNull(response.getBody());
-			Assert.assertTrue(StringUtils.hasText(response.getBody()));
+			Assert.assertTrue(StringUtils.hasText(response.getBody().getStoryId()));
 		}
 	}
 	

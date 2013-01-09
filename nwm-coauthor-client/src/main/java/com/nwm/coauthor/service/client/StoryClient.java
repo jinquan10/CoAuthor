@@ -11,6 +11,7 @@ import com.nwm.coauthor.exception.mapping.ExceptionMapper;
 import com.nwm.coauthor.service.controller.StoryController;
 import com.nwm.coauthor.service.resource.request.AddEntryRequest;
 import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
+import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
 import com.nwm.coauthor.service.resource.response.PrivateStoriesResponseWrapper;
 
 public class StoryClient extends BaseClient implements StoryController{
@@ -19,11 +20,11 @@ public class StoryClient extends BaseClient implements StoryController{
 	private static final String ADD_ENTRY_ENDPOINT = "/story/entry/";
 
 	@Override
-	public ResponseEntity<String> createStory(String coToken, CreateStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
-		ResponseEntity<String> response = null;
+	public ResponseEntity<CreateStoryResponse> createStory(String coToken, CreateStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
+		ResponseEntity<CreateStoryResponse> response = null;
 		
 		try{
-			response = restTemplate.exchange(urlResolver(CREATE_STORY_ENDPOINT), HttpMethod.POST, httpEntity(createStoryRequest, coToken), String.class);
+			response = restTemplate.exchange(urlResolver(CREATE_STORY_ENDPOINT), HttpMethod.POST, httpEntity(createStoryRequest, coToken), CreateStoryResponse.class);
 		}catch(HttpStatusCodeException e){
 			ExceptionMapper em = convertToExceptionMapper(e);
 			
@@ -59,7 +60,17 @@ public class StoryClient extends BaseClient implements StoryController{
 	}
 
 	@Override
-	public void addEntry(String coToken, AddEntryRequest entry) throws SomethingWentWrongException {
-		restTemplate.exchange(urlResolver(ADD_ENTRY_ENDPOINT) + entry.getStoryId(), HttpMethod.POST, httpEntity(entry, coToken), String.class);
+	public void addEntry(String coToken, AddEntryRequest entry) throws SomethingWentWrongException, AuthenticationUnauthorizedException {
+		try{
+			restTemplate.exchange(urlResolver(ADD_ENTRY_ENDPOINT) + entry.getStoryId(), HttpMethod.POST, httpEntity(entry, coToken), String.class);
+		}catch(HttpStatusCodeException e){
+			ExceptionMapper em = convertToExceptionMapper(e);
+			
+			if(em.getClazz() == AuthenticationUnauthorizedException.class){
+				throw new AuthenticationUnauthorizedException();
+			}else{
+				throw new SomethingWentWrongException();
+			}
+		}
 	}
 }
