@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.nwm.coauthor.exception.AddEntryException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
@@ -63,7 +64,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 	@Override
 	@RequestMapping(value = "/entry", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
-	public void addEntry(@RequestHeader("Authorization") String coToken, @RequestBody AddEntryRequest entry) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
+	public void addEntry(@RequestHeader("Authorization") String coToken, @RequestBody AddEntryRequest entry) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException {
 		validateAddEntryRequest(entry);
 		
 		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);

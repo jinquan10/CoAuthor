@@ -4,6 +4,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
 
+import com.nwm.coauthor.exception.AddEntryException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
@@ -60,7 +61,7 @@ public class StoryClient extends BaseClient implements StoryController{
 	}
 
 	@Override
-	public void addEntry(String coToken, AddEntryRequest entry) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
+	public void addEntry(String coToken, AddEntryRequest entry) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException {
 		try{
 			restTemplate.exchange(urlResolver(ADD_ENTRY_ENDPOINT), HttpMethod.POST, httpEntity(entry, coToken), String.class);
 		}catch(HttpStatusCodeException e){
@@ -70,6 +71,8 @@ public class StoryClient extends BaseClient implements StoryController{
 				throw new AuthenticationUnauthorizedException();
 			} else if(em.getClazz() == BadRequestException.class){
 				throw new BadRequestException(em.getBaseException());
+			} else if(em.getClazz() == AddEntryException.class){
+				throw new AddEntryException();
 			} else{
 				throw new SomethingWentWrongException();
 			}

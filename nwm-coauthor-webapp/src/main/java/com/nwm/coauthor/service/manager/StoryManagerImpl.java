@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nwm.coauthor.exception.AddEntryException;
 import com.nwm.coauthor.service.dao.StoryDAOImpl;
 import com.nwm.coauthor.service.model.AddEntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
@@ -24,7 +25,7 @@ public class StoryManagerImpl {
 		return storyDAO.getStoriesByFbId(fbId);
 	}
 	
-	public void addEntry(String fbId, AddEntryModel request){
+	public void addEntry(String fbId, AddEntryModel request) throws AddEntryException{
 		storyDAO.addEntry(fbId, request);
 	}
 }

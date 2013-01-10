@@ -4,6 +4,8 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -12,9 +14,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
+import com.nwm.coauthor.exception.AddEntryException;
 import com.nwm.coauthor.service.model.AddEntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
-import com.nwm.coauthor.service.resource.request.AddEntryRequest;
 import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
 @Component
@@ -22,6 +24,8 @@ public class StoryDAOImpl {
 	@Autowired
 	@Qualifier("mongoTemplate")
 	private MongoTemplate mongoTemplate;
+	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	public void createStory(StoryModel storyModel){
 		mongoTemplate.insert(storyModel);
@@ -38,13 +42,15 @@ public class StoryDAOImpl {
 		return mongoTemplate.find(q, PrivateStoryResponse.class, "storyModel");
 	}
 
-	public void addEntry(String fbId, AddEntryModel request){
+	public void addEntry(String fbId, AddEntryModel request) throws AddEntryException{
 		Criteria c = new Criteria();
+		Criteria orC = new Criteria();
 		
 		c.andOperator(where("_id").is(request.getStoryId()), 
-				where("fbFriends").is(fbId), 
 				where("lastFriendEntry").ne(fbId), 
-				where("numCharacters").gte(request.getEntry().getEntry().length()));
+				where("numCharacters").gte(request.getEntry().getEntry().length()),
+				where("version").is(request.getVersion()),
+				orC.orOperator(where("fbFriends").is(fbId), where("leaderFbId").is(fbId)));
 		
 		Update update = new Update();
 		update.push("entries", request.getEntry());
@@ -55,5 +61,12 @@ public class StoryDAOImpl {
 		q.addCriteria(c);
 		
 		StoryModel model = mongoTemplate.findAndModify(q, update, StoryModel.class, "storyModel");
+		
+		if(model == null){
+			logger.error("addEntry(): Add entry failed.\nHere is why: " + q.toString());
+//			logger.error("addEntry(): Add entry failed.\nHere is why: [_id | {}] [fbFriends | {}] [lastFriendEntry | {}] [numCharacters | {}] [version | {}]", request.getStoryId(), fbId, fbId, request.getEntry().getEntry().length(), request.getVersion());
+			
+			throw new AddEntryException();
+		}
 	}
 }

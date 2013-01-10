@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 
+import com.nwm.coauthor.exception.AddEntryException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
@@ -52,7 +53,7 @@ public class GetPrivateStoriesTest extends TestSetup{
 	}
 	
 	@Test
-	public void getPrivateStories_UserShouldSeeOneEntry_WhenMoreThanOneEntryIsSubmitted() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException{
+	public void getPrivateStories_UserShouldSeeOneEntry_WhenMoreThanOneEntryIsSubmitted() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException{
 		LoginModel user = users.get(0);
 		
 		// - Create a story with user0, and add the rest of the users as user0's friends
