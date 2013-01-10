@@ -60,15 +60,17 @@ public class StoryClient extends BaseClient implements StoryController{
 	}
 
 	@Override
-	public void addEntry(String coToken, AddEntryRequest entry) throws SomethingWentWrongException, AuthenticationUnauthorizedException {
+	public void addEntry(String coToken, AddEntryRequest entry) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
 		try{
-			restTemplate.exchange(urlResolver(ADD_ENTRY_ENDPOINT) + entry.getStoryId(), HttpMethod.POST, httpEntity(entry, coToken), String.class);
+			restTemplate.exchange(urlResolver(ADD_ENTRY_ENDPOINT), HttpMethod.POST, httpEntity(entry, coToken), String.class);
 		}catch(HttpStatusCodeException e){
 			ExceptionMapper em = convertToExceptionMapper(e);
 			
 			if(em.getClazz() == AuthenticationUnauthorizedException.class){
 				throw new AuthenticationUnauthorizedException();
-			}else{
+			} else if(em.getClazz() == BadRequestException.class){
+				throw new BadRequestException(em.getBaseException());
+			} else{
 				throw new SomethingWentWrongException();
 			}
 		}

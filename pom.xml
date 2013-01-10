@@ -55,6 +55,7 @@
 					<configuration>
 						<parallel>methods</parallel>
 						<useUnlimitedThreads>true</useUnlimitedThreads>
+						<skipTests>true</skipTests>
 					</configuration>
 				</plugin>
 

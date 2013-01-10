@@ -19,7 +19,7 @@ public class CreateStoryBuilder {
 		CreateStoryRequest createStoryRequest = new CreateStoryRequest();
 		createStoryRequest.setEntry("12345");
 		createStoryRequest.setFbFriends(fbFriends);
-		createStoryRequest.setNumCharacters(5);
+		createStoryRequest.setNumCharacters(500);
 		createStoryRequest.setTitle(null);
 		
 		return createStoryRequest;

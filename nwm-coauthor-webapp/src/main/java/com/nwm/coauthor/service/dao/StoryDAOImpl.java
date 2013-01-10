@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
+import com.nwm.coauthor.service.model.AddEntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.resource.request.AddEntryRequest;
 import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
@@ -37,13 +38,13 @@ public class StoryDAOImpl {
 		return mongoTemplate.find(q, PrivateStoryResponse.class, "storyModel");
 	}
 
-	public void addEntry(String fbId, AddEntryRequest request){
+	public void addEntry(String fbId, AddEntryModel request){
 		Criteria c = new Criteria();
 		
 		c.andOperator(where("_id").is(request.getStoryId()), 
 				where("fbFriends").is(fbId), 
 				where("lastFriendEntry").ne(fbId), 
-				where("numCharacters").gte(request.getEntry().length()));
+				where("numCharacters").gte(request.getEntry().getEntry().length()));
 		
 		Update update = new Update();
 		update.push("entries", request.getEntry());
@@ -53,6 +54,6 @@ public class StoryDAOImpl {
 		Query q = new Query();
 		q.addCriteria(c);
 		
-		mongoTemplate.findAndModify(q, update, StoryModel.class, "storyModel");
+		StoryModel model = mongoTemplate.findAndModify(q, update, StoryModel.class, "storyModel");
 	}
 }

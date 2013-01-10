@@ -1,17 +1,21 @@
-package com.nwm.coauthor.service.util;
+package com.nwm.coauthor.service.filter;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collections;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.mock.web.DelegatingServletInputStream;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.nwm.coauthor.service.util.Singletons;
 
 @Component("requestBodyFilter")
 public class RequestBodyFilter extends OncePerRequestFilter{

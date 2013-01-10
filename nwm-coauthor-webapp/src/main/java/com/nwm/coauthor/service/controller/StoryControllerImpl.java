@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.service.manager.AuthenticationManagerImpl;
 import com.nwm.coauthor.service.manager.StoryManagerImpl;
+import com.nwm.coauthor.service.model.AddEntryModel;
 import com.nwm.coauthor.service.model.StoryEntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.resource.request.AddEntryRequest;
@@ -59,15 +61,37 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 	}
 
 	@Override
-	@RequestMapping(value = "/entry")
-	public void addEntry(String coToken, AddEntryRequest entry) throws SomethingWentWrongException, AuthenticationUnauthorizedException {
+	@RequestMapping(value = "/entry", method = RequestMethod.POST)
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	public void addEntry(@RequestHeader("Authorization") String coToken, @RequestBody AddEntryRequest entry) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
 		validateAddEntryRequest(entry);
 		
 		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
+		storyManager.addEntry(fbId, new AddEntryModel(entry, fbId));
 	}	
 	
-	protected void validateAddEntryRequest(AddEntryRequest entry){
-//		entry
+	protected void validateAddEntryRequest(AddEntryRequest entry) throws BadRequestException{
+		boolean isError = false;
+		Map<String, String> batchErrors = new HashMap<String, String>();  
+		
+		if(!StringUtils.hasText(entry.getEntry())){
+			batchErrors.put("entry", "The entry must not be empty.");
+			isError = true;
+		}
+		
+		if(!StringUtils.hasText(entry.getStoryId())){
+			batchErrors.put("storyId", "The storyId must not be empty.");
+			isError = true;
+		}
+
+		if(entry.getVersion() == null){
+			batchErrors.put("version", "The version must not be empty.");
+			isError = true;
+		}
+		
+		if(isError){
+			throw new BadRequestException(batchErrors);
+		}
 	}
 	
 	protected StoryModel createStoryModelFromRequest(String fbId, CreateStoryRequest request){
@@ -75,7 +99,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 		entries.add(new StoryEntryModel(fbId, request.getEntry()));
 		
 		StoryModel model = new StoryModel();
-		model.set_id(new ObjectId().toString());
+		model.set_id(new ObjectId());
 		model.setEntries(entries);
 		model.setFbFriends(request.getFbFriends());
 		model.setIsPublished(false);
