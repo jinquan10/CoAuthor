@@ -36,4 +36,13 @@ public class AddEntryTest extends TestSetup{
 			storyClient.addEntry(users.get(currUser++).getCoToken(), request);
 		}
 	}
+	
+	// - non-existant story id
+	// - attempt to add entry while it's still your turn
+	// - add entry that's over the max numChars
+	// - version mismatch
+	// - attempt to add to a story that user doesn't belong to
+	// - null AddEntryRequest
+	// - empty AddEntryRequest
+	
 }
