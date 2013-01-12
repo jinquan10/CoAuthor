@@ -13,7 +13,6 @@ public enum ExceptionMapper {
 	ADD_ENTRY_EXCEPTION(AddEntryException.class);
 	
 	private Class<? extends BaseException> clazz;
-	private BaseException baseException;
 	
 	ExceptionMapper(Class<? extends BaseException> clazz){
 		this.setClazz(clazz);
@@ -25,13 +24,5 @@ public enum ExceptionMapper {
 
 	public void setClazz(Class<? extends BaseException> clazz) {
 		this.clazz = clazz;
-	}
-
-	public BaseException getBaseException() {
-		return baseException;
-	}
-
-	public void setBaseException(BaseException baseException) {
-		this.baseException = baseException;
 	}
 }

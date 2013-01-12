@@ -8,7 +8,7 @@ import com.nwm.coauthor.exception.AddEntryException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
-import com.nwm.coauthor.exception.mapping.ExceptionMapper;
+import com.nwm.coauthor.exception.mapping.ExceptionMapperWrapper;
 import com.nwm.coauthor.service.controller.StoryController;
 import com.nwm.coauthor.service.resource.request.AddEntryRequest;
 import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
@@ -20,6 +20,10 @@ public class StoryClient extends BaseClient implements StoryController{
 	private static final String GET_PRIVATE_STORIES_ENDPOINT = "/story/private";
 	private static final String ADD_ENTRY_ENDPOINT = "/story/entry/";
 
+	public StoryClient(){
+		
+	}
+	
 	@Override
 	public ResponseEntity<CreateStoryResponse> createStory(String coToken, CreateStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
 		ResponseEntity<CreateStoryResponse> response = null;
@@ -27,12 +31,12 @@ public class StoryClient extends BaseClient implements StoryController{
 		try{
 			response = restTemplate.exchange(urlResolver(CREATE_STORY_ENDPOINT), HttpMethod.POST, httpEntity(createStoryRequest, coToken), CreateStoryResponse.class);
 		}catch(HttpStatusCodeException e){
-			ExceptionMapper em = convertToExceptionMapper(e);
+			ExceptionMapperWrapper emw = convertToExceptionMapper(e);
 			
-			if(em.getClazz() == SomethingWentWrongException.class){
+			if(emw.getClazz() == SomethingWentWrongException.class){
 				throw new SomethingWentWrongException();
-			}else if(em.getClazz() == BadRequestException.class){
-				throw new BadRequestException(em.getBaseException());
+			}else if(emw.getClazz() == BadRequestException.class){
+				throw new BadRequestException(emw.getBaseException());
 			}else{
 				throw new AuthenticationUnauthorizedException();
 			}
@@ -48,9 +52,9 @@ public class StoryClient extends BaseClient implements StoryController{
 		try{
 			response = restTemplate.exchange(urlResolver(GET_PRIVATE_STORIES_ENDPOINT), HttpMethod.GET, httpEntity(null, coToken), PrivateStoriesResponseWrapper.class);
 		}catch(HttpStatusCodeException e){
-			ExceptionMapper em = convertToExceptionMapper(e);
+			ExceptionMapperWrapper emw = convertToExceptionMapper(e);
 			
-			if(em.getClazz() == AuthenticationUnauthorizedException.class){
+			if(emw.getClazz() == AuthenticationUnauthorizedException.class){
 				throw new AuthenticationUnauthorizedException();
 			}else{
 				throw new SomethingWentWrongException();
@@ -65,13 +69,13 @@ public class StoryClient extends BaseClient implements StoryController{
 		try{
 			restTemplate.exchange(urlResolver(ADD_ENTRY_ENDPOINT), HttpMethod.POST, httpEntity(entry, coToken), String.class);
 		}catch(HttpStatusCodeException e){
-			ExceptionMapper em = convertToExceptionMapper(e);
+			ExceptionMapperWrapper emw = convertToExceptionMapper(e);
 			
-			if(em.getClazz() == AuthenticationUnauthorizedException.class){
+			if(emw.getClazz() == AuthenticationUnauthorizedException.class){
 				throw new AuthenticationUnauthorizedException();
-			} else if(em.getClazz() == BadRequestException.class){
-				throw new BadRequestException(em.getBaseException());
-			} else if(em.getClazz() == AddEntryException.class){
+			} else if(emw.getClazz() == BadRequestException.class){
+				throw new BadRequestException(emw.getBaseException());
+			} else if(emw.getClazz() == AddEntryException.class){
 				throw new AddEntryException();
 			} else{
 				throw new SomethingWentWrongException();

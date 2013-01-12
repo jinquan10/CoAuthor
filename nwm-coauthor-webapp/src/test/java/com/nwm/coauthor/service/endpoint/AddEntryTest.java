@@ -1,5 +1,7 @@
 package com.nwm.coauthor.service.endpoint;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 
@@ -14,7 +16,9 @@ import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
 
 public class AddEntryTest extends TestSetup{
 	@Test
-	public void takeTurns_AddingEntries_To_OneStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException{
+	public void takeTurns_AddingEntries_To_OneStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, InterruptedException{
+		List<LoginModel> users = createUsers();
+		
 		LoginModel user = users.get(0);
 		
 		// - Create a story with user0, and add the rest of the users as user0's friends

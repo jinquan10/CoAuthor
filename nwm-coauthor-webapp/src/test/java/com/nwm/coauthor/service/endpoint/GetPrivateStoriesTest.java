@@ -20,7 +20,9 @@ import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
 public class GetPrivateStoriesTest extends TestSetup{
 	@Test
-	public void getPrivateStoriesSuccess() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException{
+	public void getPrivateStoriesSuccess() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException{
+		List<LoginModel> users = createUsers();
+		
 		for(int i = 0; i < users.size(); i++){
 			storyClient.createStory(users.get(i).getCoToken(), CreateStoryBuilder.createValidStory(users, i));
 		}		
@@ -53,7 +55,9 @@ public class GetPrivateStoriesTest extends TestSetup{
 	}
 	
 	@Test
-	public void getPrivateStories_UserShouldSeeOneEntry_WhenMoreThanOneEntryIsSubmitted() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException{
+	public void getPrivateStories_UserShouldSeeOneEntry_WhenMoreThanOneEntryIsSubmitted() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, InterruptedException{
+		List<LoginModel> users = createUsers();
+		
 		LoginModel user = users.get(0);
 		
 		// - Create a story with user0, and add the rest of the users as user0's friends

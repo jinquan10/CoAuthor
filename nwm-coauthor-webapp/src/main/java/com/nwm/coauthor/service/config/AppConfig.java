@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.mongodb.Mongo;
+import com.mongodb.WriteConcern;
 
 @Configuration
 @EnableWebMvc
@@ -29,6 +30,9 @@ public class AppConfig {
 
 	@Bean
 	public MongoTemplate mongoTemplate(MongoCredentials mongoCredentials) throws Exception {
-        return new MongoTemplate(new Mongo(mongoCredentials.getHost(), mongoCredentials.getPort()), mongoCredentials.getName(), mongoCredentials.getUserCredentials());
+		MongoTemplate template = new MongoTemplate(new Mongo(mongoCredentials.getHost(), mongoCredentials.getPort()), mongoCredentials.getName(), mongoCredentials.getUserCredentials());
+		template.setWriteConcern(WriteConcern.SAFE);
+		
+        return template;
     }
 }

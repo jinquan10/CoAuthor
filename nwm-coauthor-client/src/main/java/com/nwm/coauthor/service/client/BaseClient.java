@@ -15,7 +15,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import com.nwm.coauthor.exception.BaseException;
-import com.nwm.coauthor.exception.mapping.ExceptionMapper;
+import com.nwm.coauthor.exception.mapping.ExceptionMapperWrapper;
 
 public class BaseClient {
 	protected static final String HOST = "http://localhost:8081";
@@ -45,24 +45,21 @@ public class BaseClient {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		
-		if(StringUtils.hasText(coToken)){
+		if(coToken != null){
 			headers.add("Authorization", coToken);
 		}
 		
 		return new HttpEntity<Object>(object, headers);
 	}
 	
-	protected ExceptionMapper convertToExceptionMapper(HttpStatusCodeException e){
-		ExceptionMapper exceptionMapper = null;
-		
+	protected ExceptionMapperWrapper convertToExceptionMapper(HttpStatusCodeException e){
+		BaseException baseException = null;
 		try {
-			BaseException baseException = objectMapper.readValue(e.getResponseBodyAsString(), BaseException.class);
-			exceptionMapper = baseException.getId();
-			exceptionMapper.setBaseException(baseException); 
+			baseException = objectMapper.readValue(e.getResponseBodyAsString(), BaseException.class);
 		} catch (Throwable t) {
 			
 		}
 		
-		return exceptionMapper;
+		return new ExceptionMapperWrapper(baseException.getId(), baseException);
 	}
 }

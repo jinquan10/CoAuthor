@@ -29,6 +29,9 @@ public class BaseException extends Exception{
 	@JsonProperty("batchErrors")
 	private Map<String, String> batchErrors;
 	
+	@JsonProperty("threadId")
+	private String threadId;
+	
 	public Map<String, String> getBatchErrors() {
 		return batchErrors;
 	}
@@ -59,6 +62,14 @@ public class BaseException extends Exception{
 
 	public void setId(ExceptionMapper id) {
 		this.id = id;
+	}
+
+	public String getThreadId() {
+		return threadId;
+	}
+
+	public void setThreadId(String threadId) {
+		this.threadId = threadId;
 	}
 	
 }

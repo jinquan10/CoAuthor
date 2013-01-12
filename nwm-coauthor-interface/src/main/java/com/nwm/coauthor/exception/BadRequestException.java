@@ -27,6 +27,7 @@ public class BadRequestException extends BaseException {
 		setDescription(e.getDescription());
 		setStatusCode(e.getStatusCode());
 		setBatchErrors(e.getBatchErrors());
+		setThreadId(e.getThreadId());
 	}
 	
 	@Override

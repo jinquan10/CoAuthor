@@ -6,6 +6,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.mapping.ExceptionMapper;
+import com.nwm.coauthor.exception.mapping.ExceptionMapperWrapper;
 import com.nwm.coauthor.service.controller.AuthenticationController;
 import com.nwm.coauthor.service.resource.request.AuthenticateFBRequest;
 import com.nwm.coauthor.service.resource.response.AuthenticationResponse;
@@ -20,9 +21,9 @@ public class AuthenticationClient extends BaseClient implements AuthenticationCo
 		try{
 			response = restTemplate.exchange(urlResolver(AUTHENTICATE_ENDPOINT), HttpMethod.POST, httpEntity(authResource, null), AuthenticationResponse.class);
 		}catch(HttpStatusCodeException e){
-			ExceptionMapper em = convertToExceptionMapper(e);
+			ExceptionMapperWrapper emw = convertToExceptionMapper(e);
 			
-			if(em.getClazz() == SomethingWentWrongException.class){
+			if(emw.getClazz() == SomethingWentWrongException.class){
 				throw new SomethingWentWrongException();
 			}else{
 				throw new AuthenticationUnauthorizedException();
