@@ -1,6 +1,7 @@
 package com.nwm.coauthor.service.resource;
 
 public class StoryEntryResource extends BaseResource{
+	private String entryId;
 	private String fbId;
 	private String entry;
 	
@@ -15,5 +16,11 @@ public class StoryEntryResource extends BaseResource{
 	}
 	public void setEntry(String entry) {
 		this.entry = entry;
+	}
+	public String getEntryId() {
+		return entryId;
+	}
+	public void setEntryId(String entryId) {
+		this.entryId = entryId;
 	}
 }

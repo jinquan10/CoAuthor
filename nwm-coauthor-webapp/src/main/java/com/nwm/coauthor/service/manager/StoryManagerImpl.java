@@ -2,6 +2,9 @@ package com.nwm.coauthor.service.manager;
 
 import java.util.List;
 
+import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +18,7 @@ import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 public class StoryManagerImpl {
 	@Autowired
 	private StoryDAOImpl storyDAO;
-	
+
 	public String createStory(StoryModel createStoryModel){
 		storyDAO.createStory(createStoryModel);
 		return createStoryModel.get_id().toString();
@@ -25,7 +28,8 @@ public class StoryManagerImpl {
 		return storyDAO.getStoriesByFbId(fbId);
 	}
 	
-	public void addEntry(String fbId, AddEntryModel request) throws AddEntryException{
+	public String addEntry(String fbId, AddEntryModel request) throws AddEntryException{
 		storyDAO.addEntry(fbId, request);
+		return request.getEntry().getEntryId();
 	}
 }

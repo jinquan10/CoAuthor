@@ -8,15 +8,15 @@ public class AddEntryModel {
 	private ObjectId storyId;
 	private StoryEntryModel entry;
 	private Integer version;
-	
+
 	public AddEntryModel(){
 		
 	}
 	
-	public AddEntryModel(AddEntryRequest request, String fbId){
-		this.storyId = new ObjectId(request.getStoryId());
+	public AddEntryModel(AddEntryRequest request, String fbId, ObjectId storyId){
 		this.setEntry(new StoryEntryModel(fbId, request.getEntry()));
 		this.version = request.getVersion();
+		this.storyId = storyId;
 	}
 	
 	public ObjectId getStoryId() {

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,12 +30,15 @@ import com.nwm.coauthor.service.model.StoryEntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.resource.request.AddEntryRequest;
 import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
+import com.nwm.coauthor.service.resource.response.AddEntryResponse;
 import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
 import com.nwm.coauthor.service.resource.response.PrivateStoriesResponseWrapper;
 
 @Controller
 @RequestMapping(value = "/story", produces = "application/json", consumes = "application/json")
 public class StoryControllerImpl extends BaseControllerImpl implements StoryController{
+	private Logger logger = LoggerFactory.getLogger(this.getClass()); 
+	
 	@Autowired
 	private AuthenticationManagerImpl authenticationManager;
 	
@@ -63,13 +68,24 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 
 	@Override
 	@RequestMapping(value = "/entry", method = RequestMethod.POST)
-	@ResponseStatus(value = HttpStatus.NO_CONTENT)
-	public void addEntry(@RequestHeader("Authorization") String coToken, @RequestBody AddEntryRequest entry) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException {
+	public ResponseEntity<AddEntryResponse> addEntry(@RequestHeader("Authorization") String coToken, @RequestBody AddEntryRequest entry) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException {
 		validateAddEntryRequest(entry);
 		
 		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
-		storyManager.addEntry(fbId, new AddEntryModel(entry, fbId));
+		String entryId = storyManager.addEntry(fbId, new AddEntryModel(entry, fbId, convertStoryIdToObjectId(entry.getStoryId())));
+		
+		return new ResponseEntity<AddEntryResponse>(new AddEntryResponse(entryId), HttpStatus.CREATED); 
 	}	
+	
+	protected ObjectId convertStoryIdToObjectId(String storyId) throws AddEntryException{
+		try{
+			return new ObjectId(storyId);
+		}catch(IllegalArgumentException e){
+			logger.error("storyId is not a valid ObjectId", e);
+			
+			throw new AddEntryException();
+		}
+	}
 	
 	protected void validateAddEntryRequest(AddEntryRequest entry) throws BadRequestException{
 		boolean isError = false;
@@ -131,7 +147,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 		}else if(createStoryRequest.getEntry().length() < 1){
 			batchErrors.put("entry", "Your entry must be at least 1 character long.");
 			isError = true;
-		}else if(createStoryRequest.getEntry().length() > createStoryRequest.getNumCharacters()){
+		}else if(createStoryRequest.getNumCharacters() != null && createStoryRequest.getEntry().length() > createStoryRequest.getNumCharacters()){
 			batchErrors.put("entry", "Your entry exceeds the number of characters specified.");
 			isError = true;
 		}

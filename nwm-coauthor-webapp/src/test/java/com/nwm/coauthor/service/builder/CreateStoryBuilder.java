@@ -7,7 +7,7 @@ import com.nwm.coauthor.service.model.LoginModel;
 import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
 
 public class CreateStoryBuilder {
-	public static CreateStoryRequest createValidStory(List<LoginModel> users, int userIndex){
+	public static CreateStoryRequest createValidStory(List<LoginModel> users, int userIndex, Integer ... numCharacters){
 		List<String> fbFriends = new ArrayList<String>();
 		
 		for(int i = 0; i < users.size(); i++){
@@ -19,8 +19,13 @@ public class CreateStoryBuilder {
 		CreateStoryRequest createStoryRequest = new CreateStoryRequest();
 		createStoryRequest.setEntry("12345");
 		createStoryRequest.setFbFriends(fbFriends);
-		createStoryRequest.setNumCharacters(500);
 		createStoryRequest.setTitle(null);
+		
+		if(numCharacters.length != 0){
+			createStoryRequest.setNumCharacters(numCharacters[0]);
+		}else{
+			createStoryRequest.setNumCharacters(500);
+		}
 		
 		return createStoryRequest;
 	}

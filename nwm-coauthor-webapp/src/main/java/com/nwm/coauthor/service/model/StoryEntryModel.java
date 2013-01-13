@@ -1,6 +1,9 @@
 package com.nwm.coauthor.service.model;
 
+import java.util.UUID;
+
 public class StoryEntryModel extends BaseModel{
+	private String entryId;
 	private String fbId;
 	private String entry;
 	
@@ -9,6 +12,7 @@ public class StoryEntryModel extends BaseModel{
 	}
 	
 	public StoryEntryModel(String fbId, String entry){
+		this.entryId = UUID.randomUUID().toString();
 		this.fbId = fbId;
 		this.entry = entry;
 	}
@@ -24,5 +28,13 @@ public class StoryEntryModel extends BaseModel{
 	}
 	public void setEntry(String entry) {
 		this.entry = entry;
+	}
+
+	public String getEntryId() {
+		return entryId;
+	}
+
+	public void setEntryId(String entryId) {
+		this.entryId = entryId;
 	}
 }
