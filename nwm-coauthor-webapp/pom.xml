@@ -14,7 +14,7 @@
 
 	<properties>
 		<sl4j>1.7.2</sl4j>
-		<tomcatFork>true</tomcatFork>
+		<forkTomcat>true</forkTomcat>
 	</properties>
 
 	<dependencies>
@@ -94,7 +94,7 @@
 						</goals>
 
 						<configuration>
-							<fork>${tomcatFork}</fork>
+							<fork>${forkTomcat}</fork>
 							<port>8081</port>
 						</configuration>
 					</execution>

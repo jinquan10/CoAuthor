@@ -4,6 +4,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
 import com.nwm.coauthor.exception.AddEntryException;
+import com.nwm.coauthor.exception.GetPrivateStoryException;
 import com.nwm.coauthor.service.model.AddEntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
@@ -68,5 +70,26 @@ public class StoryDAOImpl {
 			
 			throw new AddEntryException();
 		}
+	}
+	
+	public PrivateStoryResponse getPrivateStory(String fbId, ObjectId storyId) throws GetPrivateStoryException{
+		Criteria leaderOrFriendC = new Criteria();
+		Criteria getStoryC = new Criteria();
+		
+		getStoryC.andOperator(where("_id").is(storyId), 
+				leaderOrFriendC.orOperator(where("leaderFbId").is(fbId), where("fbFriends").is(fbId)));
+		
+		Query q = new Query();
+		q.addCriteria(getStoryC);
+		
+		PrivateStoryResponse result = mongoTemplate.findOne(q, PrivateStoryResponse.class, "storyModel");
+		
+		if(result == null){
+			logger.error("getStory(): Get private story not found failed.\nHere is why: " + q.toString());
+
+			throw new GetPrivateStoryException();
+		}
+		
+		return result;
 	}
 }

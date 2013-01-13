@@ -10,11 +10,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import com.nwm.coauthor.exception.BaseException;
+import com.nwm.coauthor.exception.WebApplicationException;
 import com.nwm.coauthor.exception.mapping.ExceptionMapperWrapper;
 
 public class BaseClient {
@@ -58,6 +58,10 @@ public class BaseClient {
 			baseException = objectMapper.readValue(e.getResponseBodyAsString(), BaseException.class);
 		} catch (Throwable t) {
 			
+		}
+		
+		if(baseException == null){
+			throw new WebApplicationException();
 		}
 		
 		return new ExceptionMapperWrapper(baseException.getId(), baseException);

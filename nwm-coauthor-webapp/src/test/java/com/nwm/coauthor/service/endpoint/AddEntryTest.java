@@ -48,7 +48,7 @@ public class AddEntryTest extends TestSetup{
 		}
 	}
 	
-	@Test(expected = AddEntryException.class)
+	@Test(expected = BadRequestException.class)
 	public void addEntry_For_NonExistantStoryId() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException{
 		List<LoginModel> users = createUsers();
 		

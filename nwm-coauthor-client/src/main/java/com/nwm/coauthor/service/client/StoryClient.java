@@ -1,12 +1,18 @@
 package com.nwm.coauthor.service.client;
 
+import org.apache.http.client.utils.URIBuilder;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.util.UriUtils;
+import org.springframework.web.util.UrlPathHelper;
 
 import com.nwm.coauthor.exception.AddEntryException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
+import com.nwm.coauthor.exception.GetPrivateStoryException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.mapping.ExceptionMapperWrapper;
 import com.nwm.coauthor.service.controller.StoryController;
@@ -15,11 +21,13 @@ import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
 import com.nwm.coauthor.service.resource.response.AddEntryResponse;
 import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
 import com.nwm.coauthor.service.resource.response.PrivateStoriesResponseWrapper;
+import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
 public class StoryClient extends BaseClient implements StoryController{
 	private static final String CREATE_STORY_ENDPOINT = "/story";
-	private static final String GET_PRIVATE_STORIES_ENDPOINT = "/story/private";
-	private static final String ADD_ENTRY_ENDPOINT = "/story/entry/";
+	private static final String GET_PRIVATE_STORIES_ENDPOINT = "/story/privates";
+	private static final String ADD_ENTRY_ENDPOINT = "/story/entry";
+	private static final String GET_PRIVATE_STORY_ENDPOINT = "/story/private/";
 
 	public StoryClient(){
 		
@@ -70,6 +78,25 @@ public class StoryClient extends BaseClient implements StoryController{
 				throw new BadRequestException(emw.getBaseException());
 			} else if(emw.getClazz() == AddEntryException.class){
 				throw new AddEntryException();
+			} else{
+				throw new SomethingWentWrongException();
+			}
+		}
+	}
+
+	@Override
+	public ResponseEntity<PrivateStoryResponse> getPrivateStory(String coToken, String storyId) throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, GetPrivateStoryException {
+		try{
+			return restTemplate.exchange(urlResolver(GET_PRIVATE_STORY_ENDPOINT) + storyId, HttpMethod.GET, httpEntity(null, coToken), PrivateStoryResponse.class);
+		}catch(HttpStatusCodeException e){
+			ExceptionMapperWrapper emw = convertToExceptionMapper(e);
+			
+			if(emw.getClazz() == AuthenticationUnauthorizedException.class){
+				throw new AuthenticationUnauthorizedException();
+			} else if(emw.getClazz() == BadRequestException.class){
+				throw new BadRequestException(emw.getBaseException());
+			} else if(emw.getClazz() == GetPrivateStoryException.class){
+				throw new GetPrivateStoryException();
 			} else{
 				throw new SomethingWentWrongException();
 			}

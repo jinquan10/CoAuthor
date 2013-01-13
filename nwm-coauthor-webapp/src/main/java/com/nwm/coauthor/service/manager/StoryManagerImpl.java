@@ -3,12 +3,11 @@ package com.nwm.coauthor.service.manager;
 import java.util.List;
 
 import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.nwm.coauthor.exception.AddEntryException;
+import com.nwm.coauthor.exception.GetPrivateStoryException;
 import com.nwm.coauthor.service.dao.StoryDAOImpl;
 import com.nwm.coauthor.service.model.AddEntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
@@ -31,5 +30,9 @@ public class StoryManagerImpl {
 	public String addEntry(String fbId, AddEntryModel request) throws AddEntryException{
 		storyDAO.addEntry(fbId, request);
 		return request.getEntry().getEntryId();
+	}
+	
+	public PrivateStoryResponse getPrivateStory(String fbId, ObjectId storyId) throws GetPrivateStoryException{
+		return storyDAO.getPrivateStory(fbId, storyId);
 	}
 }

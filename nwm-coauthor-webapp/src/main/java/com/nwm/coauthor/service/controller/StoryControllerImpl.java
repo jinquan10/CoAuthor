@@ -13,15 +13,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.nwm.coauthor.exception.AddEntryException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
+import com.nwm.coauthor.exception.GetPrivateStoryException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.service.manager.AuthenticationManagerImpl;
 import com.nwm.coauthor.service.manager.StoryManagerImpl;
@@ -33,6 +36,7 @@ import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
 import com.nwm.coauthor.service.resource.response.AddEntryResponse;
 import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
 import com.nwm.coauthor.service.resource.response.PrivateStoriesResponseWrapper;
+import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
 @Controller
 @RequestMapping(value = "/story", produces = "application/json", consumes = "application/json")
@@ -57,7 +61,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 	}
 
 	@Override
-	@RequestMapping(value = "/private", method = RequestMethod.GET)
+	@RequestMapping(value = "/privates", method = RequestMethod.GET)
 	public ResponseEntity<PrivateStoriesResponseWrapper> getPrivateStories(@RequestHeader("Authorization") String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException{
 		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
 		
@@ -77,13 +81,38 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 		return new ResponseEntity<AddEntryResponse>(new AddEntryResponse(entryId), HttpStatus.CREATED); 
 	}	
 	
-	protected ObjectId convertStoryIdToObjectId(String storyId) throws AddEntryException{
+	@Override
+	@RequestMapping(value = "/private/{storyId}", method = RequestMethod.GET)
+	public ResponseEntity<PrivateStoryResponse> getPrivateStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, GetPrivateStoryException {
+		validateGetPrivateStoryRequest(storyId);
+		
+		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
+		PrivateStoryResponse response = storyManager.getPrivateStory(fbId, convertStoryIdToObjectId(storyId));
+		
+		return new ResponseEntity<PrivateStoryResponse>(response, HttpStatus.OK);
+	}	
+	
+	protected void validateGetPrivateStoryRequest(String storyId) throws BadRequestException{
+		boolean isError = false;
+		Map<String, String> batchErrors = new HashMap<String, String>();  
+		
+		if(!StringUtils.hasText(storyId)){
+			batchErrors.put("storyId", "The storyId must not be null or empty.");
+			isError = true;
+		}
+		
+		if(isError){
+			throw new BadRequestException(batchErrors);
+		}
+	}
+	
+	protected ObjectId convertStoryIdToObjectId(String storyId) throws BadRequestException{
 		try{
 			return new ObjectId(storyId);
 		}catch(IllegalArgumentException e){
 			logger.error("storyId is not a valid ObjectId", e);
 			
-			throw new AddEntryException();
+			throw new BadRequestException();
 		}
 	}
 	
