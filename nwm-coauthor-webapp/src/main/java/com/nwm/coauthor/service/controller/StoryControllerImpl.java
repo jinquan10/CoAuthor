@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.nwm.coauthor.exception.AddEntryException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
@@ -154,6 +152,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 		model.setNumCharacters(request.getNumCharacters());
 		model.setTitle(request.getTitle());
 		model.setVersion(0);
+		model.setLikes(0);
 		
 		return model;
 	}

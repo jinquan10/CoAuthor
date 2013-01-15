@@ -50,6 +50,7 @@ public class GetPrivateStoriesTest extends TestSetup{
 				Assert.assertNotNull(story.getNumCharacters());
 				Assert.assertTrue(StringUtils.hasText(story.getLeaderFbId()));
 				Assert.assertTrue(story.getVersion() == 0);
+				Assert.assertEquals(story.getLikes(), new Integer(0));
 			}
 		}
 	}

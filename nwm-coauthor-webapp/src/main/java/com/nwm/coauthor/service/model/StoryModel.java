@@ -14,6 +14,7 @@ public class StoryModel extends BaseModel{
 	private String lastFriendEntry;
 	private Boolean isPublished;
 	private Integer version;
+	private Integer likes;
 	
 	public String getTitle() {
 		return title;
@@ -68,5 +69,11 @@ public class StoryModel extends BaseModel{
 	}
 	public void set_id(ObjectId _id) {
 		this._id = _id;
+	}
+	public Integer getLikes() {
+		return likes;
+	}
+	public void setLikes(Integer likes) {
+		this.likes = likes;
 	}
 }

@@ -50,6 +50,7 @@ public class GetPrivateStoryTest extends TestSetup{
 		Assert.assertEquals(body.getIsPublished(), false);
 		Assert.assertEquals(body.getNumCharacters(), createStoryRequest.getNumCharacters());
 		Assert.assertEquals(body.getVersion(), new Integer(0));
+		Assert.assertEquals(body.getLikes(), new Integer(0));
 	}
 	
 	@Test

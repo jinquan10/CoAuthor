@@ -15,6 +15,7 @@ public class PrivateStoryResponse extends BaseResource {
 	private String lastFriendEntry;
 	private Boolean isPublished;
 	private Integer version;
+	private Integer likes;
 	
 	public String getTitle() {
 		return title;
@@ -69,5 +70,11 @@ public class PrivateStoryResponse extends BaseResource {
 	}
 	public void setVersion(Integer version) {
 		this.version = version;
+	}
+	public Integer getLikes() {
+		return likes;
+	}
+	public void setLikes(Integer likes) {
+		this.likes = likes;
 	}
 }
