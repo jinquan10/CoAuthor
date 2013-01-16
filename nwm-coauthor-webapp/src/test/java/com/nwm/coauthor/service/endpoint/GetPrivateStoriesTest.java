@@ -18,6 +18,7 @@ import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
 import com.nwm.coauthor.service.resource.response.PrivateStoriesResponseWrapper;
 import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
+// - TODO: test for a user having no private stories
 public class GetPrivateStoriesTest extends TestSetup{
 	@Test
 	public void getPrivateStoriesSuccess() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException{
