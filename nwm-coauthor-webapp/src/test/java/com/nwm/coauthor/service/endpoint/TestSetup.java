@@ -29,8 +29,10 @@ public class TestSetup {
 //		coTokens.add(response.getBody().getCoToken());
 //	}
 	
-	protected List<LoginModel> createUsers() throws InterruptedException{
-		int numUsers = 2;
+	protected List<LoginModel> createUsers(Integer numUsers) throws InterruptedException{
+		if(numUsers == null)
+			numUsers = 2;
+		
 		List<LoginModel> users = new ArrayList<LoginModel>();
 		String numUsersStr = System.getProperty("numUsers");
 		

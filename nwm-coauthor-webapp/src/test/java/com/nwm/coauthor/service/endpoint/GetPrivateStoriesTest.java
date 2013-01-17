@@ -18,14 +18,14 @@ import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
 import com.nwm.coauthor.service.resource.response.PrivateStoriesResponseWrapper;
 import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
-// - TODO: test for a user having no private stories
+// - TODO: test for a user having no private stories, assert story not found exception
 public class GetPrivateStoriesTest extends TestSetup{
 	@Test
 	public void getPrivateStoriesSuccess() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException{
-		List<LoginModel> users = createUsers();
+		List<LoginModel> users = createUsers(null);
 		
 		for(int i = 0; i < users.size(); i++){
-			storyClient.createStory(users.get(i).getCoToken(), CreateStoryBuilder.createValidStory(users, i));
+			storyClient.createStory(users.get(i).getCoToken(), CreateStoryBuilder.createValidStory(users, i, null));
 		}		
 		
 		for(int i = 0; i < users.size(); i++){
@@ -58,12 +58,12 @@ public class GetPrivateStoriesTest extends TestSetup{
 	
 	@Test
 	public void getPrivateStories_UserShouldSeeOneEntry_WhenMoreThanOneEntryIsSubmitted() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, InterruptedException{
-		List<LoginModel> users = createUsers();
+		List<LoginModel> users = createUsers(null);
 		
 		LoginModel user = users.get(0);
 		
 		// - Create a story with user0, and add the rest of the users as user0's friends
-		ResponseEntity<CreateStoryResponse> response = storyClient.createStory(user.getCoToken(), CreateStoryBuilder.createValidStory(users, 0));
+		ResponseEntity<CreateStoryResponse> response = storyClient.createStory(user.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, null));
 		
 		String storyId = response.getBody().getStoryId();
 		

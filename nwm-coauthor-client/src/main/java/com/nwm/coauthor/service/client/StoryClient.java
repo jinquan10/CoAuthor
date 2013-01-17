@@ -28,6 +28,7 @@ public class StoryClient extends BaseClient implements StoryController{
 	private static final String GET_PRIVATE_STORIES_ENDPOINT = "/story/privates";
 	private static final String ADD_ENTRY_ENDPOINT = "/story/entry";
 	private static final String GET_PRIVATE_STORY_ENDPOINT = "/story/private/";
+	private static final String LIKE_ENDPOINT = "/story/like/";
 
 	public StoryClient(){
 		
@@ -101,5 +102,10 @@ public class StoryClient extends BaseClient implements StoryController{
 				throw new SomethingWentWrongException();
 			}
 		}
+	}
+
+	@Override
+	public void like(String coToken, String storyId) {
+		restTemplate.exchange(urlResolver(LIKE_ENDPOINT) + storyId, HttpMethod.POST, httpEntity(null, coToken), String.class);
 	}
 }
