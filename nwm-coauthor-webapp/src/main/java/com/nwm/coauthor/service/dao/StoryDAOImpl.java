@@ -16,7 +16,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
 import com.nwm.coauthor.exception.AddEntryException;
-import com.nwm.coauthor.exception.GetPrivateStoryException;
+import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.service.model.AddEntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
@@ -72,7 +72,7 @@ public class StoryDAOImpl {
 		}
 	}
 	
-	public PrivateStoryResponse getPrivateStory(String fbId, ObjectId storyId) throws GetPrivateStoryException{
+	public PrivateStoryResponse getPrivateStory(String fbId, ObjectId storyId) throws StoryNotFoundException{
 		Criteria leaderOrFriendC = new Criteria();
 		Criteria getStoryC = new Criteria();
 		
@@ -87,7 +87,7 @@ public class StoryDAOImpl {
 		if(result == null){
 			logger.error("getStory(): Get private story not found failed.\nHere is why: " + q.toString());
 
-			throw new GetPrivateStoryException();
+			throw new StoryNotFoundException();
 		}
 		
 		return result;

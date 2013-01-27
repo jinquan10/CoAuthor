@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
-import com.nwm.coauthor.exception.GetPrivateStoryException;
+import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.service.builder.CreateStoryBuilder;
 import com.nwm.coauthor.service.model.LoginModel;
@@ -25,7 +25,7 @@ import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 // - 7. nonexistant coauthorToken
 public class LikeTest extends TestSetup{
 	@Test
-	public void userWith_NoPrivateStory_LikeAStory_AssertLikesIncremented_AssertThatUserHas0PrivateStories_AssertPrivateStoryException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, GetPrivateStoryException{
+	public void userWith_NoPrivateStory_LikeAStory_AssertLikesIncremented_AssertThatUserHas0PrivateStories_AssertPrivateStoryException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException{
 		List<LoginModel> users = createUsers(3);
 		
 		LoginModel user1 = users.get(0);
@@ -57,7 +57,7 @@ public class LikeTest extends TestSetup{
 
 		try{
 			storyClient.getPrivateStory(userWithoutPrivateStory.getCoToken(), story.getBody().getStoryId());
-		} catch(GetPrivateStoryException e){
+		} catch(StoryNotFoundException e){
 			
 		}
 		

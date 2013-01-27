@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.nwm.coauthor.exception.AddEntryException;
-import com.nwm.coauthor.exception.GetPrivateStoryException;
+import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.service.dao.StoryDAOImpl;
 import com.nwm.coauthor.service.model.AddEntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
@@ -32,7 +32,7 @@ public class StoryManagerImpl {
 		return request.getEntry().getEntryId();
 	}
 	
-	public PrivateStoryResponse getPrivateStory(String fbId, ObjectId storyId) throws GetPrivateStoryException{
+	public PrivateStoryResponse getPrivateStory(String fbId, ObjectId storyId) throws StoryNotFoundException{
 		return storyDAO.getPrivateStory(fbId, storyId);
 	}
 }

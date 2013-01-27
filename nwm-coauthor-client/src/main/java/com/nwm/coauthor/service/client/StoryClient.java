@@ -12,7 +12,7 @@ import org.springframework.web.util.UrlPathHelper;
 import com.nwm.coauthor.exception.AddEntryException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
-import com.nwm.coauthor.exception.GetPrivateStoryException;
+import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.mapping.ExceptionMapperWrapper;
 import com.nwm.coauthor.service.controller.StoryController;
@@ -86,7 +86,7 @@ public class StoryClient extends BaseClient implements StoryController{
 	}
 
 	@Override
-	public ResponseEntity<PrivateStoryResponse> getPrivateStory(String coToken, String storyId) throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, GetPrivateStoryException {
+	public ResponseEntity<PrivateStoryResponse> getPrivateStory(String coToken, String storyId) throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException {
 		try{
 			return restTemplate.exchange(urlResolver(GET_PRIVATE_STORY_ENDPOINT) + storyId, HttpMethod.GET, httpEntity(null, coToken), PrivateStoryResponse.class);
 		}catch(HttpStatusCodeException e){
@@ -96,8 +96,8 @@ public class StoryClient extends BaseClient implements StoryController{
 				throw new AuthenticationUnauthorizedException();
 			} else if(emw.getClazz() == BadRequestException.class){
 				throw new BadRequestException(emw.getBaseException());
-			} else if(emw.getClazz() == GetPrivateStoryException.class){
-				throw new GetPrivateStoryException();
+			} else if(emw.getClazz() == StoryNotFoundException.class){
+				throw new StoryNotFoundException();
 			} else{
 				throw new SomethingWentWrongException();
 			}
