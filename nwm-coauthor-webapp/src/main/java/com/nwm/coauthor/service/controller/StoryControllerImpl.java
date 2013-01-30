@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.nwm.coauthor.exception.AddEntryException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
@@ -91,9 +92,17 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 	}	
 	
 	@Override
-	public void like(String coToken, String storyId) {
+	@RequestMapping(value = "/private/like/{storyId}", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void like(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException {
+		validateLikeRequest(storyId);
 		
+		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
 	}	
+	
+	protected void validateLikeRequest(String storyId) throws BadRequestException{
+		validateGetPrivateStoryRequest(storyId);
+	}
 	
 	protected void validateGetPrivateStoryRequest(String storyId) throws BadRequestException{
 		boolean isError = false;

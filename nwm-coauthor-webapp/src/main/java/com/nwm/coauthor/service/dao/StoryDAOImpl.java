@@ -92,4 +92,10 @@ public class StoryDAOImpl {
 		
 		return result;
 	}
+	
+	public void likeStory(ObjectId storyId){
+		Criteria likeCriteria = new Criteria();
+		
+		likeCriteria.where("_id").is(storyId); 
+	}
 }

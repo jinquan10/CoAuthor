@@ -35,4 +35,8 @@ public class StoryManagerImpl {
 	public PrivateStoryResponse getPrivateStory(String fbId, ObjectId storyId) throws StoryNotFoundException{
 		return storyDAO.getPrivateStory(fbId, storyId);
 	}
+	
+	public void likeStory(String fbId, ObjectId storyId){
+		
+	}
 }

@@ -11,6 +11,7 @@ import com.nwm.coauthor.exception.AddEntryException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
+import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.service.builder.CreateStoryBuilder;
 import com.nwm.coauthor.service.model.LoginModel;
 import com.nwm.coauthor.service.resource.request.AddEntryRequest;
@@ -20,6 +21,14 @@ import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
 // - TODO: test for a user having no private stories, assert story not found exception
 public class GetPrivateStoriesTest extends TestSetup{
+	@Test(expected = StoryNotFoundException.class)
+	public void userWithNoPrivateStories_GetPrivateStories_Assert_StoryNotFoundException() throws InterruptedException, AuthenticationUnauthorizedException, SomethingWentWrongException{
+		List<LoginModel> users = createUsers(1);
+		
+		LoginModel user = users.get(0);
+		storyClient.getPrivateStories(user.getCoToken());
+	}
+	
 	@Test
 	public void getPrivateStoriesSuccess() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException{
 		List<LoginModel> users = createUsers(null);

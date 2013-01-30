@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 
+import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
@@ -17,12 +18,6 @@ import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
 import com.nwm.coauthor.service.resource.response.PrivateStoriesResponseWrapper;
 import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
-// - 2. As a user that has a private story, like a Story.
-// - 3. Like a nonexistant story
-// - 4. no storyId like request
-// - 5. null coauthorToken
-// - 6. emptyCoAuthorToken
-// - 7. nonexistant coauthorToken
 public class LikeTest extends TestSetup{
 	@Test
 	public void userWith_NoPrivateStory_LikeAStory_AssertLikesIncremented_AssertThatUserHas0PrivateStories_AssertPrivateStoryException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException{
@@ -58,9 +53,84 @@ public class LikeTest extends TestSetup{
 		try{
 			storyClient.getPrivateStory(userWithoutPrivateStory.getCoToken(), story.getBody().getStoryId());
 		} catch(StoryNotFoundException e){
-			
+			thrownStoryNotFoundException = true;
 		}
 		
-		Assert.fail("userWithoutPrivateStory is not supposed to have any private stories.");
+		if(!thrownStoryNotFoundException){
+			Assert.fail("userWithoutPrivateStory is not supposed to have any private stories.");
+		}
 	}
+	
+	@Test
+	public void userWith_PrivateStory_LikeAStory_AssertLikesIncremented() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException{
+		List<LoginModel> users = createUsers(2);
+		
+		LoginModel user = users.get(0);
+		ResponseEntity<CreateStoryResponse> story = storyClient.createStory(user.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, null));
+		
+		storyClient.like(user.getCoToken(), story.getBody().getStoryId());
+		
+		ResponseEntity<PrivateStoriesResponseWrapper> stories = storyClient.getPrivateStories(user.getCoToken());
+		PrivateStoryResponse storiesResponse = stories.getBody().getStories().get(0);
+		Assert.assertEquals(new Integer(1), storiesResponse.getLikes());
+		
+		ResponseEntity<PrivateStoryResponse> oneStory = storyClient.getPrivateStory(user.getCoToken(), story.getBody().getStoryId());
+		Assert.assertEquals(new Integer(1), oneStory.getBody().getLikes());
+	}
+	
+	@Test(expected = StoryNotFoundException.class)
+	public void userWith_PrivateStory_LikeANonExistantStory_AssertStoryNotFoundException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException{
+		List<LoginModel> users = createUsers(1);
+		
+		LoginModel user = users.get(0);
+		
+		storyClient.like(user.getCoToken(), "nonStoryId");
+	}
+	
+	@Test(expected = SomethingWentWrongException.class)
+	public void userWith_PrivateStory_LikeWithNoStoryId_AssertSomethingWentWrongException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException{
+		List<LoginModel> users = createUsers(1);
+		
+		LoginModel user = users.get(0);
+		
+		storyClient.like(user.getCoToken(), "");
+	}
+	
+	@Test(expected = AuthenticationUnauthorizedException.class)
+	public void userWith_PrivateStory_LikeAStoryWithNullCOToken_AssertSomethingWentWrongException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException{
+		List<LoginModel> users = createUsers(2);
+		LoginModel user = users.get(0);
+		
+		ResponseEntity<CreateStoryResponse> story = storyClient.createStory(user.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, null));
+		storyClient.like(null, story.getBody().getStoryId());
+	}
+	
+	@Test(expected = AuthenticationUnauthorizedException.class)
+	public void userWith_PrivateStory_LikeAStoryWithEmptyCOToken_AssertSomethingWentWrongException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException{
+		List<LoginModel> users = createUsers(2);
+		LoginModel user = users.get(0);
+		
+		ResponseEntity<CreateStoryResponse> story = storyClient.createStory(user.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, null));
+		storyClient.like("", story.getBody().getStoryId());
+	}
+	
+	@Test(expected = AuthenticationUnauthorizedException.class)
+	public void userWith_PrivateStory_LikeAStoryWithNonExistantCOToken_AssertSomethingWentWrongException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException{
+		List<LoginModel> users = createUsers(2);
+		LoginModel user = users.get(0);
+		
+		ResponseEntity<CreateStoryResponse> story = storyClient.createStory(user.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, null));
+		storyClient.like("nonExistantCOToken", story.getBody().getStoryId());
+	}
+	
+	@Test(expected = AlreadyLikedException.class)
+	public void user_LikesAStoryTwice_AssertAlreadyLikedException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException{
+		List<LoginModel> users = createUsers(2);
+		
+		LoginModel user = users.get(0);
+		ResponseEntity<CreateStoryResponse> story = storyClient.createStory(user.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, null));
+		
+		storyClient.like(user.getCoToken(), story.getBody().getStoryId());
+		storyClient.like(user.getCoToken(), story.getBody().getStoryId());
+	}	
 }
