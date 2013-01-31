@@ -93,7 +93,7 @@ public class StoryDAOImpl {
 		return result;
 	}
 	
-	public void likeStory(ObjectId storyId){
+	public void likeStory(String fbId, ObjectId storyId){
 		Criteria likeCriteria = new Criteria();
 		
 		likeCriteria.where("_id").is(storyId); 

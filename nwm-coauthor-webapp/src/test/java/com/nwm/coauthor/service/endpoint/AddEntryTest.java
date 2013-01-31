@@ -161,7 +161,7 @@ public class AddEntryTest extends TestSetup{
 	}
 	
 	// - TODO: change the exception type to AddEntryVersionException
-	@Test(expected = AddEntryException.class)
+	@Test(expected = AddEntryVersionException.class)
 	public void addEntry_For_BadVersion() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException{
 		List<LoginModel> users = createUsers(null);
 		

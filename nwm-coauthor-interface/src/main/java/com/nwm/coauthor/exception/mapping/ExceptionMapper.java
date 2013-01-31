@@ -1,6 +1,7 @@
 package com.nwm.coauthor.exception.mapping;
 
 import com.nwm.coauthor.exception.AddEntryException;
+import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BaseException;
 import com.nwm.coauthor.exception.BadRequestException;
@@ -12,7 +13,8 @@ public enum ExceptionMapper {
 	SOMETHING_WENT_WRONG_EXCEPTION(SomethingWentWrongException.class),
 	BAD_REQUEST_EXCEPTION(BadRequestException.class),
 	ADD_ENTRY_EXCEPTION(AddEntryException.class),
-	STORY_NOT_FOUND_EXCEPTION(StoryNotFoundException.class);
+	STORY_NOT_FOUND_EXCEPTION(StoryNotFoundException.class),
+	ALREADY_LIKED_EXCEPTION(AlreadyLikedException.class);
 	
 	private Class<? extends BaseException> clazz;
 	
