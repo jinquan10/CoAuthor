@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
 import com.mongodb.Mongo;
 import com.mongodb.WriteConcern;
 import com.nwm.coauthor.service.client.StoryClient;
-import com.nwm.coauthor.service.model.LoginModel;
+import com.nwm.coauthor.service.model.UserModel;
 
 public class TestSetup {
 	protected static MongoTemplate mongoTemplate = null;
@@ -29,11 +29,11 @@ public class TestSetup {
 //		coTokens.add(response.getBody().getCoToken());
 //	}
 	
-	protected List<LoginModel> createUsers(Integer numUsers) throws InterruptedException{
+	protected List<UserModel> createUsers(Integer numUsers) throws InterruptedException{
 		if(numUsers == null)
 			numUsers = 2;
 		
-		List<LoginModel> users = new ArrayList<LoginModel>();
+		List<UserModel> users = new ArrayList<UserModel>();
 		String numUsersStr = System.getProperty("numUsers");
 		
 		if(StringUtils.hasText(numUsersStr)){
@@ -41,7 +41,7 @@ public class TestSetup {
 		}
 		
 		for(int i = 0; i < numUsers; i++){
-			LoginModel loginModel = new LoginModel(String.valueOf(Math.random()), String.valueOf(Math.random()));
+			UserModel loginModel = new UserModel(String.valueOf(Math.random()), String.valueOf(Math.random()));
 			users.add(loginModel);
 			mongoTemplate.insert(loginModel);
 		}

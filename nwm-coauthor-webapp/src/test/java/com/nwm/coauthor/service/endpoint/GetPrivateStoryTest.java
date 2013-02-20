@@ -15,7 +15,7 @@ import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.WebApplicationException;
 import com.nwm.coauthor.service.builder.CreateStoryBuilder;
-import com.nwm.coauthor.service.model.LoginModel;
+import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.StoryEntryResource;
 import com.nwm.coauthor.service.resource.request.AddEntryRequest;
 import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
@@ -26,7 +26,7 @@ import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 public class GetPrivateStoryTest extends TestSetup{
 	@Test
 	public void createStory_Then_AssertTheSameStoryContents() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException{
-		List<LoginModel> users = createUsers(null);
+		List<UserModel> users = createUsers(null);
 		CreateStoryRequest createStoryRequest = CreateStoryBuilder.createValidStory(users, 0, null);
 
 		ResponseEntity<CreateStoryResponse> createdStory = storyClient.createStory(users.get(0).getCoToken(), createStoryRequest);
@@ -55,9 +55,9 @@ public class GetPrivateStoryTest extends TestSetup{
 	
 	@Test
 	public void addEntries_AssertAllEntriesAreAdded_InTheRightOrder() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, StoryNotFoundException{
-		List<LoginModel> users = createUsers(null);
+		List<UserModel> users = createUsers(null);
 		
-		LoginModel user = users.get(0);
+		UserModel user = users.get(0);
 		
 		// - Create a story with user0, and add the rest of the users as user0's friends
 		ResponseEntity<CreateStoryResponse> response = storyClient.createStory(user.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, null));
@@ -108,7 +108,7 @@ public class GetPrivateStoryTest extends TestSetup{
 	
 	@Test(expected = WebApplicationException.class)
 	public void withEmptyStoryId() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException{
-		List<LoginModel> users = createUsers(null);
+		List<UserModel> users = createUsers(null);
 		CreateStoryRequest createStoryRequest = CreateStoryBuilder.createValidStory(users, 0, null);
 
 		ResponseEntity<CreateStoryResponse> createdStory = storyClient.createStory(users.get(0).getCoToken(), createStoryRequest);
@@ -120,7 +120,7 @@ public class GetPrivateStoryTest extends TestSetup{
 	
 	@Test(expected = BadRequestException.class)
 	public void withInvalidStoryId() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, InterruptedException{
-		List<LoginModel> users = createUsers(null);
+		List<UserModel> users = createUsers(null);
 		CreateStoryRequest createStoryRequest = CreateStoryBuilder.createValidStory(users, 0, null);
 
 		ResponseEntity<CreateStoryResponse> createdStory = storyClient.createStory(users.get(0).getCoToken(), createStoryRequest);
@@ -132,7 +132,7 @@ public class GetPrivateStoryTest extends TestSetup{
 	
 	@Test(expected = StoryNotFoundException.class)
 	public void withNonExistantStoryId() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, InterruptedException{
-		List<LoginModel> users = createUsers(null);
+		List<UserModel> users = createUsers(null);
 		CreateStoryRequest createStoryRequest = CreateStoryBuilder.createValidStory(users, 0, null);
 
 		ResponseEntity<CreateStoryResponse> createdStory = storyClient.createStory(users.get(0).getCoToken(), createStoryRequest);

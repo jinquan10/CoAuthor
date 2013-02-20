@@ -37,6 +37,6 @@ public class StoryManagerImpl {
 	}
 	
 	public void likeStory(String fbId, ObjectId storyId){
-		
+		storyDAO.likeStory(fbId, storyId);
 	}
 }

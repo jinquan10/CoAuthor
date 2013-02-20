@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
-import com.nwm.coauthor.service.model.LoginModel;
+import com.nwm.coauthor.service.model.UserModel;
 
 @Component
 public class AuthenticationDAOImpl {
@@ -19,14 +19,14 @@ public class AuthenticationDAOImpl {
 	private MongoTemplate mongoTemplate;
 	
 	public void login(String coToken, String fbId){
-		mongoTemplate.upsert(query(where("fbId").is(fbId)), update("coToken", coToken), LoginModel.class);
+		mongoTemplate.upsert(query(where("fbId").is(fbId)), update("coToken", coToken), UserModel.class);
 	}
 
-	public LoginModel authenticateCOTokenForFbId(String coToken) {
+	public UserModel authenticateCOTokenForFbId(String coToken) {
 		Query query = new Query();
 		query.addCriteria(where("coToken").is(coToken));
 		query.fields().include("fbId");
 		
-		return mongoTemplate.findOne(query, LoginModel.class);
+		return mongoTemplate.findOne(query, UserModel.class);
 	}
 }

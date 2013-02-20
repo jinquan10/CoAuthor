@@ -3,11 +3,11 @@ package com.nwm.coauthor.service.builder;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.nwm.coauthor.service.model.LoginModel;
+import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
 
 public class CreateStoryBuilder {
-	public static CreateStoryRequest createValidStory(List<LoginModel> users, int userIndex, List<String> fbFriends, Integer ... numCharacters){
+	public static CreateStoryRequest createValidStory(List<UserModel> users, int userIndex, List<String> fbFriends, Integer ... numCharacters){
 		if(fbFriends == null){
 			fbFriends = new ArrayList<String>();
 			

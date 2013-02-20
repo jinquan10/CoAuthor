@@ -13,7 +13,7 @@ import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.service.builder.CreateStoryBuilder;
-import com.nwm.coauthor.service.model.LoginModel;
+import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.request.AddEntryRequest;
 import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
 import com.nwm.coauthor.service.resource.response.PrivateStoriesResponseWrapper;
@@ -23,15 +23,15 @@ import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 public class GetPrivateStoriesTest extends TestSetup{
 	@Test(expected = StoryNotFoundException.class)
 	public void userWithNoPrivateStories_GetPrivateStories_Assert_StoryNotFoundException() throws InterruptedException, AuthenticationUnauthorizedException, SomethingWentWrongException{
-		List<LoginModel> users = createUsers(1);
+		List<UserModel> users = createUsers(1);
 		
-		LoginModel user = users.get(0);
+		UserModel user = users.get(0);
 		storyClient.getPrivateStories(user.getCoToken());
 	}
 	
 	@Test
 	public void getPrivateStoriesSuccess() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException{
-		List<LoginModel> users = createUsers(null);
+		List<UserModel> users = createUsers(null);
 		
 		for(int i = 0; i < users.size(); i++){
 			storyClient.createStory(users.get(i).getCoToken(), CreateStoryBuilder.createValidStory(users, i, null));
@@ -67,9 +67,9 @@ public class GetPrivateStoriesTest extends TestSetup{
 	
 	@Test
 	public void getPrivateStories_UserShouldSeeOneEntry_WhenMoreThanOneEntryIsSubmitted() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, InterruptedException{
-		List<LoginModel> users = createUsers(null);
+		List<UserModel> users = createUsers(null);
 		
-		LoginModel user = users.get(0);
+		UserModel user = users.get(0);
 		
 		// - Create a story with user0, and add the rest of the users as user0's friends
 		ResponseEntity<CreateStoryResponse> response = storyClient.createStory(user.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, null));

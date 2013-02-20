@@ -19,6 +19,7 @@ import com.nwm.coauthor.exception.AddEntryException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.service.model.AddEntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
+import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
 @Component
@@ -93,9 +94,15 @@ public class StoryDAOImpl {
 		return result;
 	}
 	
-	public void likeStory(String fbId, ObjectId storyId){
-		Criteria likeCriteria = new Criteria();
+	public void likeStory(String fbId, String storyId){
+		Criteria alreadyLikedCriteria = new Criteria();
+		Criteria norOperator = new Criteria();
 		
-		likeCriteria.where("_id").is(storyId); 
+		alreadyLikedCriteria.andOperator(norOperator.norOperator(where("storyLikes").is(storyId)), where("fbId").is(fbId));
+		
+		Query q = new Query();
+		q.addCriteria(alreadyLikedCriteria);
+		
+		long storyLikedCount = mongoTemplate.count(q, UserModel.class);
 	}
 }

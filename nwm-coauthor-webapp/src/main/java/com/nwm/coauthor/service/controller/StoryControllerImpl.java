@@ -98,6 +98,8 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 		validateLikeRequest(storyId);
 		
 		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
+		
+		storyManager.likeStory(fbId, convertStoryIdToObjectId(storyId));
 	}	
 	
 	protected void validateLikeRequest(String storyId) throws BadRequestException{
