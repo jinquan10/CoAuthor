@@ -10,16 +10,25 @@ import org.springframework.http.ResponseEntity;
 import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
-import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
+import com.nwm.coauthor.exception.StoryNotFoundException;
+import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.service.builder.CreateStoryBuilder;
 import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
 import com.nwm.coauthor.service.resource.response.PrivateStoriesResponseWrapper;
 import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
-// - can't like a story you belong to
 public class LikeTest extends TestSetup{
+	@Test(expected = UserLikingOwnStoryException.class)
+	public void like_WhenUserBelongsToStory() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException{
+		List<UserModel> users = createUsers(3);
+		
+		ResponseEntity<CreateStoryResponse> createdStory = storyClient.createStory(users.get(0).getCoToken(), CreateStoryBuilder.createValidStory(users, 0, null));
+		
+		storyClient.like(users.get(0).getCoToken(), createdStory.getBody().getStoryId());
+	}
+	
 	@Test
 	public void userWith_NoPrivateStory_LikeAStory_AssertLikesIncremented_AssertThatUserHas0PrivateStories_AssertPrivateStoryException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException{
 		List<UserModel> users = createUsers(3);

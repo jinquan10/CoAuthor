@@ -96,9 +96,9 @@ public class StoryDAOImpl {
 	
 	public void likeStory(String fbId, String storyId){
 		Criteria alreadyLikedCriteria = new Criteria();
-		Criteria norOperator = new Criteria();
+		Criteria norCriteria = new Criteria();
 		
-		alreadyLikedCriteria.andOperator(norOperator.norOperator(where("storyLikes").is(storyId)), where("fbId").is(fbId));
+		alreadyLikedCriteria.andOperator(norCriteria.norOperator(where("storyLikes").is(storyId)), where("fbId").is(fbId));
 		
 		Query q = new Query();
 		q.addCriteria(alreadyLikedCriteria);

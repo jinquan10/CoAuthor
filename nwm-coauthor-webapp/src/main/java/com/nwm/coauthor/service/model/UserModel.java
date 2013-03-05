@@ -2,10 +2,12 @@ package com.nwm.coauthor.service.model;
 
 import java.util.List;
 
+import org.bson.types.ObjectId;
+
 public class UserModel{
 	private String fbId;
 	private String coToken;
-	private List<String> storyLikes;
+	private List<ObjectId> storyLikes;
 	
 	public UserModel(){
 		
@@ -34,18 +36,18 @@ public class UserModel{
 	public String toString(){
 		StringBuilder storyLikesStringBuilder = new StringBuilder();
 		
-		for(String storyId : storyLikes){
-			storyLikesStringBuilder.append(storyId);
+		for(ObjectId storyId : storyLikes){
+			storyLikesStringBuilder.append(storyId.toString());
 		}
 		
 		return "fbId: " + fbId + " coToken: " + coToken + " storyLikes: " + storyLikesStringBuilder.toString();
 	}
-
-	public List<String> getStoryLikes() {
+	
+	public List<ObjectId> getStoryLikes() {
 		return storyLikes;
 	}
 
-	public void setStoryLikes(List<String> storyLikes) {
+	public void setStoryLikes(List<ObjectId> storyLikes) {
 		this.storyLikes = storyLikes;
-	}
+	}	
 }
