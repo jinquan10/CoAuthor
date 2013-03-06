@@ -11,6 +11,8 @@ import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
+import com.nwm.coauthor.exception.UnauthorizedException;
+import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.exception.mapping.ExceptionMapperWrapper;
 import com.nwm.coauthor.service.controller.StoryController;
 import com.nwm.coauthor.service.resource.request.AddEntryRequest;
@@ -89,7 +91,7 @@ public class StoryClient extends BaseClient implements StoryController{
 	}
 
 	@Override
-	public ResponseEntity<PrivateStoryResponse> getStoryForEdit(String coToken, String storyId) throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException {
+	public ResponseEntity<PrivateStoryResponse> getStoryForEdit(String coToken, String storyId) throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, UnauthorizedException{
 		try{
 			return restTemplate.exchange(urlStoryResolver("/" + storyId + GET_PRIVATE_STORY_ENDPOINT), HttpMethod.GET, httpEntity(null, coToken), PrivateStoryResponse.class);
 		}catch(HttpStatusCodeException e){
@@ -97,6 +99,8 @@ public class StoryClient extends BaseClient implements StoryController{
 			
 			if(emw.getClazz() == AuthenticationUnauthorizedException.class){
 				throw new AuthenticationUnauthorizedException();
+			} else if(emw.getClazz() == UnauthorizedException.class){
+				throw new UnauthorizedException();
 			} else if(emw.getClazz() == BadRequestException.class){
 				throw new BadRequestException(emw.getBaseException());
 			} else if(emw.getClazz() == StoryNotFoundException.class){
@@ -108,7 +112,7 @@ public class StoryClient extends BaseClient implements StoryController{
 	}
 
 	@Override
-	public void like(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException, SomethingWentWrongException{
+	public void like(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException, SomethingWentWrongException, UserLikingOwnStoryException{
 		try{
 			restTemplate.exchange(urlStoryResolver("/" + storyId + LIKE_ENDPOINT), HttpMethod.POST, httpEntity(null, coToken), String.class);
 		}catch(HttpStatusCodeException e){
@@ -118,6 +122,8 @@ public class StoryClient extends BaseClient implements StoryController{
 				throw new AuthenticationUnauthorizedException();
 			} else if(emw.getClazz() == BadRequestException.class){
 				throw new BadRequestException(emw.getBaseException());
+			} else if(emw.getClazz() == UserLikingOwnStoryException.class){
+				throw new UserLikingOwnStoryException();
 			} else if(emw.getClazz() == AlreadyLikedException.class){
 				throw new AlreadyLikedException();
 			} else if(emw.getClazz() == StoryNotFoundException.class){

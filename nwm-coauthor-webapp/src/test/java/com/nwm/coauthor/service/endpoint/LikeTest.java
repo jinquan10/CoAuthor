@@ -12,6 +12,7 @@ import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
+import com.nwm.coauthor.exception.UnauthorizedException;
 import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.service.builder.CreateStoryBuilder;
 import com.nwm.coauthor.service.model.UserModel;
@@ -21,7 +22,7 @@ import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
 public class LikeTest extends TestSetup{
 	@Test(expected = UserLikingOwnStoryException.class)
-	public void like_WhenUserBelongsToStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException, AlreadyLikedException, StoryNotFoundException{
+	public void like_WhenUserBelongsToStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException, AlreadyLikedException, StoryNotFoundException, UserLikingOwnStoryException{
 		List<UserModel> users = createUsers(3);
 		
 		ResponseEntity<CreateStoryResponse> createdStory = storyClient.createStory(users.get(0).getCoToken(), CreateStoryBuilder.createValidStory(users, 0, null));
@@ -30,7 +31,7 @@ public class LikeTest extends TestSetup{
 	}
 	
 	@Test
-	public void userWith_NoPrivateStory_LikeAStory_AssertLikesIncremented_AssertThatUserHas0PrivateStories_AssertPrivateStoryException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException{
+	public void userWith_NoPrivateStory_LikeAStory_AssertLikesIncremented_AssertThatUserHas0PrivateStories_AssertPrivateStoryException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException, UnauthorizedException, UserLikingOwnStoryException{
 		List<UserModel> users = createUsers(3);
 		
 		UserModel user1 = users.get(0);
@@ -42,7 +43,7 @@ public class LikeTest extends TestSetup{
 		fbFriends.add(user2.getFbId());
 		
 		ResponseEntity<CreateStoryResponse> story = storyClient.createStory(user1.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, fbFriends)); 
-		Assert.assertEquals(story.getStatusCode(), 201);
+		Assert.assertEquals(201, story.getStatusCode().value());
 		
 		storyClient.like(userWithoutPrivateStory.getCoToken(), story.getBody().getStoryId());
 		
@@ -62,7 +63,7 @@ public class LikeTest extends TestSetup{
 
 		try{
 			storyClient.getStoryForEdit(userWithoutPrivateStory.getCoToken(), story.getBody().getStoryId());
-		} catch(StoryNotFoundException e){
+		} catch(UnauthorizedException e){
 			thrownStoryNotFoundException = true;
 		}
 		
@@ -72,7 +73,7 @@ public class LikeTest extends TestSetup{
 	}
 	
 	@Test
-	public void userWith_PrivateStory_LikeAStory_AssertLikesIncremented() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException{
+	public void userWith_PrivateStory_LikeAStory_AssertLikesIncremented() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException, UnauthorizedException, UserLikingOwnStoryException{
 		List<UserModel> users = createUsers(2);
 		
 		UserModel user = users.get(0);
@@ -89,7 +90,7 @@ public class LikeTest extends TestSetup{
 	}
 	
 	@Test(expected = StoryNotFoundException.class)
-	public void userWith_PrivateStory_LikeANonExistantStory_AssertStoryNotFoundException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException{
+	public void userWith_PrivateStory_LikeANonExistantStory_AssertStoryNotFoundException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException, UserLikingOwnStoryException{
 		List<UserModel> users = createUsers(1);
 		
 		UserModel user = users.get(0);
@@ -97,17 +98,8 @@ public class LikeTest extends TestSetup{
 		storyClient.like(user.getCoToken(), "nonStoryId");
 	}
 	
-	@Test(expected = SomethingWentWrongException.class)
-	public void userWith_PrivateStory_LikeWithNoStoryId_AssertSomethingWentWrongException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException{
-		List<UserModel> users = createUsers(1);
-		
-		UserModel user = users.get(0);
-		
-		storyClient.like(user.getCoToken(), "");
-	}
-	
 	@Test(expected = AuthenticationUnauthorizedException.class)
-	public void userWith_PrivateStory_LikeAStoryWithNullCOToken_AssertSomethingWentWrongException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException{
+	public void userWith_PrivateStory_LikeAStoryWithNullCOToken_AssertSomethingWentWrongException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException, UserLikingOwnStoryException{
 		List<UserModel> users = createUsers(2);
 		UserModel user = users.get(0);
 		
@@ -116,7 +108,7 @@ public class LikeTest extends TestSetup{
 	}
 	
 	@Test(expected = AuthenticationUnauthorizedException.class)
-	public void userWith_PrivateStory_LikeAStoryWithEmptyCOToken_AssertSomethingWentWrongException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException{
+	public void userWith_PrivateStory_LikeAStoryWithEmptyCOToken_AssertSomethingWentWrongException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException, UserLikingOwnStoryException{
 		List<UserModel> users = createUsers(2);
 		UserModel user = users.get(0);
 		
@@ -125,7 +117,7 @@ public class LikeTest extends TestSetup{
 	}
 	
 	@Test(expected = AuthenticationUnauthorizedException.class)
-	public void userWith_PrivateStory_LikeAStoryWithNonExistantCOToken_AssertSomethingWentWrongException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException{
+	public void userWith_PrivateStory_LikeAStoryWithNonExistantCOToken_AssertSomethingWentWrongException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException, UserLikingOwnStoryException{
 		List<UserModel> users = createUsers(2);
 		UserModel user = users.get(0);
 		
@@ -134,7 +126,7 @@ public class LikeTest extends TestSetup{
 	}
 	
 	@Test(expected = AlreadyLikedException.class)
-	public void user_LikesAStoryTwice_AssertAlreadyLikedException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException{
+	public void user_LikesAStoryTwice_AssertAlreadyLikedException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException, UserLikingOwnStoryException{
 		List<UserModel> users = createUsers(2);
 		
 		UserModel user = users.get(0);

@@ -31,7 +31,7 @@ public class CreateStoryTest extends TestSetup{
 		}
 	}
 	
-	@Test(expected = SomethingWentWrongException.class)
+	@Test(expected = AuthenticationUnauthorizedException.class)
 	public void createStoryNullCoTokenTest() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException{
 		List<UserModel> users = createUsers(null);
 		

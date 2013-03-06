@@ -46,9 +46,7 @@ public class BaseClient {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		
-		if(coToken != null){
-			headers.add("Authorization", coToken);
-		}
+		headers.add("Authorization", coToken);
 		
 		return new HttpEntity<Object>(object, headers);
 	}

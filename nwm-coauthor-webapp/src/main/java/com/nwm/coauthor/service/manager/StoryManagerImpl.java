@@ -13,6 +13,7 @@ import com.nwm.coauthor.exception.AddEntryVersionException;
 import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.UnauthorizedException;
+import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.service.dao.StoryDAOImpl;
 import com.nwm.coauthor.service.dao.UserDAOImpl;
 import com.nwm.coauthor.service.model.AddEntryModel;
@@ -66,6 +67,10 @@ public class StoryManagerImpl {
 	public PrivateStoryResponse getStoryForEdit(String fbId, ObjectId storyId) throws StoryNotFoundException, UnauthorizedException{
 	    PrivateStoryResponse privateStory = storyDAO.getPrivateStory(storyId);
 	    
+	    if(privateStory == null){
+	    	throw new StoryNotFoundException();
+	    }
+	    
 	    if(!privateStory.getLeaderFbId().equals(fbId)){
 	        if(!privateStory.getFbFriends().contains(fbId)){
 	            throw new UnauthorizedException();
@@ -75,8 +80,8 @@ public class StoryManagerImpl {
 	    return privateStory;
 	}
 	
-	public void likeStory(String fbId, ObjectId storyId) throws AlreadyLikedException, StoryNotFoundException{
-		checkStoryExists(storyId);
+	public void likeStory(String fbId, ObjectId storyId) throws AlreadyLikedException, StoryNotFoundException, UserLikingOwnStoryException{
+		checkIsUserLikingOwnStory(fbId, storyId);
 		checkStoryAlreadyLiked(fbId, storyId);
 		persistLikeStory(fbId, storyId);
 	}
@@ -86,8 +91,7 @@ public class StoryManagerImpl {
 		storyDAO.likeStory(storyId);
 	}
 
-	private void checkStoryAlreadyLiked(String fbId, ObjectId storyId)
-			throws AlreadyLikedException {
+	private void checkStoryAlreadyLiked(String fbId, ObjectId storyId) throws AlreadyLikedException {
 		boolean isStoryLiked = userDAO.isStoryLiked(fbId, storyId);
 		
 		if(isStoryLiked){
@@ -95,12 +99,19 @@ public class StoryManagerImpl {
 		}
 	}
 
-	private void checkStoryExists(ObjectId storyId)
-			throws StoryNotFoundException {
+	private void checkIsUserLikingOwnStory(String fbId, ObjectId storyId) throws StoryNotFoundException, UserLikingOwnStoryException {
 		PrivateStoryResponse privateStory = storyDAO.getPrivateStory(storyId);
 		
 		if(privateStory == null){
 			throw new StoryNotFoundException();
 		}
+		
+	    if(privateStory.getLeaderFbId().equals(fbId)){
+	        throw new UserLikingOwnStoryException();
+	    }
+	    
+        if(privateStory.getFbFriends().contains(fbId)){
+        	throw new UserLikingOwnStoryException();
+        }
 	}
 }

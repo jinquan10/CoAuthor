@@ -25,7 +25,7 @@ public class UserDAOImpl {
 	
 	public boolean isStoryLiked(String fbId, ObjectId storyId){
 		Criteria c = new Criteria();
-		c.andOperator(where("likes").is(storyId), where("fbId").is(fbId));
+		c.andOperator(where("storyLikes").is(storyId), where("fbId").is(fbId));
 		
 		Query q = new Query();
 		q.addCriteria(c);
