@@ -66,6 +66,10 @@ public class StoryDAOImpl {
 		StoryModel model = mongoTemplate.findAndModify(q, update, StoryModel.class, "storyModel");
 		
 		if(model == null){
+		    q = new Query(where("_id").is(request.getStoryId()));
+		    
+		    mongoTemplate.find(q, StoryModel.class);		    
+		    
 			logger.error("addEntry(): Add entry failed.\nHere is why: " + q.toString());
 //			logger.error("addEntry(): Add entry failed.\nHere is why: [_id | {}] [fbFriends | {}] [lastFriendEntry | {}] [numCharacters | {}] [version | {}]", request.getStoryId(), fbId, fbId, request.getEntry().getEntry().length(), request.getVersion());
 			
@@ -74,11 +78,9 @@ public class StoryDAOImpl {
 	}
 	
 	public PrivateStoryResponse getPrivateStory(String fbId, ObjectId storyId) throws StoryNotFoundException{
-		Criteria leaderOrFriendC = new Criteria();
 		Criteria getStoryC = new Criteria();
 		
-		getStoryC.andOperator(where("_id").is(storyId), 
-				leaderOrFriendC.orOperator(where("leaderFbId").is(fbId), where("fbFriends").is(fbId)));
+		getStoryC.andOperator(where("_id").is(storyId));
 		
 		Query q = new Query();
 		q.addCriteria(getStoryC);
@@ -94,15 +96,13 @@ public class StoryDAOImpl {
 		return result;
 	}
 	
-	public void likeStory(String fbId, String storyId){
-		Criteria alreadyLikedCriteria = new Criteria();
-		Criteria norCriteria = new Criteria();
-		
-		alreadyLikedCriteria.andOperator(norCriteria.norOperator(where("storyLikes").is(storyId)), where("fbId").is(fbId));
-		
-		Query q = new Query();
-		q.addCriteria(alreadyLikedCriteria);
-		
-		long storyLikedCount = mongoTemplate.count(q, UserModel.class);
+	public void likeStory(ObjectId storyId){
+	    Query query = new Query();
+	    query.addCriteria(where("_id").is(storyId));
+	    
+	    Update update = new Update();
+	    update.inc("likes", 1);
+	    
+		mongoTemplate.findAndModify(query, update, StoryModel.class);
 	}
 }

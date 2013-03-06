@@ -21,7 +21,7 @@ import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
 public class LikeTest extends TestSetup{
 	@Test(expected = UserLikingOwnStoryException.class)
-	public void like_WhenUserBelongsToStory() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException{
+	public void like_WhenUserBelongsToStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException{
 		List<UserModel> users = createUsers(3);
 		
 		ResponseEntity<CreateStoryResponse> createdStory = storyClient.createStory(users.get(0).getCoToken(), CreateStoryBuilder.createValidStory(users, 0, null));
@@ -46,7 +46,7 @@ public class LikeTest extends TestSetup{
 		
 		storyClient.like(userWithoutPrivateStory.getCoToken(), story.getBody().getStoryId());
 		
-		ResponseEntity<PrivateStoryResponse> privateStoryResponse = storyClient.getPrivateStory(user1.getCoToken(), story.getBody().getStoryId());
+		ResponseEntity<PrivateStoryResponse> privateStoryResponse = storyClient.getStoryForEdit(user1.getCoToken(), story.getBody().getStoryId());
 		Assert.assertEquals(new Integer(1), privateStoryResponse.getBody().getLikes());
 		
 		boolean thrownStoryNotFoundException = false;
@@ -61,7 +61,7 @@ public class LikeTest extends TestSetup{
 		}
 
 		try{
-			storyClient.getPrivateStory(userWithoutPrivateStory.getCoToken(), story.getBody().getStoryId());
+			storyClient.getStoryForEdit(userWithoutPrivateStory.getCoToken(), story.getBody().getStoryId());
 		} catch(StoryNotFoundException e){
 			thrownStoryNotFoundException = true;
 		}
@@ -84,7 +84,7 @@ public class LikeTest extends TestSetup{
 		PrivateStoryResponse storiesResponse = stories.getBody().getStories().get(0);
 		Assert.assertEquals(new Integer(1), storiesResponse.getLikes());
 		
-		ResponseEntity<PrivateStoryResponse> oneStory = storyClient.getPrivateStory(user.getCoToken(), story.getBody().getStoryId());
+		ResponseEntity<PrivateStoryResponse> oneStory = storyClient.getStoryForEdit(user.getCoToken(), story.getBody().getStoryId());
 		Assert.assertEquals(new Integer(1), oneStory.getBody().getLikes());
 	}
 	

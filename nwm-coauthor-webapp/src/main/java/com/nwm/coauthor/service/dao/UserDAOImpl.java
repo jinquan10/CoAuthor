@@ -2,8 +2,6 @@ package com.nwm.coauthor.service.dao;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
-import java.util.List;
-
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,12 +13,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
-import com.nwm.coauthor.exception.AddEntryException;
-import com.nwm.coauthor.exception.StoryNotFoundException;
-import com.nwm.coauthor.service.model.AddEntryModel;
-import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.model.UserModel;
-import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
 @Component
 public class UserDAOImpl {
@@ -41,4 +34,14 @@ public class UserDAOImpl {
 		
 		return likeCount > 0 ? true : false;
 	}
+
+    public void likeStory(String fbId, ObjectId storyId) {
+        Query q = new Query();
+        q.addCriteria(where("fbId").is(fbId));
+        
+        Update update = new Update();
+        update.push("storyLikes", storyId);
+        
+        mongoTemplate.findAndModify(q, update, UserModel.class);
+    }
 }

@@ -13,6 +13,7 @@ import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
+import com.nwm.coauthor.exception.UnauthorizedException;
 import com.nwm.coauthor.exception.WebApplicationException;
 import com.nwm.coauthor.service.builder.CreateStoryBuilder;
 import com.nwm.coauthor.service.model.UserModel;
@@ -33,7 +34,7 @@ public class GetPrivateStoryTest extends TestSetup{
 		
 		String storyId = createdStory.getBody().getStoryId();
 		
-		ResponseEntity<PrivateStoryResponse> privateStory = storyClient.getPrivateStory(users.get(0).getCoToken(), storyId);
+		ResponseEntity<PrivateStoryResponse> privateStory = storyClient.getStoryForEdit(users.get(0).getCoToken(), storyId);
 
 		Assert.assertNotNull(privateStory);
 		Assert.assertEquals(HttpStatus.OK, privateStory.getStatusCode());
@@ -88,7 +89,7 @@ public class GetPrivateStoryTest extends TestSetup{
 			Assert.assertNotNull(entryId.getBody().getEntryId());
 		}
 		
-		ResponseEntity<PrivateStoryResponse> privateStory = storyClient.getPrivateStory(user.getCoToken(), storyId);
+		ResponseEntity<PrivateStoryResponse> privateStory = storyClient.getStoryForEdit(user.getCoToken(), storyId);
 		
 		Assert.assertEquals(HttpStatus.OK, privateStory.getStatusCode());
 		Assert.assertNotNull(privateStory.getBody());
@@ -115,7 +116,7 @@ public class GetPrivateStoryTest extends TestSetup{
 		
 		String storyId = createdStory.getBody().getStoryId();
 		
-		ResponseEntity<PrivateStoryResponse> privateStory = storyClient.getPrivateStory(users.get(0).getCoToken(), "");		
+		ResponseEntity<PrivateStoryResponse> privateStory = storyClient.getStoryForEdit(users.get(0).getCoToken(), "");		
 	}
 	
 	@Test(expected = BadRequestException.class)
@@ -127,7 +128,7 @@ public class GetPrivateStoryTest extends TestSetup{
 		
 		String storyId = createdStory.getBody().getStoryId();
 		
-		ResponseEntity<PrivateStoryResponse> privateStory = storyClient.getPrivateStory(users.get(0).getCoToken(), "haha");		
+		ResponseEntity<PrivateStoryResponse> privateStory = storyClient.getStoryForEdit(users.get(0).getCoToken(), "haha");		
 	}
 	
 	@Test(expected = StoryNotFoundException.class)
@@ -141,6 +142,20 @@ public class GetPrivateStoryTest extends TestSetup{
 		
 		storyId = "1" + storyId.substring(1);
 		
-		ResponseEntity<PrivateStoryResponse> privateStory = storyClient.getPrivateStory(users.get(0).getCoToken(), storyId);		
+		ResponseEntity<PrivateStoryResponse> privateStory = storyClient.getStoryForEdit(users.get(0).getCoToken(), storyId);		
 	}
+	
+    @Test(expected = UnauthorizedException.class)
+    public void withAUserThatDoesNotBelongToStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, InterruptedException{
+        List<UserModel> users = createUsers(3);
+        
+        List<String> fbFriends = new ArrayList<String>();
+        fbFriends.add(users.get(1).getFbId());
+        
+        CreateStoryRequest createStoryRequest = CreateStoryBuilder.createValidStory(users, 0, fbFriends);
+        ResponseEntity<CreateStoryResponse> createdStory = storyClient.createStory(users.get(0).getCoToken(), createStoryRequest);
+        String storyId = createdStory.getBody().getStoryId();
+        
+        storyClient.getStoryForEdit(users.get(2).getCoToken(), storyId);        
+    }	
 }

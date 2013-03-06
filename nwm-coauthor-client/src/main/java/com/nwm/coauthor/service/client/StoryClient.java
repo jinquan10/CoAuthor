@@ -86,7 +86,7 @@ public class StoryClient extends BaseClient implements StoryController{
 	}
 
 	@Override
-	public ResponseEntity<PrivateStoryResponse> getPrivateStory(String coToken, String storyId) throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException {
+	public ResponseEntity<PrivateStoryResponse> getStoryForEdit(String coToken, String storyId) throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException {
 		try{
 			return restTemplate.exchange(urlResolver(GET_PRIVATE_STORY_ENDPOINT) + storyId, HttpMethod.GET, httpEntity(null, coToken), PrivateStoryResponse.class);
 		}catch(HttpStatusCodeException e){

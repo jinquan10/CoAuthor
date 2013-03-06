@@ -21,10 +21,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.nwm.coauthor.exception.AddEntryException;
+import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
+import com.nwm.coauthor.exception.UnauthorizedException;
 import com.nwm.coauthor.service.manager.AuthenticationManagerImpl;
 import com.nwm.coauthor.service.manager.StoryManagerImpl;
 import com.nwm.coauthor.service.model.AddEntryModel;
@@ -61,7 +63,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 
 	@Override
 	@RequestMapping(value = "/privates", method = RequestMethod.GET)
-	public ResponseEntity<PrivateStoriesResponseWrapper> getPrivateStories(@RequestHeader("Authorization") String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException{
+	public ResponseEntity<PrivateStoriesResponseWrapper> getPrivateStories(@RequestHeader("Authorization") String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException, StoryNotFoundException{
 		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
 		
 		PrivateStoriesResponseWrapper wrapper = new PrivateStoriesResponseWrapper(storyManager.getStoriesByFbId(fbId));
@@ -82,11 +84,11 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 	
 	@Override
 	@RequestMapping(value = "/private/{storyId}", method = RequestMethod.GET)
-	public ResponseEntity<PrivateStoryResponse> getPrivateStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException {
+	public ResponseEntity<PrivateStoryResponse> getStoryForEdit(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, UnauthorizedException {
 		validateGetPrivateStoryRequest(storyId);
 		
 		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
-		PrivateStoryResponse response = storyManager.getPrivateStory(fbId, convertStoryIdToObjectId(storyId));
+		PrivateStoryResponse response = storyManager.getStoryForEdit(fbId, convertStoryIdToObjectId(storyId));
 		
 		return new ResponseEntity<PrivateStoryResponse>(response, HttpStatus.OK);
 	}	
@@ -94,7 +96,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 	@Override
 	@RequestMapping(value = "/private/like/{storyId}", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void like(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException {
+	public void like(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException {
 		validateLikeRequest(storyId);
 		
 		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
