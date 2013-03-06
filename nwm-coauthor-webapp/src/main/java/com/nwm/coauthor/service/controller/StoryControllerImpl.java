@@ -84,7 +84,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 	}	
 	
 	@Override
-	@RequestMapping(value = "/private/{storyId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{storyId}/private", method = RequestMethod.GET)
 	public ResponseEntity<PrivateStoryResponse> getStoryForEdit(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, UnauthorizedException {
 		validateGetPrivateStoryRequest(storyId);
 		
@@ -95,7 +95,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 	}	
 	
 	@Override
-	@RequestMapping(value = "/private/like/{storyId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/{storyId}/private/like", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void like(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException {
 		validateLikeRequest(storyId);

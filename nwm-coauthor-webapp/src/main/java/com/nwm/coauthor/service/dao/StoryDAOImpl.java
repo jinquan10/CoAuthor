@@ -15,8 +15,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
-import com.nwm.coauthor.exception.AddEntryException;
-import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.service.model.AddEntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;

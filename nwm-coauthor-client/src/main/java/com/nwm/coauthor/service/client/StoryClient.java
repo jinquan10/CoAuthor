@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
 
 import com.nwm.coauthor.exception.AddEntryException;
+import com.nwm.coauthor.exception.AddEntryVersionException;
+import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
@@ -19,11 +21,11 @@ import com.nwm.coauthor.service.resource.response.PrivateStoriesResponseWrapper;
 import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
 public class StoryClient extends BaseClient implements StoryController{
-	private static final String CREATE_STORY_ENDPOINT = "/story";
-	private static final String GET_PRIVATE_STORIES_ENDPOINT = "/story/privates";
-	private static final String ADD_ENTRY_ENDPOINT = "/story/entry";
-	private static final String GET_PRIVATE_STORY_ENDPOINT = "/story/private/";
-	private static final String LIKE_ENDPOINT = "/story/like/";
+	private static final String CREATE_STORY_ENDPOINT = "/";
+	private static final String GET_PRIVATE_STORIES_ENDPOINT = "/privates";
+	private static final String ADD_ENTRY_ENDPOINT = "/entry";
+	private static final String GET_PRIVATE_STORY_ENDPOINT = "/private";
+	private static final String LIKE_ENDPOINT = "/private/like";
 
 	public StoryClient(){
 		
@@ -32,7 +34,7 @@ public class StoryClient extends BaseClient implements StoryController{
 	@Override
 	public ResponseEntity<CreateStoryResponse> createStory(String coToken, CreateStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
 		try{
-			return restTemplate.exchange(urlResolver(CREATE_STORY_ENDPOINT), HttpMethod.POST, httpEntity(createStoryRequest, coToken), CreateStoryResponse.class);
+			return restTemplate.exchange(urlStoryResolver(CREATE_STORY_ENDPOINT), HttpMethod.POST, httpEntity(createStoryRequest, coToken), CreateStoryResponse.class);
 		}catch(HttpStatusCodeException e){
 			ExceptionMapperWrapper emw = convertToExceptionMapper(e);
 			
@@ -49,7 +51,7 @@ public class StoryClient extends BaseClient implements StoryController{
 	@Override
 	public ResponseEntity<PrivateStoriesResponseWrapper> getPrivateStories(String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException, StoryNotFoundException{
 		try{
-			return restTemplate.exchange(urlResolver(GET_PRIVATE_STORIES_ENDPOINT), HttpMethod.GET, httpEntity(null, coToken), PrivateStoriesResponseWrapper.class);
+			return restTemplate.exchange(urlStoryResolver(GET_PRIVATE_STORIES_ENDPOINT), HttpMethod.GET, httpEntity(null, coToken), PrivateStoriesResponseWrapper.class);
 		}catch(HttpStatusCodeException e){
 			ExceptionMapperWrapper emw = convertToExceptionMapper(e);
 			
@@ -64,9 +66,9 @@ public class StoryClient extends BaseClient implements StoryController{
 	}
 
 	@Override
-	public ResponseEntity<AddEntryResponse> addEntry(String coToken, AddEntryRequest entry) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException {
+	public ResponseEntity<AddEntryResponse> addEntry(String coToken, AddEntryRequest entry) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, StoryNotFoundException, AddEntryVersionException {
 		try{
-			return restTemplate.exchange(urlResolver(ADD_ENTRY_ENDPOINT), HttpMethod.POST, httpEntity(entry, coToken), AddEntryResponse.class);
+			return restTemplate.exchange(urlStoryResolver(ADD_ENTRY_ENDPOINT), HttpMethod.POST, httpEntity(entry, coToken), AddEntryResponse.class);
 		}catch(HttpStatusCodeException e){
 			ExceptionMapperWrapper emw = convertToExceptionMapper(e);
 			
@@ -76,6 +78,10 @@ public class StoryClient extends BaseClient implements StoryController{
 				throw new BadRequestException(emw.getBaseException());
 			} else if(emw.getClazz() == AddEntryException.class){
 				throw new AddEntryException();
+			} else if(emw.getClazz() == StoryNotFoundException.class){
+				throw new StoryNotFoundException();
+			} else if(emw.getClazz() == AddEntryVersionException.class){
+				throw new AddEntryVersionException();
 			} else{
 				throw new SomethingWentWrongException();
 			}
@@ -85,7 +91,7 @@ public class StoryClient extends BaseClient implements StoryController{
 	@Override
 	public ResponseEntity<PrivateStoryResponse> getStoryForEdit(String coToken, String storyId) throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException {
 		try{
-			return restTemplate.exchange(urlResolver(GET_PRIVATE_STORY_ENDPOINT) + storyId, HttpMethod.GET, httpEntity(null, coToken), PrivateStoryResponse.class);
+			return restTemplate.exchange(urlStoryResolver("/" + storyId + GET_PRIVATE_STORY_ENDPOINT), HttpMethod.GET, httpEntity(null, coToken), PrivateStoryResponse.class);
 		}catch(HttpStatusCodeException e){
 			ExceptionMapperWrapper emw = convertToExceptionMapper(e);
 			
@@ -102,7 +108,23 @@ public class StoryClient extends BaseClient implements StoryController{
 	}
 
 	@Override
-	public void like(String coToken, String storyId) {
-		restTemplate.exchange(urlResolver(LIKE_ENDPOINT) + storyId, HttpMethod.POST, httpEntity(null, coToken), String.class);
+	public void like(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException, SomethingWentWrongException{
+		try{
+			restTemplate.exchange(urlStoryResolver("/" + storyId + LIKE_ENDPOINT), HttpMethod.POST, httpEntity(null, coToken), String.class);
+		}catch(HttpStatusCodeException e){
+			ExceptionMapperWrapper emw = convertToExceptionMapper(e);
+			
+			if(emw.getClazz() == AuthenticationUnauthorizedException.class){
+				throw new AuthenticationUnauthorizedException();
+			} else if(emw.getClazz() == BadRequestException.class){
+				throw new BadRequestException(emw.getBaseException());
+			} else if(emw.getClazz() == AlreadyLikedException.class){
+				throw new AlreadyLikedException();
+			} else if(emw.getClazz() == StoryNotFoundException.class){
+				throw new StoryNotFoundException();
+			} else{
+				throw new SomethingWentWrongException();
+			}			
+		}
 	}
 }

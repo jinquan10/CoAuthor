@@ -20,6 +20,7 @@ import com.nwm.coauthor.exception.mapping.ExceptionMapperWrapper;
 public class BaseClient {
 	protected static final String HOST = "http://localhost:8081";
 	protected static final String SERVICE = "/nwm-coauthor-webapp";
+	protected static final String STORY = "/story";
 	protected RestTemplate restTemplate = new RestTemplate();
 	protected ObjectMapper objectMapper = new ObjectMapper();
 	
@@ -37,8 +38,8 @@ public class BaseClient {
 		restTemplate.setRequestFactory(httpClient);
 	}
 	
-	protected String urlResolver(String endpoint){
-		return HOST + SERVICE + endpoint;
+	protected String urlStoryResolver(String endpoint){
+		return HOST + SERVICE + STORY + endpoint;
 	}
 	
 	protected HttpEntity<Object> httpEntity(Object object, String coToken){

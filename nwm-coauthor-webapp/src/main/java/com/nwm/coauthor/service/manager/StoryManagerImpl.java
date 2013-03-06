@@ -1,14 +1,11 @@
 package com.nwm.coauthor.service.manager;
 
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-
 import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import com.nwm.coauthor.exception.AddEntryException;

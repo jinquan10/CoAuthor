@@ -19,7 +19,7 @@ public class AuthenticationClient extends BaseClient implements AuthenticationCo
 		ResponseEntity<AuthenticationResponse> response = null;
 		
 		try{
-			response = restTemplate.exchange(urlResolver(AUTHENTICATE_ENDPOINT), HttpMethod.POST, httpEntity(authResource, null), AuthenticationResponse.class);
+			response = restTemplate.exchange(urlStoryResolver(AUTHENTICATE_ENDPOINT), HttpMethod.POST, httpEntity(authResource, null), AuthenticationResponse.class);
 		}catch(HttpStatusCodeException e){
 			ExceptionMapperWrapper emw = convertToExceptionMapper(e);
 			
