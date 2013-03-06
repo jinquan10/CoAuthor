@@ -1,19 +1,14 @@
 package com.nwm.coauthor.service.client;
 
-import org.apache.http.client.utils.URIBuilder;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.web.util.UriUtils;
-import org.springframework.web.util.UrlPathHelper;
 
 import com.nwm.coauthor.exception.AddEntryException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
-import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
+import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.mapping.ExceptionMapperWrapper;
 import com.nwm.coauthor.service.controller.StoryController;
 import com.nwm.coauthor.service.resource.request.AddEntryRequest;
@@ -52,7 +47,7 @@ public class StoryClient extends BaseClient implements StoryController{
 	}
 
 	@Override
-	public ResponseEntity<PrivateStoriesResponseWrapper> getPrivateStories(String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException{
+	public ResponseEntity<PrivateStoriesResponseWrapper> getPrivateStories(String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException, StoryNotFoundException{
 		try{
 			return restTemplate.exchange(urlResolver(GET_PRIVATE_STORIES_ENDPOINT), HttpMethod.GET, httpEntity(null, coToken), PrivateStoriesResponseWrapper.class);
 		}catch(HttpStatusCodeException e){
@@ -60,6 +55,8 @@ public class StoryClient extends BaseClient implements StoryController{
 			
 			if(emw.getClazz() == AuthenticationUnauthorizedException.class){
 				throw new AuthenticationUnauthorizedException();
+			}else if(emw.getClazz() == StoryNotFoundException.class){
+				throw new StoryNotFoundException();
 			}else{
 				throw new SomethingWentWrongException();
 			}

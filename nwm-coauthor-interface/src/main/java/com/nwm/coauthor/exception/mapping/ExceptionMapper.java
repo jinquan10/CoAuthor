@@ -1,6 +1,7 @@
 package com.nwm.coauthor.exception.mapping;
 
 import com.nwm.coauthor.exception.AddEntryException;
+import com.nwm.coauthor.exception.AddEntryVersionException;
 import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BaseException;
@@ -18,7 +19,8 @@ public enum ExceptionMapper {
 	STORY_NOT_FOUND_EXCEPTION(StoryNotFoundException.class),
 	ALREADY_LIKED_EXCEPTION(AlreadyLikedException.class),
 	USER_LIKING_OWN_STORY_EXCEPTION(UserLikingOwnStoryException.class),
-	UNAUTHORIZED_EXCEPTION(UnauthorizedException.class);
+	UNAUTHORIZED_EXCEPTION(UnauthorizedException.class),
+	ADD_ENTRY_VERSION_EXCEPTION(AddEntryVersionException.class);
 	
 	private Class<? extends BaseException> clazz;
 	

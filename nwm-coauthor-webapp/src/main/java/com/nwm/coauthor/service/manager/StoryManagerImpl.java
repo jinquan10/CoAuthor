@@ -1,12 +1,18 @@
 package com.nwm.coauthor.service.manager;
 
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+
 import java.util.List;
 
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import com.nwm.coauthor.exception.AddEntryException;
+import com.nwm.coauthor.exception.AddEntryVersionException;
 import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.UnauthorizedException;
@@ -23,6 +29,8 @@ public class StoryManagerImpl {
 
 	@Autowired
 	private UserDAOImpl userDAO;
+
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	public String createStory(StoryModel createStoryModel){
 		storyDAO.createStory(createStoryModel);
@@ -39,13 +47,27 @@ public class StoryManagerImpl {
 		return stories;
 	}
 	
-	public String addEntry(String fbId, AddEntryModel request) throws AddEntryException{
-		storyDAO.addEntry(fbId, request);
+	public String addEntry(String fbId, AddEntryModel request) throws AddEntryException, StoryNotFoundException, AddEntryVersionException{
+		StoryModel model = storyDAO.addEntry(fbId, request);
+		
+		if(model == null){
+		    PrivateStoryResponse privateStory = storyDAO.getPrivateStory(request.getStoryId());		    
+		    
+		    if(request.getVersion() != privateStory.getVersion()){
+		    	throw new AddEntryVersionException();
+		    }
+		    
+			logger.error("addEntry(): Add entry failed.");
+//			logger.error("addEntry(): Add entry failed.\nHere is why: [_id | {}] [fbFriends | {}] [lastFriendEntry | {}] [numCharacters | {}] [version | {}]", request.getStoryId(), fbId, fbId, request.getEntry().getEntry().length(), request.getVersion());
+			
+			throw new AddEntryException();
+		}
+		
 		return request.getEntry().getEntryId();
 	}
 	
 	public PrivateStoryResponse getStoryForEdit(String fbId, ObjectId storyId) throws StoryNotFoundException, UnauthorizedException{
-	    PrivateStoryResponse privateStory = storyDAO.getPrivateStory(fbId, storyId);
+	    PrivateStoryResponse privateStory = storyDAO.getPrivateStory(storyId);
 	    
 	    if(!privateStory.getLeaderFbId().equals(fbId)){
 	        if(!privateStory.getFbFriends().contains(fbId)){
@@ -57,18 +79,31 @@ public class StoryManagerImpl {
 	}
 	
 	public void likeStory(String fbId, ObjectId storyId) throws AlreadyLikedException, StoryNotFoundException{
-		// - see if user belongs to the story
-		// - see if user already liked story
-		// - like the story
-		
-		PrivateStoryResponse privateStory = storyDAO.getPrivateStory(fbId, storyId);
+		checkStoryExists(storyId);
+		checkStoryAlreadyLiked(fbId, storyId);
+		persistLikeStory(fbId, storyId);
+	}
+
+	private void persistLikeStory(String fbId, ObjectId storyId) {
+		userDAO.likeStory(fbId, storyId);
+		storyDAO.likeStory(storyId);
+	}
+
+	private void checkStoryAlreadyLiked(String fbId, ObjectId storyId)
+			throws AlreadyLikedException {
 		boolean isStoryLiked = userDAO.isStoryLiked(fbId, storyId);
 		
 		if(isStoryLiked){
 			throw new AlreadyLikedException();
 		}
+	}
+
+	private void checkStoryExists(ObjectId storyId)
+			throws StoryNotFoundException {
+		PrivateStoryResponse privateStory = storyDAO.getPrivateStory(storyId);
 		
-		userDAO.likeStory(fbId, storyId);
-		storyDAO.likeStory(storyId);
+		if(privateStory == null){
+			throw new StoryNotFoundException();
+		}
 	}
 }

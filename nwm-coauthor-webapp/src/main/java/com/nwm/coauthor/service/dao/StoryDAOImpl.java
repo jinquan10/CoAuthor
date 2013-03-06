@@ -19,7 +19,6 @@ import com.nwm.coauthor.exception.AddEntryException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.service.model.AddEntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
-import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
 @Component
@@ -45,7 +44,7 @@ public class StoryDAOImpl {
 		return mongoTemplate.find(q, PrivateStoryResponse.class, "storyModel");
 	}
 
-	public void addEntry(String fbId, AddEntryModel request) throws AddEntryException{
+	public StoryModel addEntry(String fbId, AddEntryModel request){
 		Criteria c = new Criteria();
 		Criteria orC = new Criteria();
 		
@@ -63,37 +62,13 @@ public class StoryDAOImpl {
 		Query q = new Query();
 		q.addCriteria(c);
 		
-		StoryModel model = mongoTemplate.findAndModify(q, update, StoryModel.class, "storyModel");
-		
-		if(model == null){
-		    q = new Query(where("_id").is(request.getStoryId()));
-		    
-		    mongoTemplate.find(q, StoryModel.class);		    
-		    
-			logger.error("addEntry(): Add entry failed.\nHere is why: " + q.toString());
-//			logger.error("addEntry(): Add entry failed.\nHere is why: [_id | {}] [fbFriends | {}] [lastFriendEntry | {}] [numCharacters | {}] [version | {}]", request.getStoryId(), fbId, fbId, request.getEntry().getEntry().length(), request.getVersion());
-			
-			throw new AddEntryException();
-		}
+		return mongoTemplate.findAndModify(q, update, StoryModel.class, "storyModel");
 	}
 	
-	public PrivateStoryResponse getPrivateStory(String fbId, ObjectId storyId) throws StoryNotFoundException{
-		Criteria getStoryC = new Criteria();
+	public PrivateStoryResponse getPrivateStory(ObjectId storyId){
+		Query q = new Query(where("_id").is(storyId));
 		
-		getStoryC.andOperator(where("_id").is(storyId));
-		
-		Query q = new Query();
-		q.addCriteria(getStoryC);
-		
-		PrivateStoryResponse result = mongoTemplate.findOne(q, PrivateStoryResponse.class, "storyModel");
-		
-		if(result == null){
-			logger.error("getStory(): Get private story not found failed.\nHere is why: " + q.toString());
-
-			throw new StoryNotFoundException();
-		}
-		
-		return result;
+		return mongoTemplate.findOne(q, PrivateStoryResponse.class, "storyModel");
 	}
 	
 	public void likeStory(ObjectId storyId){

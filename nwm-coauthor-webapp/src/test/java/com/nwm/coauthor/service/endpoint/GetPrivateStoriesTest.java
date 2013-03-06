@@ -22,7 +22,7 @@ import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 // - TODO: test for a user having no private stories, assert story not found exception
 public class GetPrivateStoriesTest extends TestSetup{
 	@Test(expected = StoryNotFoundException.class)
-	public void userWithNoPrivateStories_GetPrivateStories_Assert_StoryNotFoundException() throws InterruptedException, AuthenticationUnauthorizedException, SomethingWentWrongException{
+	public void userWithNoPrivateStories_GetPrivateStories_Assert_StoryNotFoundException() throws InterruptedException, AuthenticationUnauthorizedException, SomethingWentWrongException, StoryNotFoundException{
 		List<UserModel> users = createUsers(1);
 		
 		UserModel user = users.get(0);
@@ -30,7 +30,7 @@ public class GetPrivateStoriesTest extends TestSetup{
 	}
 	
 	@Test
-	public void getPrivateStoriesSuccess() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException{
+	public void getPrivateStoriesSuccess() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException, StoryNotFoundException{
 		List<UserModel> users = createUsers(null);
 		
 		for(int i = 0; i < users.size(); i++){
@@ -66,7 +66,7 @@ public class GetPrivateStoriesTest extends TestSetup{
 	}
 	
 	@Test
-	public void getPrivateStories_UserShouldSeeOneEntry_WhenMoreThanOneEntryIsSubmitted() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, InterruptedException{
+	public void getPrivateStories_UserShouldSeeOneEntry_WhenMoreThanOneEntryIsSubmitted() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, InterruptedException, StoryNotFoundException{
 		List<UserModel> users = createUsers(null);
 		
 		UserModel user = users.get(0);
