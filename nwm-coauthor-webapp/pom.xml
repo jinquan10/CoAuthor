@@ -15,6 +15,7 @@
 	<properties>
 		<sl4j>1.7.2</sl4j>
 		<forkTomcat>true</forkTomcat>
+		<skipTomcat>false</skipTomcat>
 	</properties>
 
 	<dependencies>
@@ -94,6 +95,7 @@
 						</goals>
 
 						<configuration>
+							<skip>${skipTomcat}</skip>
 							<fork>${forkTomcat}</fork>
 							<port>8081</port>
 						</configuration>
