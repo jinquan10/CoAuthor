@@ -3,6 +3,7 @@ package com.nwm.coauthor.service.endpoint;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
@@ -74,18 +75,24 @@ public class LikeTest extends TestSetup{
 	
 	@Test
 	public void userWith_PrivateStory_LikeAStory_AssertLikesIncremented() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException, UnauthorizedException, UserLikingOwnStoryException{
-		List<UserModel> users = createUsers(2);
+		List<UserModel> users = createUsers(3);
 		
-		UserModel user = users.get(0);
-		ResponseEntity<CreateStoryResponse> story = storyClient.createStory(user.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, null));
+		UserModel leader = users.get(0);
+		UserModel member = users.get(1);
+		UserModel nonMember = users.get(2);
 		
-		storyClient.like(user.getCoToken(), story.getBody().getStoryId());
+		List<String> fbFriends = new ArrayList<String>();
+		fbFriends.add(member.getFbId());
 		
-		ResponseEntity<PrivateStoriesResponseWrapper> stories = storyClient.getPrivateStories(user.getCoToken());
+		ResponseEntity<CreateStoryResponse> story = storyClient.createStory(leader.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, fbFriends));
+		
+		storyClient.like(nonMember.getCoToken(), story.getBody().getStoryId());
+		
+		ResponseEntity<PrivateStoriesResponseWrapper> stories = storyClient.getPrivateStories(leader.getCoToken());
 		PrivateStoryResponse storiesResponse = stories.getBody().getStories().get(0);
 		Assert.assertEquals(new Integer(1), storiesResponse.getLikes());
 		
-		ResponseEntity<PrivateStoryResponse> oneStory = storyClient.getStoryForEdit(user.getCoToken(), story.getBody().getStoryId());
+		ResponseEntity<PrivateStoryResponse> oneStory = storyClient.getStoryForEdit(leader.getCoToken(), story.getBody().getStoryId());
 		Assert.assertEquals(new Integer(1), oneStory.getBody().getLikes());
 	}
 	
@@ -95,7 +102,7 @@ public class LikeTest extends TestSetup{
 		
 		UserModel user = users.get(0);
 		
-		storyClient.like(user.getCoToken(), "nonStoryId");
+		storyClient.like(user.getCoToken(), new ObjectId().toString());
 	}
 	
 	@Test(expected = AuthenticationUnauthorizedException.class)
@@ -127,12 +134,18 @@ public class LikeTest extends TestSetup{
 	
 	@Test(expected = AlreadyLikedException.class)
 	public void user_LikesAStoryTwice_AssertAlreadyLikedException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException, UserLikingOwnStoryException{
-		List<UserModel> users = createUsers(2);
+		List<UserModel> users = createUsers(3);
 		
-		UserModel user = users.get(0);
-		ResponseEntity<CreateStoryResponse> story = storyClient.createStory(user.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, null));
+		UserModel leader = users.get(0);
+		UserModel member = users.get(1);
+		UserModel nonMember = users.get(2);
 		
-		storyClient.like(user.getCoToken(), story.getBody().getStoryId());
-		storyClient.like(user.getCoToken(), story.getBody().getStoryId());
+		List<String> fbFriends = new ArrayList<String>();
+		fbFriends.add(member.getFbId());
+		
+		ResponseEntity<CreateStoryResponse> story = storyClient.createStory(leader.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, fbFriends));
+		
+		storyClient.like(nonMember.getCoToken(), story.getBody().getStoryId());
+		storyClient.like(nonMember.getCoToken(), story.getBody().getStoryId());
 	}	
 }

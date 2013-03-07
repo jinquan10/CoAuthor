@@ -68,7 +68,7 @@
 								<pluginExecution>
 									<pluginExecutionFilter>
 										<groupId>org.apache.tomcat.maven</groupId>
-										<artifactId>tomcat6-maven-plugin</artifactId>
+										<artifactId>tomcat7-maven-plugin</artifactId>
 										<versionRange>[2.0,)</versionRange>
 										<goals>
 											<goal>run</goal>

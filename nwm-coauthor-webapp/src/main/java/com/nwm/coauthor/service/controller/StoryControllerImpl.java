@@ -130,7 +130,10 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 		}catch(IllegalArgumentException e){
 			logger.error("storyId is not a valid ObjectId", e);
 			
-			throw new BadRequestException();
+			Map<String, String> batchErrors = new HashMap<String, String>();  
+			batchErrors.put("storyId", "The storyId is not a valid storyId.");
+			
+			throw new BadRequestException(batchErrors);
 		}
 	}
 	
