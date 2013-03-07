@@ -34,7 +34,11 @@ public class BadRequestException extends BaseException {
 	
 	@Override
 	public String toString(){
-		Set<Entry<String, String>> entries = getBatchErrors().entrySet();
+		Set<Entry<String, String>> entries = null;
+		
+		if(getBatchErrors() != null){
+			entries = getBatchErrors().entrySet();
+		}
 		
 		String batchErrors = "";
 		for(Entry<String, String> entry : entries){
