@@ -28,7 +28,7 @@ public class LikeTest extends TestSetup{
 		
 		ResponseEntity<CreateStoryResponse> createdStory = storyClient.createStory(users.get(0).getCoToken(), CreateStoryBuilder.createValidStory(users, 0, null));
 		
-		storyClient.like(users.get(0).getCoToken(), createdStory.getBody().getStoryId());
+		storyClient.likeStory(users.get(0).getCoToken(), createdStory.getBody().getStoryId());
 	}
 	
 	@Test
@@ -46,7 +46,7 @@ public class LikeTest extends TestSetup{
 		ResponseEntity<CreateStoryResponse> story = storyClient.createStory(user1.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, fbFriends)); 
 		Assert.assertEquals(201, story.getStatusCode().value());
 		
-		storyClient.like(userWithoutPrivateStory.getCoToken(), story.getBody().getStoryId());
+		storyClient.likeStory(userWithoutPrivateStory.getCoToken(), story.getBody().getStoryId());
 		
 		ResponseEntity<PrivateStoryResponse> privateStoryResponse = storyClient.getStoryForEdit(user1.getCoToken(), story.getBody().getStoryId());
 		Assert.assertEquals(new Integer(1), privateStoryResponse.getBody().getLikes());
@@ -86,7 +86,7 @@ public class LikeTest extends TestSetup{
 		
 		ResponseEntity<CreateStoryResponse> story = storyClient.createStory(leader.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, fbFriends));
 		
-		storyClient.like(nonMember.getCoToken(), story.getBody().getStoryId());
+		storyClient.likeStory(nonMember.getCoToken(), story.getBody().getStoryId());
 		
 		ResponseEntity<PrivateStoriesResponseWrapper> stories = storyClient.getPrivateStories(leader.getCoToken());
 		PrivateStoryResponse storiesResponse = stories.getBody().getStories().get(0);
@@ -102,7 +102,7 @@ public class LikeTest extends TestSetup{
 		
 		UserModel user = users.get(0);
 		
-		storyClient.like(user.getCoToken(), new ObjectId().toString());
+		storyClient.likeStory(user.getCoToken(), new ObjectId().toString());
 	}
 	
 	@Test(expected = AuthenticationUnauthorizedException.class)
@@ -111,7 +111,7 @@ public class LikeTest extends TestSetup{
 		UserModel user = users.get(0);
 		
 		ResponseEntity<CreateStoryResponse> story = storyClient.createStory(user.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, null));
-		storyClient.like(null, story.getBody().getStoryId());
+		storyClient.likeStory(null, story.getBody().getStoryId());
 	}
 	
 	@Test(expected = AuthenticationUnauthorizedException.class)
@@ -120,7 +120,7 @@ public class LikeTest extends TestSetup{
 		UserModel user = users.get(0);
 		
 		ResponseEntity<CreateStoryResponse> story = storyClient.createStory(user.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, null));
-		storyClient.like("", story.getBody().getStoryId());
+		storyClient.likeStory("", story.getBody().getStoryId());
 	}
 	
 	@Test(expected = AuthenticationUnauthorizedException.class)
@@ -129,7 +129,7 @@ public class LikeTest extends TestSetup{
 		UserModel user = users.get(0);
 		
 		ResponseEntity<CreateStoryResponse> story = storyClient.createStory(user.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, null));
-		storyClient.like("nonExistantCOToken", story.getBody().getStoryId());
+		storyClient.likeStory("nonExistantCOToken", story.getBody().getStoryId());
 	}
 	
 	@Test(expected = AlreadyLikedException.class)
@@ -145,7 +145,7 @@ public class LikeTest extends TestSetup{
 		
 		ResponseEntity<CreateStoryResponse> story = storyClient.createStory(leader.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, fbFriends));
 		
-		storyClient.like(nonMember.getCoToken(), story.getBody().getStoryId());
-		storyClient.like(nonMember.getCoToken(), story.getBody().getStoryId());
+		storyClient.likeStory(nonMember.getCoToken(), story.getBody().getStoryId());
+		storyClient.likeStory(nonMember.getCoToken(), story.getBody().getStoryId());
 	}	
 }

@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.springframework.http.HttpStatus;
+
 import com.nwm.coauthor.exception.mapping.ExceptionMapper;
 
 public class BadRequestException extends BaseException {
@@ -12,20 +14,20 @@ public class BadRequestException extends BaseException {
 	public BadRequestException(){
 		setId(ExceptionMapper.BAD_REQUEST_EXCEPTION);
 		setDescription("You made a bad request.");
-		setStatusCode(400);
+		setHttpStatus(HttpStatus.BAD_REQUEST);
 	}
 	
 	public BadRequestException(Map<String, String> batchErrors){
 		setId(ExceptionMapper.BAD_REQUEST_EXCEPTION);
 		setDescription("You made a bad request.");
 		setBatchErrors(batchErrors);
-		setStatusCode(400);
+		setHttpStatus(HttpStatus.BAD_REQUEST);
 	}
 	
 	public BadRequestException(BaseException e){
 		setId(e.getId());
 		setDescription(e.getDescription());
-		setStatusCode(e.getStatusCode());
+		setHttpStatus(e.getHttpStatus());
 		setBatchErrors(e.getBatchErrors());
 		setThreadId(e.getThreadId());
 	}
@@ -39,6 +41,6 @@ public class BadRequestException extends BaseException {
 			batchErrors += entry.getKey() + ":" + entry.getValue() + " ";
 		}
 		
-		return "id: " + getId() + " description: " + getDescription() + " statusCode " + getStatusCode() + " errors: " + batchErrors;
+		return "id: " + getId() + " description: " + getDescription() + " httpStatus " + getHttpStatus() + " errors: " + batchErrors;
 	}
 }

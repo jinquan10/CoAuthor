@@ -9,6 +9,7 @@ import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.UnauthorizedException;
+import com.nwm.coauthor.exception.UserIsNotLeaderException;
 import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 
 public enum ExceptionMapper {
@@ -20,7 +21,8 @@ public enum ExceptionMapper {
 	ALREADY_LIKED_EXCEPTION(AlreadyLikedException.class),
 	USER_LIKING_OWN_STORY_EXCEPTION(UserLikingOwnStoryException.class),
 	UNAUTHORIZED_EXCEPTION(UnauthorizedException.class),
-	ADD_ENTRY_VERSION_EXCEPTION(AddEntryVersionException.class);
+	ADD_ENTRY_VERSION_EXCEPTION(AddEntryVersionException.class),
+	USER_IS_NOT_LEADER_EXCEPTION(UserIsNotLeaderException.class);
 	
 	private Class<? extends BaseException> clazz;
 	

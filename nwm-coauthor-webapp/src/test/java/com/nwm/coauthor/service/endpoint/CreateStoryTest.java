@@ -56,7 +56,6 @@ public class CreateStoryTest extends TestSetup{
 				Map<String, String> batchErrors = e.getBatchErrors();
 
 				Assert.assertEquals(e.toString(), 3, batchErrors.size());
-				Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), e.getStatusCode());
 			}
 		}
 	}
@@ -72,7 +71,6 @@ public class CreateStoryTest extends TestSetup{
 				Map<String, String> batchErrors = e.getBatchErrors();
 
 				Assert.assertEquals(e.toString(), 3, batchErrors.size());
-				Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), e.getStatusCode());
 			}
 		}
 	}
@@ -90,7 +88,6 @@ public class CreateStoryTest extends TestSetup{
 				Map<String, String> batchErrors = e.getBatchErrors();
 
 				Assert.assertEquals(e.toString(), 1, batchErrors.size());
-				Assert.assertEquals(HttpStatus.BAD_REQUEST.value(), e.getStatusCode());
 			}
 		}
 	}

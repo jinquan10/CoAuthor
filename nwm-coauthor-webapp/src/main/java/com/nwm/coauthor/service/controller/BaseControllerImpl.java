@@ -26,7 +26,7 @@ public class BaseControllerImpl {
 	protected ResponseEntity<BaseException> getExceptionBody(Throwable t){
 		BaseException baseException = (BaseException)t;
 		
-		return new ResponseEntity<BaseException>(baseException, HttpStatus.valueOf(baseException.getStatusCode()));
+		return new ResponseEntity<BaseException>(baseException, baseException.getHttpStatus());
 	}
 	
 	protected ResponseEntity<BaseException> getSomethingWentWrongExceptionBody(Throwable t) throws IOException{
@@ -41,6 +41,6 @@ public class BaseControllerImpl {
 		
 		SomethingWentWrongException body = new SomethingWentWrongException();
 		
-		return new ResponseEntity<BaseException>(body, HttpStatus.valueOf(body.getStatusCode()));
+		return new ResponseEntity<BaseException>(body, body.getHttpStatus());
 	}
 }

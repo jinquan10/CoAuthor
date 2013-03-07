@@ -98,7 +98,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 	@Override
 	@RequestMapping(value = "/{storyId}/private/like", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void like(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException, UserLikingOwnStoryException {
+	public void likeStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException, UserLikingOwnStoryException {
 		validateLikeRequest(storyId);
 		
 		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
@@ -218,5 +218,11 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 		if(isError){
 			throw new BadRequestException(batchErrors);
 		}
+	}
+
+	@Override
+	public void publishStory(String coToken, String storyId) {
+		// TODO Auto-generated method stub
+		
 	}
 }

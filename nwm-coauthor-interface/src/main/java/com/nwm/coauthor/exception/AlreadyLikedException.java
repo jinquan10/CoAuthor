@@ -10,6 +10,6 @@ public class AlreadyLikedException extends BaseException{
 	public AlreadyLikedException(){
 		setId(ExceptionMapper.ALREADY_LIKED_EXCEPTION);
 		setDescription("You have already liked this story.");
-		setStatusCode(HttpStatus.FORBIDDEN.value());
+		setHttpStatus(HttpStatus.FORBIDDEN);
 	}
 }

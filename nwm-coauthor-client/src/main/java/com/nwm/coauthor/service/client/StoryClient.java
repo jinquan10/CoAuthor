@@ -28,7 +28,8 @@ public class StoryClient extends BaseClient implements StoryController{
 	private static final String ADD_ENTRY_ENDPOINT = "/entry";
 	private static final String GET_PRIVATE_STORY_ENDPOINT = "/private";
 	private static final String LIKE_ENDPOINT = "/private/like";
-
+	private static final String PUBLISH_ENDPOINT = "/publish";
+	
 	public StoryClient(){
 		
 	}
@@ -112,7 +113,7 @@ public class StoryClient extends BaseClient implements StoryController{
 	}
 
 	@Override
-	public void like(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException, SomethingWentWrongException, UserLikingOwnStoryException{
+	public void likeStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException, SomethingWentWrongException, UserLikingOwnStoryException{
 		try{
 			restTemplate.exchange(urlStoryResolver("/" + storyId + LIKE_ENDPOINT), HttpMethod.POST, httpEntity(null, coToken), String.class);
 		}catch(HttpStatusCodeException e){
@@ -132,5 +133,10 @@ public class StoryClient extends BaseClient implements StoryController{
 				throw new SomethingWentWrongException();
 			}			
 		}
+	}
+
+	@Override
+	public void publishStory(String coToken, String storyId) {
+		restTemplate.exchange(urlStoryResolver("/" + storyId + PUBLISH_ENDPOINT), HttpMethod.POST, httpEntity(null, coToken), String.class);
 	}
 }

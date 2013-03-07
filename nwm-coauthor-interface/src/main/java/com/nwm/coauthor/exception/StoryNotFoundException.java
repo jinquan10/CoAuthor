@@ -1,5 +1,7 @@
 package com.nwm.coauthor.exception;
 
+import org.springframework.http.HttpStatus;
+
 import com.nwm.coauthor.exception.mapping.ExceptionMapper;
 
 public class StoryNotFoundException extends BaseException {
@@ -8,6 +10,6 @@ public class StoryNotFoundException extends BaseException {
 	public StoryNotFoundException(){
 		setId(ExceptionMapper.STORY_NOT_FOUND_EXCEPTION);
 		setDescription("The private story cannot be found.");
-		setStatusCode(404);
+		setHttpStatus(HttpStatus.NOT_FOUND);
 	}
 }

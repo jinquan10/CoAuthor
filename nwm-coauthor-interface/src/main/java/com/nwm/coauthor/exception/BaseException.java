@@ -8,6 +8,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import org.springframework.http.HttpStatus;
 
 import com.nwm.coauthor.exception.mapping.ExceptionMapper;
 
@@ -23,8 +24,7 @@ public class BaseException extends Exception{
 	@JsonProperty("description")
 	private String description;
 	
-	@JsonProperty("statusCode")
-	private int statusCode;
+	private HttpStatus httpStatus;
 
 	@JsonProperty("batchErrors")
 	private Map<String, String> batchErrors;
@@ -48,14 +48,6 @@ public class BaseException extends Exception{
 		this.description = description;
 	}
 
-	public int getStatusCode() {
-		return statusCode;
-	}
-
-	public void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
-	}
-
 	public ExceptionMapper getId() {
 		return id;
 	}
@@ -70,6 +62,14 @@ public class BaseException extends Exception{
 
 	public void setThreadId(String threadId) {
 		this.threadId = threadId;
+	}
+
+	public HttpStatus getHttpStatus() {
+		return httpStatus;
+	}
+
+	public void setHttpStatus(HttpStatus httpStatus) {
+		this.httpStatus = httpStatus;
 	}
 	
 }

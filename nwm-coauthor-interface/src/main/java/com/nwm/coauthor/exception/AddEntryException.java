@@ -1,5 +1,7 @@
 package com.nwm.coauthor.exception;
 
+import org.springframework.http.HttpStatus;
+
 import com.nwm.coauthor.exception.mapping.ExceptionMapper;
 
 public class AddEntryException extends BaseException {
@@ -8,6 +10,6 @@ public class AddEntryException extends BaseException {
 	public AddEntryException(){
 		setId(ExceptionMapper.ADD_ENTRY_EXCEPTION);
 		setDescription("Someone may have added an entry at the same time as you.  Please try refreshing the story and try again.");
-		setStatusCode(400);
+		setHttpStatus(HttpStatus.BAD_REQUEST);
 	}
 }

@@ -1,5 +1,7 @@
 package com.nwm.coauthor.exception;
 
+import org.springframework.http.HttpStatus;
+
 import com.nwm.coauthor.exception.mapping.ExceptionMapper;
 
 public class SomethingWentWrongException extends BaseException{
@@ -8,6 +10,6 @@ public class SomethingWentWrongException extends BaseException{
 	public SomethingWentWrongException(){
 		setId(ExceptionMapper.SOMETHING_WENT_WRONG_EXCEPTION);
 		setDescription("Sorry, something didn't go right.  We are on it!");
-		setStatusCode(500);
+		setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
