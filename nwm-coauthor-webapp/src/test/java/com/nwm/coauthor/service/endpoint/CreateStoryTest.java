@@ -13,6 +13,7 @@ import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.service.builder.CreateStoryBuilder;
+import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
 import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
@@ -20,7 +21,7 @@ import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
 public class CreateStoryTest extends TestSetup{
 	@Test
 	public void createStorySuccessTest() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		
 		for(int i = 0; i < users.size(); i++){
 			ResponseEntity<CreateStoryResponse> response = storyClient.createStory(users.get(i).getCoToken(), CreateStoryBuilder.createValidStory(users, i, null));
@@ -33,21 +34,21 @@ public class CreateStoryTest extends TestSetup{
 	
 	@Test(expected = AuthenticationUnauthorizedException.class)
 	public void createStoryNullCoTokenTest() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		
 		storyClient.createStory(null, CreateStoryBuilder.createValidStory(users, 0, null));
 	}	
 
 	@Test(expected = AuthenticationUnauthorizedException.class)
 	public void createStoryEmptyStringCoTokenTest() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		
 		storyClient.createStory("", CreateStoryBuilder.createValidStory(users, 0, null));
 	}	
 	
 	@Test
 	public void createStory_EmptyCreateStoryRequestTest() throws SomethingWentWrongException, AuthenticationUnauthorizedException, InterruptedException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		
 		for(int i = 0; i < users.size(); i++){
 			try {
@@ -62,7 +63,7 @@ public class CreateStoryTest extends TestSetup{
 	
 	@Test
 	public void createStoryNullResourceTest() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		
 		for(int i = 0; i < users.size(); i++){
 			try {
@@ -77,7 +78,7 @@ public class CreateStoryTest extends TestSetup{
 	
 	@Test
 	public void createStoryLengthyTitleTest() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		
 		for(int i = 0; i < users.size(); i++){
 			try {

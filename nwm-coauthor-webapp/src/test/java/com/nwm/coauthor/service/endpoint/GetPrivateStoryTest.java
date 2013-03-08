@@ -17,6 +17,7 @@ import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.UnauthorizedException;
 import com.nwm.coauthor.exception.WebApplicationException;
 import com.nwm.coauthor.service.builder.CreateStoryBuilder;
+import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.StoryEntryResource;
 import com.nwm.coauthor.service.resource.request.AddEntryRequest;
@@ -28,7 +29,7 @@ import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 public class GetPrivateStoryTest extends TestSetup{
 	@Test
 	public void createStory_Then_AssertTheSameStoryContents() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, UnauthorizedException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		CreateStoryRequest createStoryRequest = CreateStoryBuilder.createValidStory(users, 0, null);
 
 		ResponseEntity<CreateStoryResponse> createdStory = storyClient.createStory(users.get(0).getCoToken(), createStoryRequest);
@@ -57,7 +58,7 @@ public class GetPrivateStoryTest extends TestSetup{
 	
 	@Test
 	public void addEntries_AssertAllEntriesAreAdded_InTheRightOrder() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, StoryNotFoundException, AddEntryVersionException, UnauthorizedException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		
 		UserModel user = users.get(0);
 		
@@ -110,7 +111,7 @@ public class GetPrivateStoryTest extends TestSetup{
 	
 	@Test(expected = WebApplicationException.class)
 	public void withEmptyStoryId() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, UnauthorizedException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		CreateStoryRequest createStoryRequest = CreateStoryBuilder.createValidStory(users, 0, null);
 
 		ResponseEntity<CreateStoryResponse> createdStory = storyClient.createStory(users.get(0).getCoToken(), createStoryRequest);
@@ -122,7 +123,7 @@ public class GetPrivateStoryTest extends TestSetup{
 	
 	@Test(expected = BadRequestException.class)
 	public void withInvalidStoryId() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, InterruptedException, UnauthorizedException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		CreateStoryRequest createStoryRequest = CreateStoryBuilder.createValidStory(users, 0, null);
 
 		ResponseEntity<CreateStoryResponse> createdStory = storyClient.createStory(users.get(0).getCoToken(), createStoryRequest);
@@ -134,7 +135,7 @@ public class GetPrivateStoryTest extends TestSetup{
 	
 	@Test(expected = StoryNotFoundException.class)
 	public void withNonExistantStoryId() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, InterruptedException, UnauthorizedException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		CreateStoryRequest createStoryRequest = CreateStoryBuilder.createValidStory(users, 0, null);
 
 		ResponseEntity<CreateStoryResponse> createdStory = storyClient.createStory(users.get(0).getCoToken(), createStoryRequest);
@@ -148,7 +149,7 @@ public class GetPrivateStoryTest extends TestSetup{
 	
     @Test(expected = UnauthorizedException.class)
     public void withAUserThatDoesNotBelongToStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, InterruptedException, UnauthorizedException{
-        List<UserModel> users = createUsers(3);
+        List<UserModel> users = UserBuilder.createUsers(3);
         
         List<String> fbFriends = new ArrayList<String>();
         fbFriends.add(users.get(1).getFbId());

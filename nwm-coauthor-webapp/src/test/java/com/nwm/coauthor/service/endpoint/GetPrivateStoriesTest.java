@@ -14,6 +14,7 @@ import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.service.builder.CreateStoryBuilder;
+import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.request.AddEntryRequest;
 import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
@@ -24,7 +25,7 @@ import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 public class GetPrivateStoriesTest extends TestSetup{
 	@Test(expected = StoryNotFoundException.class)
 	public void userWithNoPrivateStories_GetPrivateStories_Assert_StoryNotFoundException() throws InterruptedException, AuthenticationUnauthorizedException, SomethingWentWrongException, StoryNotFoundException{
-		List<UserModel> users = createUsers(1);
+		List<UserModel> users = UserBuilder.createUsers(1);
 		
 		UserModel user = users.get(0);
 		storyClient.getPrivateStories(user.getCoToken());
@@ -32,7 +33,7 @@ public class GetPrivateStoriesTest extends TestSetup{
 	
 	@Test
 	public void getPrivateStoriesSuccess() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException, StoryNotFoundException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		
 		for(int i = 0; i < users.size(); i++){
 			storyClient.createStory(users.get(i).getCoToken(), CreateStoryBuilder.createValidStory(users, i, null));
@@ -68,7 +69,7 @@ public class GetPrivateStoriesTest extends TestSetup{
 	
 	@Test
 	public void getPrivateStories_UserShouldSeeOneEntry_WhenMoreThanOneEntryIsSubmitted() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, InterruptedException, StoryNotFoundException, AddEntryVersionException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		
 		UserModel user = users.get(0);
 		

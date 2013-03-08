@@ -14,6 +14,7 @@ import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.service.builder.CreateStoryBuilder;
+import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.request.AddEntryRequest;
 import com.nwm.coauthor.service.resource.response.AddEntryResponse;
@@ -22,7 +23,7 @@ import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
 public class AddEntryTest extends TestSetup{
 	@Test
 	public void takeTurns_AddingEntries_To_OneStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, InterruptedException, StoryNotFoundException, AddEntryVersionException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		
 		UserModel user = users.get(0);
 		
@@ -52,7 +53,7 @@ public class AddEntryTest extends TestSetup{
 	
 	@Test(expected = BadRequestException.class)
 	public void addEntry_For_NonExistantStoryId() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, StoryNotFoundException, AddEntryVersionException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		
 		UserModel user = users.get(0);
 		
@@ -68,7 +69,7 @@ public class AddEntryTest extends TestSetup{
 	
 	@Test(expected = BadRequestException.class)
 	public void addEntry_For_NullStoryId() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, StoryNotFoundException, AddEntryVersionException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		
 		UserModel user = users.get(0);
 		
@@ -84,7 +85,7 @@ public class AddEntryTest extends TestSetup{
 	
 	@Test(expected = BadRequestException.class)
 	public void addEntry_For_EmptyStoryId() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, StoryNotFoundException, AddEntryVersionException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		
 		UserModel user = users.get(0);
 		
@@ -100,7 +101,7 @@ public class AddEntryTest extends TestSetup{
 
 	@Test(expected = BadRequestException.class)
 	public void addEntry_For_EmptyEntry() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, StoryNotFoundException, AddEntryVersionException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		
 		UserModel user = users.get(0);
 		
@@ -116,7 +117,7 @@ public class AddEntryTest extends TestSetup{
 	
 	@Test(expected = AddEntryException.class)
 	public void addEntry_For_LengthyEntry() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, StoryNotFoundException, AddEntryVersionException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		
 		UserModel user = users.get(0);
 		
@@ -132,7 +133,7 @@ public class AddEntryTest extends TestSetup{
 	
 	@Test(expected = BadRequestException.class)
 	public void addEntry_For_NullEntry() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, StoryNotFoundException, AddEntryVersionException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		
 		UserModel user = users.get(0);
 		
@@ -148,7 +149,7 @@ public class AddEntryTest extends TestSetup{
 	
 	@Test(expected = BadRequestException.class)
 	public void addEntry_For_NullVersion() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, StoryNotFoundException, AddEntryVersionException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		
 		UserModel user = users.get(0);
 		
@@ -164,7 +165,7 @@ public class AddEntryTest extends TestSetup{
 	
 	@Test(expected = AddEntryVersionException.class)
 	public void addEntry_For_BadVersion() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, StoryNotFoundException, AddEntryVersionException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		
 		UserModel user = users.get(0);
 		
@@ -180,7 +181,7 @@ public class AddEntryTest extends TestSetup{
 
 	@Test(expected = AddEntryException.class)
 	public void addEntry_When_NotYourTurn() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, StoryNotFoundException, AddEntryVersionException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		
 		UserModel user = users.get(0);
 		
@@ -196,7 +197,7 @@ public class AddEntryTest extends TestSetup{
 	
 	@Test(expected = AddEntryException.class)
 	public void addEntry_To_StoryThat_UserDoesNotBelong() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, StoryNotFoundException, AddEntryVersionException{
-		List<UserModel> users = createUsers(null);
+		List<UserModel> users = UserBuilder.createUsers(null);
 		
 		UserModel user = users.get(0);
 		
@@ -207,7 +208,7 @@ public class AddEntryTest extends TestSetup{
 		request.setStoryId(response.getBody().getStoryId());
 		request.setVersion(0);
 		
-		List<UserModel> usersNotBelonging = createUsers(null);
+		List<UserModel> usersNotBelonging = UserBuilder.createUsers(null);
 		
 		storyClient.addEntry(usersNotBelonging.get(0).getCoToken(), request);
 	}	
