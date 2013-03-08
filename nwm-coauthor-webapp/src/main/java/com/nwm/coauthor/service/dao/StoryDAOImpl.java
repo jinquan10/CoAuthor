@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
+import com.mongodb.WriteResult;
 import com.nwm.coauthor.service.model.AddEntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
@@ -24,8 +25,6 @@ public class StoryDAOImpl {
     @Autowired
     @Qualifier("mongoTemplate")
     private MongoTemplate mongoTemplate;
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public void createStory(StoryModel storyModel) {
         mongoTemplate.insert(storyModel);
@@ -42,7 +41,7 @@ public class StoryDAOImpl {
         return mongoTemplate.find(q, PrivateStoryResponse.class, "storyModel");
     }
 
-    public StoryModel addEntry(String fbId, AddEntryModel request) {
+    public WriteResult addEntry(String fbId, AddEntryModel request) {
         Criteria c = new Criteria();
         Criteria orC = new Criteria();
 
@@ -57,7 +56,7 @@ public class StoryDAOImpl {
         Query q = new Query();
         q.addCriteria(c);
 
-        return mongoTemplate.findAndModify(q, update, StoryModel.class, "storyModel");
+        return mongoTemplate.updateFirst(q, update, StoryModel.class);
     }
 
     public PrivateStoryResponse getPrivateStory(ObjectId storyId) {
@@ -73,6 +72,18 @@ public class StoryDAOImpl {
         Update update = new Update();
         update.inc("likes", 1);
 
-        mongoTemplate.findAndModify(query, update, StoryModel.class);
+        mongoTemplate.updateFirst(query, update, StoryModel.class);
+    }
+
+    public WriteResult publishStory(String fbId, ObjectId storyId) {
+        Criteria criteria = new Criteria();
+        criteria.andOperator(where("leaderFbId").is(fbId), where("_id").is(storyId), where("title").ne(null));
+
+        Query query = new Query(criteria);
+        
+        Update update = new Update();
+        update.set("isPublished", true);
+        
+        return mongoTemplate.updateFirst(query, update, StoryModel.class);
     }
 }

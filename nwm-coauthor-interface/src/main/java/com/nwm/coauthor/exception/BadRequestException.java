@@ -11,12 +11,6 @@ import com.nwm.coauthor.exception.mapping.ExceptionMapper;
 public class BadRequestException extends BaseException {
 	private static final long serialVersionUID = 1L;
 
-	public BadRequestException(){
-		setId(ExceptionMapper.BAD_REQUEST_EXCEPTION);
-		setDescription("You made a bad request.");
-		setHttpStatus(HttpStatus.BAD_REQUEST);
-	}
-	
 	public BadRequestException(Map<String, String> batchErrors){
 		setId(ExceptionMapper.BAD_REQUEST_EXCEPTION);
 		setDescription("You made a bad request.");

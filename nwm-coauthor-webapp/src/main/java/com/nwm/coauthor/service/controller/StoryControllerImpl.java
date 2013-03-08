@@ -25,9 +25,11 @@ import com.nwm.coauthor.exception.AddEntryVersionException;
 import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
+import com.nwm.coauthor.exception.NoTitleForPublishingException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.UnauthorizedException;
+import com.nwm.coauthor.exception.UserIsNotLeaderException;
 import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.service.manager.AuthenticationManagerImpl;
 import com.nwm.coauthor.service.manager.StoryManagerImpl;
@@ -44,8 +46,6 @@ import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 @Controller
 @RequestMapping(value = "/story", produces = "application/json", consumes = "application/json")
 public class StoryControllerImpl extends BaseControllerImpl implements StoryController {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
     @Autowired
     private AuthenticationManagerImpl authenticationManager;
 
@@ -91,7 +91,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     @RequestMapping(value = "/{storyId}/private", method = RequestMethod.GET)
     public ResponseEntity<PrivateStoryResponse> getStoryForEdit(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws SomethingWentWrongException, BadRequestException,
             AuthenticationUnauthorizedException, StoryNotFoundException, UnauthorizedException {
-        validateGetPrivateStoryRequest(storyId);
+        validateRequestStoryId(storyId);
 
         String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
         PrivateStoryResponse response = storyManager.getStoryForEdit(fbId, convertStoryIdToObjectId(storyId));
@@ -102,20 +102,26 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     @Override
     @RequestMapping(value = "/{storyId}/private/like", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void likeStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException,
-            StoryNotFoundException, UserLikingOwnStoryException {
-        validateLikeRequest(storyId);
+    public void likeStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException, UserLikingOwnStoryException {
+        validateRequestStoryId(storyId);
 
         String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
 
         storyManager.likeStory(fbId, convertStoryIdToObjectId(storyId));
     }
 
-    protected void validateLikeRequest(String storyId) throws BadRequestException {
-        validateGetPrivateStoryRequest(storyId);
-    }
-
-    protected void validateGetPrivateStoryRequest(String storyId) throws BadRequestException {
+    @Override
+    @RequestMapping(value = "/{storyId}/publish")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void publishStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException {
+        validateRequestStoryId(storyId);
+        
+        String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
+        
+        storyManager.publishStory(fbId, convertStoryIdToObjectId(storyId));
+    }    
+    
+    protected void validateRequestStoryId(String storyId) throws BadRequestException {
         boolean isError = false;
         Map<String, String> batchErrors = new HashMap<String, String>();
 
@@ -133,8 +139,6 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
         try {
             return new ObjectId(storyId);
         } catch (IllegalArgumentException e) {
-            logger.error("storyId is not a valid ObjectId", e);
-
             Map<String, String> batchErrors = new HashMap<String, String>();
             batchErrors.put("storyId", "The storyId is not a valid storyId.");
 
@@ -223,11 +227,5 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
         if (isError) {
             throw new BadRequestException(batchErrors);
         }
-    }
-
-    @Override
-    public void publishStory(String coToken, String storyId) {
-        // TODO Auto-generated method stub
-
     }
 }

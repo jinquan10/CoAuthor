@@ -3,16 +3,18 @@ package com.nwm.coauthor.service.manager;
 import java.util.List;
 
 import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import com.mongodb.WriteResult;
 import com.nwm.coauthor.exception.AddEntryException;
 import com.nwm.coauthor.exception.AddEntryVersionException;
 import com.nwm.coauthor.exception.AlreadyLikedException;
+import com.nwm.coauthor.exception.NoTitleForPublishingException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.UnauthorizedException;
+import com.nwm.coauthor.exception.UserIsNotLeaderException;
 import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.service.dao.StoryDAOImpl;
 import com.nwm.coauthor.service.dao.UserDAOImpl;
@@ -24,11 +26,8 @@ import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 public class StoryManagerImpl {
     @Autowired
     private StoryDAOImpl storyDAO;
-
     @Autowired
     private UserDAOImpl userDAO;
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public String createStory(StoryModel createStoryModel) {
         storyDAO.createStory(createStoryModel);
@@ -46,19 +45,14 @@ public class StoryManagerImpl {
     }
 
     public String addEntry(String fbId, AddEntryModel request) throws AddEntryException, StoryNotFoundException, AddEntryVersionException {
-        StoryModel model = storyDAO.addEntry(fbId, request);
+        WriteResult result = storyDAO.addEntry(fbId, request);
 
-        if (model == null) {
+        if (result.getN() == 0) {
             PrivateStoryResponse privateStory = storyDAO.getPrivateStory(request.getStoryId());
 
             if (request.getVersion() != privateStory.getVersion()) {
                 throw new AddEntryVersionException();
             }
-
-            logger.error("addEntry(): Add entry failed.");
-            // logger.error("addEntry(): Add entry failed.\nHere is why: [_id | {}] [fbFriends | {}] [lastFriendEntry | {}] [numCharacters | {}] [version | {}]",
-            // request.getStoryId(), fbId, fbId,
-            // request.getEntry().getEntry().length(), request.getVersion());
 
             throw new AddEntryException();
         }
@@ -114,6 +108,26 @@ public class StoryManagerImpl {
 
         if (privateStory.getFbFriends().contains(fbId)) {
             throw new UserLikingOwnStoryException();
+        }
+    }
+
+    public void publishStory(String fbId, ObjectId storyId) throws StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException {
+        WriteResult result = storyDAO.publishStory(fbId, storyId);
+        
+        if(result.getN() == 0){
+            PrivateStoryResponse privateStory = storyDAO.getPrivateStory(storyId);
+            
+            if(privateStory == null){
+                throw new StoryNotFoundException();
+            }
+            
+            if(!privateStory.getLeaderFbId().equals(fbId)){
+                throw new UserIsNotLeaderException();
+            }
+            
+            if(privateStory.getTitle() == null){
+                throw new NoTitleForPublishingException();
+            }
         }
     }
 }

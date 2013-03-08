@@ -46,11 +46,9 @@ public class CreateStoryBuilder {
     }
 
     public CreateStoryRequest build() {
-        CreateStoryRequest request = new CreateStoryRequest();
         request.setEntry(request.getEntry() == null ? "12345" : request.getEntry());
         request.setFbFriends(request.getFbFriends() == null ? UserBuilder.getDefaultFBFriends() : request.getFbFriends());
-        // request.setTitle(request.getTitle() == null ? null :
-        // request.getTitle());
+        request.setTitle(request.getTitle() == null ? null : request.getTitle());
         request.setNumCharacters(request.getNumCharacters() == null ? 500 : request.getNumCharacters());
 
         return request;

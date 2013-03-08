@@ -26,6 +26,8 @@ public class BaseControllerImpl {
     protected ResponseEntity<BaseException> getExceptionBody(Throwable t) {
         BaseException baseException = (BaseException) t;
 
+        logger.warn(t.getMessage(), t);
+        
         return new ResponseEntity<BaseException>(baseException, baseException.getHttpStatus());
     }
 

@@ -29,7 +29,10 @@ public class UserBuilder {
     }
 
     public static UserModel createUser() {
-        return new UserModel(String.valueOf(Math.random()), String.valueOf(Math.random()));
+        UserModel loginModel = new UserModel(String.valueOf(Math.random()), String.valueOf(Math.random()));
+        MongoInstance.getInstance().insert(loginModel);
+        
+        return loginModel;
     }
 
     public static List<String> getFBFriends(Integer numFriends) {
