@@ -18,34 +18,34 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.nwm.coauthor.service.util.Singletons;
 
 @Component("requestBodyFilter")
-public class RequestBodyFilter extends OncePerRequestFilter{
+public class RequestBodyFilter extends OncePerRequestFilter {
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-		if(request.getContentLength() == 0){
-			request = new RequestWrapper(request);
-		}
-		
-		filterChain.doFilter(request, response);
-	}
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        if (request.getContentLength() == 0) {
+            request = new RequestWrapper(request);
+        }
 
-	public class RequestWrapper extends HttpServletRequestWrapper{
+        filterChain.doFilter(request, response);
+    }
 
-		public RequestWrapper(HttpServletRequest request) {
-			super(request);
-		}
-		
-		@Override
-		public ServletInputStream getInputStream(){
-			byte [] bytes = null;
-			
-			try {
-				 bytes = Singletons.objectMapper.writeValueAsBytes(Collections.emptyMap());
-			} catch (Throwable e) {
+    public class RequestWrapper extends HttpServletRequestWrapper {
 
-			}
-			
-			return new DelegatingServletInputStream(new ByteArrayInputStream(bytes));
-		}
-	}
+        public RequestWrapper(HttpServletRequest request) {
+            super(request);
+        }
+
+        @Override
+        public ServletInputStream getInputStream() {
+            byte[] bytes = null;
+
+            try {
+                bytes = Singletons.objectMapper.writeValueAsBytes(Collections.emptyMap());
+            } catch (Throwable e) {
+
+            }
+
+            return new DelegatingServletInputStream(new ByteArrayInputStream(bytes));
+        }
+    }
 }

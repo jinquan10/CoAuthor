@@ -16,15 +16,15 @@ import com.nwm.coauthor.service.resource.response.AuthenticationResponse;
 
 @Controller
 @RequestMapping(value = "/authenticate", produces = "application/json", consumes = "application/json")
-public class AuthenticationControllerImpl extends BaseControllerImpl implements AuthenticationController{
-	@Autowired
-	private AuthenticationManagerImpl authenticationManager = null;
-	
-	@Override
-	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<AuthenticationResponse> authenticateFB(@RequestBody AuthenticateFBRequest authResource) throws SomethingWentWrongException, AuthenticationUnauthorizedException {
-		String coToken = authenticationManager.authenticateFB(authResource.getFbToken());
-	
-		return new ResponseEntity<AuthenticationResponse>(new AuthenticationResponse(coToken), HttpStatus.OK);
-	}
+public class AuthenticationControllerImpl extends BaseControllerImpl implements AuthenticationController {
+    @Autowired
+    private AuthenticationManagerImpl authenticationManager = null;
+
+    @Override
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<AuthenticationResponse> authenticateFB(@RequestBody AuthenticateFBRequest authResource) throws SomethingWentWrongException, AuthenticationUnauthorizedException {
+        String coToken = authenticationManager.authenticateFB(authResource.getFbToken());
+
+        return new ResponseEntity<AuthenticationResponse>(new AuthenticationResponse(coToken), HttpStatus.OK);
+    }
 }

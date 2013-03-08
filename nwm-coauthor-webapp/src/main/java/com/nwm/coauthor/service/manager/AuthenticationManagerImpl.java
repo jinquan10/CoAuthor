@@ -13,31 +13,33 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AuthenticationManagerImpl {
-	@Autowired private AuthenticationDAOImpl authenticationDAO;
-	@Autowired private FacebookClientImpl fbClient;
-	
-	/**
-	 * 
-	 * @param coToken
-	 * @return mongo objectId
-	 * @throws AuthenticationUnauthorizedException 
-	 */
-	public String authenticateCOTokenForFbId(String coToken) throws AuthenticationUnauthorizedException{
-		UserModel loginModel = authenticationDAO.authenticateCOTokenForFbId(coToken);
-		
-		if(loginModel == null){
-			throw new AuthenticationUnauthorizedException();
-		}
-		
-		return loginModel.getFbId();
-	}
+    @Autowired
+    private AuthenticationDAOImpl authenticationDAO;
+    @Autowired
+    private FacebookClientImpl fbClient;
 
-	public String authenticateFB(String fbToken) throws AuthenticationUnauthorizedException {
-		FBUser fbUser = fbClient.validate(fbToken);
-		String coToken = UUID.randomUUID().toString() + UUID.randomUUID().toString() + UUID.randomUUID().toString() + UUID.randomUUID().toString(); 
-		
-		authenticationDAO.login(coToken, fbUser.getId());
-		
-		return coToken; 
-	}
+    /**
+     * 
+     * @param coToken
+     * @return mongo objectId
+     * @throws AuthenticationUnauthorizedException
+     */
+    public String authenticateCOTokenForFbId(String coToken) throws AuthenticationUnauthorizedException {
+        UserModel loginModel = authenticationDAO.authenticateCOTokenForFbId(coToken);
+
+        if (loginModel == null) {
+            throw new AuthenticationUnauthorizedException();
+        }
+
+        return loginModel.getFbId();
+    }
+
+    public String authenticateFB(String fbToken) throws AuthenticationUnauthorizedException {
+        FBUser fbUser = fbClient.validate(fbToken);
+        String coToken = UUID.randomUUID().toString() + UUID.randomUUID().toString() + UUID.randomUUID().toString() + UUID.randomUUID().toString();
+
+        authenticationDAO.login(coToken, fbUser.getId());
+
+        return coToken;
+    }
 }

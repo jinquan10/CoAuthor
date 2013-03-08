@@ -18,21 +18,21 @@ import com.mongodb.WriteConcern;
 @EnableWebMvc
 @ComponentScan(basePackages = "com.nwm.coauthor.service")
 public class AppConfig {
-	@Bean
-	public EnvironmentPropertyPlaceholderConfigurer environmentPropertyPlaceholderConfigurer() {
-		EnvironmentPropertyPlaceholderConfigurer eppc = new EnvironmentPropertyPlaceholderConfigurer();
+    @Bean
+    public EnvironmentPropertyPlaceholderConfigurer environmentPropertyPlaceholderConfigurer() {
+        EnvironmentPropertyPlaceholderConfigurer eppc = new EnvironmentPropertyPlaceholderConfigurer();
 
-		Resource location = new ClassPathResource("service.properties");
-		eppc.setLocation(location);
+        Resource location = new ClassPathResource("service.properties");
+        eppc.setLocation(location);
 
-		return eppc;
-	}
+        return eppc;
+    }
 
-	@Bean
-	public MongoTemplate mongoTemplate(MongoCredentials mongoCredentials) throws Exception {
-		MongoTemplate template = new MongoTemplate(new Mongo(mongoCredentials.getHost(), mongoCredentials.getPort()), mongoCredentials.getName(), mongoCredentials.getUserCredentials());
-//		template.setWriteConcern(WriteConcern.SAFE);
-		
+    @Bean
+    public MongoTemplate mongoTemplate(MongoCredentials mongoCredentials) throws Exception {
+        MongoTemplate template = new MongoTemplate(new Mongo(mongoCredentials.getHost(), mongoCredentials.getPort()), mongoCredentials.getName(), mongoCredentials.getUserCredentials());
+        // template.setWriteConcern(WriteConcern.SAFE);
+
         return template;
     }
 }

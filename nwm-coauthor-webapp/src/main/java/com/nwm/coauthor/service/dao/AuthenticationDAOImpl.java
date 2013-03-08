@@ -14,19 +14,19 @@ import com.nwm.coauthor.service.model.UserModel;
 
 @Component
 public class AuthenticationDAOImpl {
-	@Autowired
-	@Qualifier("mongoTemplate")
-	private MongoTemplate mongoTemplate;
-	
-	public void login(String coToken, String fbId){
-		mongoTemplate.upsert(query(where("fbId").is(fbId)), update("coToken", coToken), UserModel.class);
-	}
+    @Autowired
+    @Qualifier("mongoTemplate")
+    private MongoTemplate mongoTemplate;
 
-	public UserModel authenticateCOTokenForFbId(String coToken) {
-		Query query = new Query();
-		query.addCriteria(where("coToken").is(coToken));
-		query.fields().include("fbId");
-		
-		return mongoTemplate.findOne(query, UserModel.class);
-	}
+    public void login(String coToken, String fbId) {
+        mongoTemplate.upsert(query(where("fbId").is(fbId)), update("coToken", coToken), UserModel.class);
+    }
+
+    public UserModel authenticateCOTokenForFbId(String coToken) {
+        Query query = new Query();
+        query.addCriteria(where("coToken").is(coToken));
+        query.fields().include("fbId");
+
+        return mongoTemplate.findOne(query, UserModel.class);
+    }
 }
