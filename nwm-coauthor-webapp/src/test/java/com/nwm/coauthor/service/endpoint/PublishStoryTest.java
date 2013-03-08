@@ -22,32 +22,47 @@ import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
 public class PublishStoryTest extends TestSetup {
     @Test(expected = UserIsNotLeaderException.class)
-    public void userIsNotLeader() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException {
+    public void userIsNotLeader() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException, UnauthorizedException {
         UserModel leader = UserBuilder.createUser();
         UserModel member = UserBuilder.createUser();
 
         CreateStoryRequest storyRequest = CreateStoryBuilder.init().title("The one").build();
         ResponseEntity<CreateStoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
-        storyClient.publishStory(member.getCoToken(), storyResponse.getBody().getStoryId());
+        try{
+            storyClient.publishStory(member.getCoToken(), storyResponse.getBody().getStoryId());
+        }finally{
+            ResponseEntity<PrivateStoryResponse> storyForEditResponse = storyClient.getStoryForEdit(leader.getCoToken(), storyResponse.getBody().getStoryId());
+            Assert.assertEquals(false, storyForEditResponse.getBody().getIsPublished());            
+        }
     }
 
     @Test(expected = UserIsNotLeaderException.class)
-    public void userIsANonMember() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException {
+    public void userIsANonMember() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException, UnauthorizedException {
         UserModel leader = UserBuilder.createUser();
         UserModel nonMember = UserBuilder.createUser();
 
         CreateStoryRequest storyRequest = CreateStoryBuilder.init().title("The one").build();
         ResponseEntity<CreateStoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
-        storyClient.publishStory(nonMember.getCoToken(), storyResponse.getBody().getStoryId());
+        try{
+            storyClient.publishStory(nonMember.getCoToken(), storyResponse.getBody().getStoryId());
+        }finally{
+            ResponseEntity<PrivateStoryResponse> storyForEditResponse = storyClient.getStoryForEdit(leader.getCoToken(), storyResponse.getBody().getStoryId());
+            Assert.assertEquals(false, storyForEditResponse.getBody().getIsPublished());            
+        }
     }
 
     @Test(expected = NoTitleForPublishingException.class)
-    public void hasNullTitle() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException {
+    public void hasNullTitle() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException, UnauthorizedException {
         UserModel leader = UserBuilder.createUser();
 
         CreateStoryRequest storyRequest = CreateStoryBuilder.init().title(null).build();
         ResponseEntity<CreateStoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
-        storyClient.publishStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
+        try{
+            storyClient.publishStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
+        }finally{
+            ResponseEntity<PrivateStoryResponse> storyForEditResponse = storyClient.getStoryForEdit(leader.getCoToken(), storyResponse.getBody().getStoryId());
+            Assert.assertEquals(false, storyForEditResponse.getBody().getIsPublished());            
+        }
     }
 
     @Test(expected = StoryNotFoundException.class)
@@ -63,21 +78,27 @@ public class PublishStoryTest extends TestSetup {
 
         CreateStoryRequest storyRequest = CreateStoryBuilder.init().title("The one").build();
         ResponseEntity<CreateStoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
-        storyClient.publishStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
         
-        ResponseEntity<PrivateStoryResponse> storyForEditResponse = storyClient.getStoryForEdit(leader.getCoToken(), storyResponse.getBody().getStoryId());
-        Assert.assertEquals(true, storyForEditResponse.getBody().getIsPublished());
+        try{
+            storyClient.publishStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
+        }finally{
+            ResponseEntity<PrivateStoryResponse> storyForEditResponse = storyClient.getStoryForEdit(leader.getCoToken(), storyResponse.getBody().getStoryId());
+            Assert.assertEquals(true, storyForEditResponse.getBody().getIsPublished());            
+        }
     }
     
-    @Test
+    @Test(expected = NoTitleForPublishingException.class)
     public void hasEmptyTitle() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException, UnauthorizedException {
         UserModel leader = UserBuilder.createUser();
 
         CreateStoryRequest storyRequest = CreateStoryBuilder.init().title("").build();
         ResponseEntity<CreateStoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
-        storyClient.publishStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
         
-        ResponseEntity<PrivateStoryResponse> storyForEditResponse = storyClient.getStoryForEdit(leader.getCoToken(), storyResponse.getBody().getStoryId());
-        Assert.assertEquals(true, storyForEditResponse.getBody().getIsPublished());
+        try{
+            storyClient.publishStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
+        }finally{
+            ResponseEntity<PrivateStoryResponse> storyForEditResponse = storyClient.getStoryForEdit(leader.getCoToken(), storyResponse.getBody().getStoryId());
+            Assert.assertEquals(true, storyForEditResponse.getBody().getIsPublished());            
+        }
     }    
 }
