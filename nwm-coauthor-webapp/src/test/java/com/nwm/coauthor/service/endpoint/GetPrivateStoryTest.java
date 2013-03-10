@@ -26,7 +26,7 @@ import com.nwm.coauthor.service.resource.response.AddEntryResponse;
 import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
 import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
-public class GetPrivateStoryTest extends TestSetup {
+public class GetPrivateStoryTest extends BaseTest {
     @Test
     public void createStory_Then_AssertTheSameStoryContents() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException,
             StoryNotFoundException, UnauthorizedException {

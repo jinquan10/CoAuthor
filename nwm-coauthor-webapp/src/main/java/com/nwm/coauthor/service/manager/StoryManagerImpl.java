@@ -14,6 +14,7 @@ import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.NoTitleForPublishingException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.UnauthorizedException;
+import com.nwm.coauthor.exception.UnpublishedStoryLikedException;
 import com.nwm.coauthor.exception.UserIsNotLeaderException;
 import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.service.dao.StoryDAOImpl;
@@ -76,9 +77,9 @@ public class StoryManagerImpl {
         return privateStory;
     }
 
-    public void likeStory(String fbId, ObjectId storyId) throws AlreadyLikedException, StoryNotFoundException, UserLikingOwnStoryException {
-        checkIsUserLikingOwnStory(fbId, storyId);
-        checkStoryAlreadyLiked(fbId, storyId);
+    public void likeStory(String fbId, ObjectId storyId) throws AlreadyLikedException, StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException {
+        checkLikeStoryRequirements(fbId, storyId);
+        checkLikeUserRequirements(fbId, storyId);
         persistLikeStory(fbId, storyId);
     }
 
@@ -87,7 +88,7 @@ public class StoryManagerImpl {
         storyDAO.likeStory(storyId);
     }
 
-    private void checkStoryAlreadyLiked(String fbId, ObjectId storyId) throws AlreadyLikedException {
+    private void checkLikeUserRequirements(String fbId, ObjectId storyId) throws AlreadyLikedException {
         boolean isStoryLiked = userDAO.isStoryLiked(fbId, storyId);
 
         if (isStoryLiked) {
@@ -95,7 +96,7 @@ public class StoryManagerImpl {
         }
     }
 
-    private void checkIsUserLikingOwnStory(String fbId, ObjectId storyId) throws StoryNotFoundException, UserLikingOwnStoryException {
+    private void checkLikeStoryRequirements(String fbId, ObjectId storyId) throws StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException {
         PrivateStoryResponse privateStory = storyDAO.getPrivateStory(storyId);
 
         if (privateStory == null) {
@@ -108,6 +109,10 @@ public class StoryManagerImpl {
 
         if (privateStory.getFbFriends().contains(fbId)) {
             throw new UserLikingOwnStoryException();
+        }
+        
+        if (privateStory.getIsPublished() == null || !privateStory.getIsPublished()){
+            throw new UnpublishedStoryLikedException();
         }
     }
 
@@ -125,7 +130,7 @@ public class StoryManagerImpl {
                 throw new UserIsNotLeaderException();
             }
             
-            if(privateStory.getTitle() == null){
+            if(!StringUtils.hasText(privateStory.getTitle())){
                 throw new NoTitleForPublishingException();
             }
         }

@@ -20,7 +20,7 @@ import com.nwm.coauthor.service.resource.request.AddEntryRequest;
 import com.nwm.coauthor.service.resource.response.AddEntryResponse;
 import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
 
-public class AddEntryTest extends TestSetup {
+public class AddEntryTest extends BaseTest {
     @Test
     public void takeTurns_AddingEntries_To_OneStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, InterruptedException,
             StoryNotFoundException, AddEntryVersionException {

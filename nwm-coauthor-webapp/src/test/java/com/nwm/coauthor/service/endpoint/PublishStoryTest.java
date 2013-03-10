@@ -20,7 +20,7 @@ import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
 import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
 import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
-public class PublishStoryTest extends TestSetup {
+public class PublishStoryTest extends BaseTest {
     @Test(expected = UserIsNotLeaderException.class)
     public void userIsNotLeader() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException, UnauthorizedException {
         UserModel leader = UserBuilder.createUser();
@@ -98,7 +98,7 @@ public class PublishStoryTest extends TestSetup {
             storyClient.publishStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
         }finally{
             ResponseEntity<PrivateStoryResponse> storyForEditResponse = storyClient.getStoryForEdit(leader.getCoToken(), storyResponse.getBody().getStoryId());
-            Assert.assertEquals(true, storyForEditResponse.getBody().getIsPublished());            
+            Assert.assertEquals(false, storyForEditResponse.getBody().getIsPublished());            
         }
     }    
 }

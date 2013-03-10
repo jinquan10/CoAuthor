@@ -22,7 +22,7 @@ import com.nwm.coauthor.service.resource.response.PrivateStoriesResponseWrapper;
 import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
 // - TODO: test for a user having no private stories, assert story not found exception
-public class GetPrivateStoriesTest extends TestSetup {
+public class GetPrivateStoriesTest extends BaseTest {
     @Test(expected = StoryNotFoundException.class)
     public void userWithNoPrivateStories_GetPrivateStories_Assert_StoryNotFoundException() throws InterruptedException, AuthenticationUnauthorizedException, SomethingWentWrongException,
             StoryNotFoundException {

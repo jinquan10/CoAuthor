@@ -77,8 +77,8 @@ public class StoryDAOImpl {
 
     public WriteResult publishStory(String fbId, ObjectId storyId) {
         Criteria criteria = new Criteria();
-        criteria.andOperator(where("leaderFbId").is(fbId), where("_id").is(storyId), where("title").ne(null));
-
+        criteria.andOperator(where("leaderFbId").is(fbId), where("_id").is(storyId), where("title").ne(null), where("title").ne(""));
+        
         Query query = new Query(criteria);
         
         Update update = new Update();

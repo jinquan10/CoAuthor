@@ -18,7 +18,7 @@ import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
 import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
 
-public class CreateStoryTest extends TestSetup {
+public class CreateStoryTest extends BaseTest {
     @Test
     public void createStorySuccessTest() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException {
         List<UserModel> users = UserBuilder.createUsers(null);

@@ -2,7 +2,7 @@ package com.nwm.coauthor.service.endpoint;
 
 import com.nwm.coauthor.service.client.StoryClient;
 
-public class TestSetup {
+public class BaseTest {
     protected static StoryClient storyClient = new StoryClient();
 
     // private static void authenticateForCoToken() throws

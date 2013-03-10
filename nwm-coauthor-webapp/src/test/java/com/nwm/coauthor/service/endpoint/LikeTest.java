@@ -11,21 +11,48 @@ import org.springframework.http.ResponseEntity;
 import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
+import com.nwm.coauthor.exception.NoTitleForPublishingException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.UnauthorizedException;
+import com.nwm.coauthor.exception.UnpublishedStoryLikedException;
+import com.nwm.coauthor.exception.UserIsNotLeaderException;
 import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.service.builder.CreateStoryBuilder;
 import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
+import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
 import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
 import com.nwm.coauthor.service.resource.response.PrivateStoriesResponseWrapper;
 import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
-public class LikeTest extends TestSetup {
+public class LikeTest extends BaseTest {
+    @Test
+    public void likeAStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AlreadyLikedException, StoryNotFoundException, UserLikingOwnStoryException, UserIsNotLeaderException, NoTitleForPublishingException, UnpublishedStoryLikedException{
+        UserModel leader= UserBuilder.createUser();
+        UserModel nonMember = UserBuilder.createUser();
+        
+        CreateStoryRequest storyRequest = CreateStoryBuilder.init().title("title").build();
+        ResponseEntity<CreateStoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
+        
+        storyClient.publishStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
+        storyClient.likeStory(nonMember.getCoToken(), storyResponse.getBody().getStoryId());
+    }
+    
+    @Test(expected = UnpublishedStoryLikedException.class)
+    public void likeAnUnpublishedStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AlreadyLikedException, StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException{
+        UserModel leader= UserBuilder.createUser();
+        UserModel nonMember = UserBuilder.createUser();
+        
+        CreateStoryRequest storyRequest = CreateStoryBuilder.init().build();
+        ResponseEntity<CreateStoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
+        
+        storyClient.likeStory(nonMember.getCoToken(), storyResponse.getBody().getStoryId());
+    }
+    
     @Test(expected = UserLikingOwnStoryException.class)
     public void like_WhenUserBelongsToStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException, AlreadyLikedException,
-            StoryNotFoundException, UserLikingOwnStoryException {
+            StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException {
         List<UserModel> users = UserBuilder.createUsers(3);
 
         ResponseEntity<CreateStoryResponse> createdStory = storyClient.createStory(users.get(0).getCoToken(), CreateStoryBuilder.createValidStory(users, 0, null));
@@ -35,7 +62,7 @@ public class LikeTest extends TestSetup {
 
     @Test
     public void userWith_NoPrivateStory_LikeAStory_AssertLikesIncremented_AssertThatUserHas0PrivateStories_AssertPrivateStoryException() throws InterruptedException, SomethingWentWrongException,
-            AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException, UnauthorizedException, UserLikingOwnStoryException {
+            AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException, UnauthorizedException, UserLikingOwnStoryException, UnpublishedStoryLikedException, UserIsNotLeaderException, NoTitleForPublishingException {
         List<UserModel> users = UserBuilder.createUsers(3);
 
         UserModel user1 = users.get(0);
@@ -46,9 +73,13 @@ public class LikeTest extends TestSetup {
 
         fbFriends.add(user2.getFbId());
 
-        ResponseEntity<CreateStoryResponse> story = storyClient.createStory(user1.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, fbFriends));
+        CreateStoryRequest storyRequest = CreateStoryBuilder.createValidStory(users, 0, fbFriends);
+        storyRequest.setTitle("title");
+        
+        ResponseEntity<CreateStoryResponse> story = storyClient.createStory(user1.getCoToken(), storyRequest);
         Assert.assertEquals(201, story.getStatusCode().value());
 
+        storyClient.publishStory(user1.getCoToken(), story.getBody().getStoryId());
         storyClient.likeStory(userWithoutPrivateStory.getCoToken(), story.getBody().getStoryId());
 
         ResponseEntity<PrivateStoryResponse> privateStoryResponse = storyClient.getStoryForEdit(user1.getCoToken(), story.getBody().getStoryId());
@@ -78,7 +109,7 @@ public class LikeTest extends TestSetup {
 
     @Test
     public void userWith_PrivateStory_LikeAStory_AssertLikesIncremented() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException,
-            StoryNotFoundException, AlreadyLikedException, UnauthorizedException, UserLikingOwnStoryException {
+            StoryNotFoundException, AlreadyLikedException, UnauthorizedException, UserLikingOwnStoryException, UnpublishedStoryLikedException, UserIsNotLeaderException, NoTitleForPublishingException {
         List<UserModel> users = UserBuilder.createUsers(3);
 
         UserModel leader = users.get(0);
@@ -88,8 +119,12 @@ public class LikeTest extends TestSetup {
         List<String> fbFriends = new ArrayList<String>();
         fbFriends.add(member.getFbId());
 
-        ResponseEntity<CreateStoryResponse> story = storyClient.createStory(leader.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, fbFriends));
+        CreateStoryRequest storyRequest = CreateStoryBuilder.createValidStory(users, 0, fbFriends);
+        storyRequest.setTitle("title");
+        
+        ResponseEntity<CreateStoryResponse> story = storyClient.createStory(leader.getCoToken(), storyRequest);
 
+        storyClient.publishStory(leader.getCoToken(), story.getBody().getStoryId());
         storyClient.likeStory(nonMember.getCoToken(), story.getBody().getStoryId());
 
         ResponseEntity<PrivateStoriesResponseWrapper> stories = storyClient.getPrivateStories(leader.getCoToken());
@@ -102,7 +137,7 @@ public class LikeTest extends TestSetup {
 
     @Test(expected = StoryNotFoundException.class)
     public void userWith_PrivateStory_LikeANonExistantStory_AssertStoryNotFoundException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException,
-            BadRequestException, StoryNotFoundException, AlreadyLikedException, UserLikingOwnStoryException {
+            BadRequestException, StoryNotFoundException, AlreadyLikedException, UserLikingOwnStoryException, UnpublishedStoryLikedException {
         List<UserModel> users = UserBuilder.createUsers(1);
 
         UserModel user = users.get(0);
@@ -112,7 +147,7 @@ public class LikeTest extends TestSetup {
 
     @Test(expected = AuthenticationUnauthorizedException.class)
     public void userWith_PrivateStory_LikeAStoryWithNullCOToken_AssertSomethingWentWrongException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException,
-            BadRequestException, StoryNotFoundException, AlreadyLikedException, UserLikingOwnStoryException {
+            BadRequestException, StoryNotFoundException, AlreadyLikedException, UserLikingOwnStoryException, UnpublishedStoryLikedException {
         List<UserModel> users = UserBuilder.createUsers(2);
         UserModel user = users.get(0);
 
@@ -122,7 +157,7 @@ public class LikeTest extends TestSetup {
 
     @Test(expected = AuthenticationUnauthorizedException.class)
     public void userWith_PrivateStory_LikeAStoryWithEmptyCOToken_AssertSomethingWentWrongException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException,
-            BadRequestException, StoryNotFoundException, AlreadyLikedException, UserLikingOwnStoryException {
+            BadRequestException, StoryNotFoundException, AlreadyLikedException, UserLikingOwnStoryException, UnpublishedStoryLikedException {
         List<UserModel> users = UserBuilder.createUsers(2);
         UserModel user = users.get(0);
 
@@ -132,7 +167,7 @@ public class LikeTest extends TestSetup {
 
     @Test(expected = AuthenticationUnauthorizedException.class)
     public void userWith_PrivateStory_LikeAStoryWithNonExistantCOToken_AssertSomethingWentWrongException() throws InterruptedException, SomethingWentWrongException,
-            AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException, UserLikingOwnStoryException {
+            AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException, UserLikingOwnStoryException, UnpublishedStoryLikedException {
         List<UserModel> users = UserBuilder.createUsers(2);
         UserModel user = users.get(0);
 
@@ -142,7 +177,7 @@ public class LikeTest extends TestSetup {
 
     @Test(expected = AlreadyLikedException.class)
     public void user_LikesAStoryTwice_AssertAlreadyLikedException() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException,
-            StoryNotFoundException, AlreadyLikedException, UserLikingOwnStoryException {
+            StoryNotFoundException, AlreadyLikedException, UserLikingOwnStoryException, UnpublishedStoryLikedException, UserIsNotLeaderException, NoTitleForPublishingException {
         List<UserModel> users = UserBuilder.createUsers(3);
 
         UserModel leader = users.get(0);
@@ -152,8 +187,12 @@ public class LikeTest extends TestSetup {
         List<String> fbFriends = new ArrayList<String>();
         fbFriends.add(member.getFbId());
 
-        ResponseEntity<CreateStoryResponse> story = storyClient.createStory(leader.getCoToken(), CreateStoryBuilder.createValidStory(users, 0, fbFriends));
+        CreateStoryRequest storyRequest = CreateStoryBuilder.createValidStory(users, 0, fbFriends);
+        storyRequest.setTitle("title");
+        
+        ResponseEntity<CreateStoryResponse> story = storyClient.createStory(leader.getCoToken(), storyRequest);
 
+        storyClient.publishStory(leader.getCoToken(), story.getBody().getStoryId());
         storyClient.likeStory(nonMember.getCoToken(), story.getBody().getStoryId());
         storyClient.likeStory(nonMember.getCoToken(), story.getBody().getStoryId());
     }

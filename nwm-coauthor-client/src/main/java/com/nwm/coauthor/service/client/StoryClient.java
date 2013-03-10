@@ -13,6 +13,7 @@ import com.nwm.coauthor.exception.NoTitleForPublishingException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.UnauthorizedException;
+import com.nwm.coauthor.exception.UnpublishedStoryLikedException;
 import com.nwm.coauthor.exception.UserIsNotLeaderException;
 import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.exception.mapping.ExceptionMapperWrapper;
@@ -115,7 +116,7 @@ public class StoryClient extends BaseClient implements StoryController{
 	}
 
 	@Override
-	public void likeStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException, SomethingWentWrongException, UserLikingOwnStoryException{
+	public void likeStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException, SomethingWentWrongException, UserLikingOwnStoryException, UnpublishedStoryLikedException{
 		try{
 			restTemplate.exchange(urlStoryResolver("/" + storyId + LIKE_ENDPOINT), HttpMethod.POST, httpEntity(null, coToken), String.class);
 		}catch(HttpStatusCodeException e){
@@ -131,6 +132,8 @@ public class StoryClient extends BaseClient implements StoryController{
 				throw new AlreadyLikedException();
 			} else if(emw.getClazz() == StoryNotFoundException.class){
 				throw new StoryNotFoundException();
+			} else if(emw.getClazz() == UnpublishedStoryLikedException.class){
+			    throw new UnpublishedStoryLikedException();
 			} else{
 				throw new SomethingWentWrongException();
 			}			

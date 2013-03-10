@@ -10,6 +10,7 @@ import com.nwm.coauthor.exception.NoTitleForPublishingException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.UnauthorizedException;
+import com.nwm.coauthor.exception.UnpublishedStoryLikedException;
 import com.nwm.coauthor.exception.UserIsNotLeaderException;
 import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 
@@ -24,7 +25,8 @@ public enum ExceptionMapper {
 	UNAUTHORIZED_EXCEPTION(UnauthorizedException.class),
 	ADD_ENTRY_VERSION_EXCEPTION(AddEntryVersionException.class),
 	USER_IS_NOT_LEADER_EXCEPTION(UserIsNotLeaderException.class),
-	NO_TITLE_FOR_PUBLISHING_EXCEPTION(NoTitleForPublishingException.class);
+	NO_TITLE_FOR_PUBLISHING_EXCEPTION(NoTitleForPublishingException.class),
+	UNPUBLISHED_STORY_LIKED_EXCEPTION(UnpublishedStoryLikedException.class);
 	
 	private Class<? extends BaseException> clazz;
 	
