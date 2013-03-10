@@ -1,6 +1,8 @@
 package com.nwm.coauthor.service.endpoint;
 
 
+import java.util.List;
+
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,12 +26,13 @@ public class PublishStoryTest extends BaseTest {
     @Test(expected = UserIsNotLeaderException.class)
     public void userIsNotLeader() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException, UnauthorizedException {
         UserModel leader = UserBuilder.createUser();
-        UserModel member = UserBuilder.createUser();
+        List<UserModel> friends = UserBuilder.createUsers(2);
+        
+        CreateStoryRequest request = CreateStoryBuilder.init().fbFriends(UserBuilder.exchangeForFbIds(friends)).title("the one").build();
 
-        CreateStoryRequest storyRequest = CreateStoryBuilder.init().title("The one").build();
-        ResponseEntity<CreateStoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
+        ResponseEntity<CreateStoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), request);
         try{
-            storyClient.publishStory(member.getCoToken(), storyResponse.getBody().getStoryId());
+            storyClient.publishStory(friends.get(0).getCoToken(), storyResponse.getBody().getStoryId());
         }finally{
             ResponseEntity<PrivateStoryResponse> storyForEditResponse = storyClient.getStoryForEdit(leader.getCoToken(), storyResponse.getBody().getStoryId());
             Assert.assertEquals(false, storyForEditResponse.getBody().getIsPublished());            

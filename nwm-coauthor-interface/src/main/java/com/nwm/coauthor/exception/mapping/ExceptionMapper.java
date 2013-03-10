@@ -3,6 +3,7 @@ package com.nwm.coauthor.exception.mapping;
 import com.nwm.coauthor.exception.AddEntryException;
 import com.nwm.coauthor.exception.AddEntryVersionException;
 import com.nwm.coauthor.exception.AlreadyLikedException;
+import com.nwm.coauthor.exception.AlreadyPublishedException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BaseException;
 import com.nwm.coauthor.exception.BadRequestException;
@@ -26,7 +27,8 @@ public enum ExceptionMapper {
 	ADD_ENTRY_VERSION_EXCEPTION(AddEntryVersionException.class),
 	USER_IS_NOT_LEADER_EXCEPTION(UserIsNotLeaderException.class),
 	NO_TITLE_FOR_PUBLISHING_EXCEPTION(NoTitleForPublishingException.class),
-	UNPUBLISHED_STORY_LIKED_EXCEPTION(UnpublishedStoryLikedException.class);
+	UNPUBLISHED_STORY_LIKED_EXCEPTION(UnpublishedStoryLikedException.class),
+	ALREADY_PUBLISHED_EXCEPTION(AlreadyPublishedException.class);
 	
 	private Class<? extends BaseException> clazz;
 	

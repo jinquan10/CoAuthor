@@ -57,4 +57,14 @@ public class UserBuilder {
 
         return getFBFriends(numFriends);
     }
+    
+    public static List<String> exchangeForFbIds(List<UserModel> users){
+        List<String> fbIds = new ArrayList<String>();
+        
+        for(UserModel user : users){
+            fbIds.add(user.getFbId());
+        }
+        
+        return fbIds;
+    }
 }

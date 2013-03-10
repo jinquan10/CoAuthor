@@ -19,6 +19,7 @@ import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.exception.mapping.ExceptionMapperWrapper;
 import com.nwm.coauthor.service.controller.StoryController;
 import com.nwm.coauthor.service.resource.request.AddEntryRequest;
+import com.nwm.coauthor.service.resource.request.ChangeTitleRequest;
 import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
 import com.nwm.coauthor.service.resource.response.AddEntryResponse;
 import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
@@ -32,6 +33,7 @@ public class StoryClient extends BaseClient implements StoryController{
 	private static final String GET_PRIVATE_STORY_ENDPOINT = "/private";
 	private static final String LIKE_ENDPOINT = "/private/like";
 	private static final String PUBLISH_ENDPOINT = "/publish";
+	private static final String CHANGE_TITLE_ENDPOINT = "/title";
 	
 	public StoryClient(){
 		
@@ -163,5 +165,10 @@ public class StoryClient extends BaseClient implements StoryController{
                 throw new SomethingWentWrongException();
             }           
 		}
+	}
+	
+	@Override
+	public void changeStoryTitle(String coToken, String storyId, ChangeTitleRequest request){
+	    restTemplate.exchange(urlStoryResolver("/" + storyId + CHANGE_TITLE_ENDPOINT), HttpMethod.PUT, httpEntity(request, coToken), String.class);
 	}
 }
