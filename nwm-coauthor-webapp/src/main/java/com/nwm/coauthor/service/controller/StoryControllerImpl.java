@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.nwm.coauthor.exception.AddEntryException;
 import com.nwm.coauthor.exception.AddEntryVersionException;
 import com.nwm.coauthor.exception.AlreadyLikedException;
+import com.nwm.coauthor.exception.AlreadyPublishedException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.NoTitleForPublishingException;
@@ -36,6 +37,7 @@ import com.nwm.coauthor.service.model.AddEntryModel;
 import com.nwm.coauthor.service.model.StoryEntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.resource.request.AddEntryRequest;
+import com.nwm.coauthor.service.resource.request.ChangeTitleRequest;
 import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
 import com.nwm.coauthor.service.resource.response.AddEntryResponse;
 import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
@@ -101,7 +103,8 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     @Override
     @RequestMapping(value = "/{storyId}/private/like", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void likeStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException {
+    public void likeStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException,
+            StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException {
         validateRequestStoryId(storyId);
 
         String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
@@ -110,16 +113,42 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     }
 
     @Override
-    @RequestMapping(value = "/{storyId}/publish")
+    @RequestMapping(value = "/{storyId}/publish", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void publishStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException {
+    public void publishStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException,
+            UserIsNotLeaderException, NoTitleForPublishingException {
         validateRequestStoryId(storyId);
-        
+
         String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
-        
+
         storyManager.publishStory(fbId, convertStoryIdToObjectId(storyId));
-    }    
-    
+    }
+
+    @Override
+    @RequestMapping(value = "/{storyId}/title", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changeStoryTitle(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestBody ChangeTitleRequest request) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException,
+            UserIsNotLeaderException, StoryNotFoundException, AlreadyPublishedException {
+
+        validateChangeStoryRequest(request);
+        String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
+        storyManager.changeStoryTitle(fbId, convertStoryIdToObjectId(storyId), request.getTitle());
+    }
+
+    private void validateChangeStoryRequest(ChangeTitleRequest request) throws BadRequestException {
+        boolean isError = false;
+        Map<String, String> batchErrors = new HashMap<String, String>();
+
+        if (!StringUtils.hasText(request.getTitle())) {
+            batchErrors.put("title", "The title must not be null or empty.");
+            isError = true;
+        }
+
+        if (isError) {
+            throw new BadRequestException(batchErrors);
+        }
+    }
+
     protected void validateRequestStoryId(String storyId) throws BadRequestException {
         boolean isError = false;
         Map<String, String> batchErrors = new HashMap<String, String>();

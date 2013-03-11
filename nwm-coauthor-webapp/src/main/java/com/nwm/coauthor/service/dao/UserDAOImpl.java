@@ -21,8 +21,6 @@ public class UserDAOImpl {
     @Qualifier("mongoTemplate")
     private MongoTemplate mongoTemplate;
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
     public boolean isStoryLiked(String fbId, ObjectId storyId) {
         Criteria c = new Criteria();
         c.andOperator(where("storyLikes").is(storyId), where("fbId").is(fbId));

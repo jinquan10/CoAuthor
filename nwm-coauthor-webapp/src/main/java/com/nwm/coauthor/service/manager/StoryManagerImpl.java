@@ -11,6 +11,7 @@ import com.mongodb.WriteResult;
 import com.nwm.coauthor.exception.AddEntryException;
 import com.nwm.coauthor.exception.AddEntryVersionException;
 import com.nwm.coauthor.exception.AlreadyLikedException;
+import com.nwm.coauthor.exception.AlreadyPublishedException;
 import com.nwm.coauthor.exception.NoTitleForPublishingException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.UnauthorizedException;
@@ -132,6 +133,26 @@ public class StoryManagerImpl {
             
             if(!StringUtils.hasText(privateStory.getTitle())){
                 throw new NoTitleForPublishingException();
+            }
+        }
+    }
+
+    public void changeStoryTitle(String fbId, ObjectId storyId, String title) throws StoryNotFoundException, UserIsNotLeaderException, AlreadyPublishedException {
+        WriteResult result = storyDAO.changeStoryTitle(fbId, storyId, title);
+        
+        if(result.getN() == 0){
+            PrivateStoryResponse privateStory = storyDAO.getPrivateStory(storyId);
+            
+            if(privateStory == null){
+                throw new StoryNotFoundException();
+            }
+            
+            if(!privateStory.getLeaderFbId().equals(fbId)){
+                throw new UserIsNotLeaderException();
+            }
+            
+            if(privateStory.getIsPublished() != null && privateStory.getIsPublished()){
+                throw new AlreadyPublishedException();
             }
         }
     }

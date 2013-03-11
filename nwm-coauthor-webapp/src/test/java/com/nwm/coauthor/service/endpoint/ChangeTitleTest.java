@@ -20,18 +20,17 @@ import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.request.ChangeTitleRequest;
 import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
 import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
-import com.nwm.coauthor.service.resource.response.PrivateStoryResponse;
 
 public class ChangeTitleTest extends BaseTest {
     @Test(expected = StoryNotFoundException.class)
-    public void nonExistantStory() {
+    public void nonExistantStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, UserIsNotLeaderException, StoryNotFoundException, AlreadyPublishedException {
         UserModel user = UserBuilder.createUser();
 
         storyClient.changeStoryTitle(user.getCoToken(), new ObjectId().toString(), ChangeTitleRequest.initWithTitle("title"));
-    }
+    } 
 
     @Test(expected = BadRequestException.class)
-    public void nullTitle() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
+    public void nullTitle() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, UserIsNotLeaderException, StoryNotFoundException, AlreadyPublishedException {
         UserModel user = UserBuilder.createUser();
 
         ResponseEntity<CreateStoryResponse> storyResponse = storyClient.createStory(user.getCoToken(), CreateStoryBuilder.init().build());
@@ -48,7 +47,7 @@ public class ChangeTitleTest extends BaseTest {
     }
 
     @Test(expected = BadRequestException.class)
-    public void emptyTitle() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
+    public void emptyTitle() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, UserIsNotLeaderException, StoryNotFoundException, AlreadyPublishedException {
         UserModel user = UserBuilder.createUser();
 
         ResponseEntity<CreateStoryResponse> storyResponse = storyClient.createStory(user.getCoToken(), CreateStoryBuilder.init().build());
@@ -65,7 +64,7 @@ public class ChangeTitleTest extends BaseTest {
     }
 
     @Test(expected = UserIsNotLeaderException.class)
-    public void justAMember() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException {
+    public void justAMember() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException, UserIsNotLeaderException, StoryNotFoundException, AlreadyPublishedException {
         UserModel leader = UserBuilder.createUser();
         List<UserModel> friends = UserBuilder.createUsers(2);
         
@@ -76,7 +75,7 @@ public class ChangeTitleTest extends BaseTest {
     }
 
     @Test(expected = UserIsNotLeaderException.class)
-    public void notAMember() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException {
+    public void notAMember() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException, UserIsNotLeaderException, StoryNotFoundException, AlreadyPublishedException {
         UserModel leader = UserBuilder.createUser();
         UserModel nonMember = UserBuilder.createUser();
         
@@ -87,7 +86,7 @@ public class ChangeTitleTest extends BaseTest {
     }    
     
     @Test(expected = AlreadyPublishedException.class)
-    public void alreadyPublished() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException {
+    public void alreadyPublished() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException, AlreadyPublishedException{
         UserModel leader = UserBuilder.createUser();
         CreateStoryRequest storyRequest = CreateStoryBuilder.init().title("The one").build();
 
@@ -98,7 +97,7 @@ public class ChangeTitleTest extends BaseTest {
     }
 
     @Test
-    public void changeTitle() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
+    public void changeTitle() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, UserIsNotLeaderException, StoryNotFoundException, AlreadyPublishedException {
         UserModel leader = UserBuilder.createUser();
         CreateStoryRequest storyRequest = CreateStoryBuilder.init().title("The one").build();
 

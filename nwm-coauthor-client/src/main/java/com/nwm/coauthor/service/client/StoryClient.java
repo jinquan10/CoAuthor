@@ -7,6 +7,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import com.nwm.coauthor.exception.AddEntryException;
 import com.nwm.coauthor.exception.AddEntryVersionException;
 import com.nwm.coauthor.exception.AlreadyLikedException;
+import com.nwm.coauthor.exception.AlreadyPublishedException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.NoTitleForPublishingException;
@@ -157,8 +158,6 @@ public class StoryClient extends BaseClient implements StoryController{
                 throw new UserIsNotLeaderException();
             } else if(emw.getClazz() == NoTitleForPublishingException.class){
                 throw new NoTitleForPublishingException();
-            } else if(emw.getClazz() == BadRequestException.class){
-                throw new BadRequestException(emw.getBaseException());
             } else if(emw.getClazz() == StoryNotFoundException.class){
                 throw new StoryNotFoundException();
             } else{
@@ -168,7 +167,25 @@ public class StoryClient extends BaseClient implements StoryController{
 	}
 	
 	@Override
-	public void changeStoryTitle(String coToken, String storyId, ChangeTitleRequest request){
-	    restTemplate.exchange(urlStoryResolver("/" + storyId + CHANGE_TITLE_ENDPOINT), HttpMethod.PUT, httpEntity(request, coToken), String.class);
+	public void changeStoryTitle(String coToken, String storyId, ChangeTitleRequest request) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, UserIsNotLeaderException, StoryNotFoundException, AlreadyPublishedException{
+	    try{
+	        restTemplate.exchange(urlStoryResolver("/" + storyId + CHANGE_TITLE_ENDPOINT), HttpMethod.PUT, httpEntity(request, coToken), String.class);
+	    }catch(HttpStatusCodeException e){
+            ExceptionMapperWrapper emw = convertToExceptionMapper(e);
+            
+            if(emw.getClazz() == AuthenticationUnauthorizedException.class){
+                throw new AuthenticationUnauthorizedException();
+            } else if(emw.getClazz() == BadRequestException.class){
+                throw new BadRequestException(emw.getBaseException());
+            } else if(emw.getClazz() == UserIsNotLeaderException.class){
+                throw new UserIsNotLeaderException();
+            } else if(emw.getClazz() == StoryNotFoundException.class){
+                throw new StoryNotFoundException();
+            } else if(emw.getClazz() == AlreadyPublishedException.class){
+                throw new AlreadyPublishedException();
+            } else{
+                throw new SomethingWentWrongException();
+            }           
+        }
 	}
 }

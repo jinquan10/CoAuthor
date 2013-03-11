@@ -86,4 +86,14 @@ public class StoryDAOImpl {
         
         return mongoTemplate.updateFirst(query, update, StoryModel.class);
     }
+
+    public WriteResult changeStoryTitle(String fbId, ObjectId storyId, String title) {
+        Criteria criteria = new Criteria();
+        criteria.andOperator(where("_id").is(storyId), where("leaderFbId").is(fbId), where("isPublished").is(false));
+        
+        Update update = new Update();
+        update.set("title", title);
+        
+        return mongoTemplate.updateFirst(new Query(criteria), update, StoryModel.class);
+    }
 }
