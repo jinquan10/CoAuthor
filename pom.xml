@@ -12,12 +12,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-			<version>3.2.1.RELEASE</version>
-		</dependency>	
-	
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
@@ -88,6 +82,6 @@
     <module>nwm-coauthor-interface</module>
     <module>nwm-coauthor-client</module>
     <module>nwm-coauthor-webapp</module>
-    <module>nwm-coauthor-android</module>
+<!--     <module>nwm-coauthor-android</module> -->
   </modules>
 </project>
