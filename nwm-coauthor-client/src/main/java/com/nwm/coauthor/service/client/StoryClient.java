@@ -21,6 +21,7 @@ import com.nwm.coauthor.exception.mapping.ExceptionMapperWrapper;
 import com.nwm.coauthor.service.controller.StoryController;
 import com.nwm.coauthor.service.resource.request.AddEntryRequest;
 import com.nwm.coauthor.service.resource.request.ChangeTitleRequest;
+import com.nwm.coauthor.service.resource.request.CommentRequest;
 import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
 import com.nwm.coauthor.service.resource.response.AddEntryResponse;
 import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
@@ -35,6 +36,7 @@ public class StoryClient extends BaseClient implements StoryController{
 	private static final String LIKE_ENDPOINT = "/private/like";
 	private static final String PUBLISH_ENDPOINT = "/publish";
 	private static final String CHANGE_TITLE_ENDPOINT = "/title";
+	private static final String COMMENT_ENDPOINT = "/comment";
 	
 	public StoryClient(){
 		
@@ -187,5 +189,10 @@ public class StoryClient extends BaseClient implements StoryController{
                 throw new SomethingWentWrongException();
             }           
         }
+	}
+	
+	@Override
+	public void comment(String coToken, String storyId, CommentRequest request){
+		restTemplate.exchange(urlStoryResolver("/" + storyId + COMMENT_ENDPOINT), HttpMethod.POST, httpEntity(request, coToken), String.class);
 	}
 }

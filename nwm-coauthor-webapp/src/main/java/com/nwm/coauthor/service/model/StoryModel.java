@@ -15,7 +15,8 @@ public class StoryModel extends BaseModel {
     private Boolean isPublished;
     private Integer version;
     private Integer likes;
-
+    private List<CommentModel> comments;
+    
     public String getTitle() {
         return title;
     }
@@ -95,4 +96,12 @@ public class StoryModel extends BaseModel {
     public void setLikes(Integer likes) {
         this.likes = likes;
     }
+
+	public List<CommentModel> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<CommentModel> comments) {
+		this.comments = comments;
+	}
 }
