@@ -1,14 +1,12 @@
 package com.nwm.coauthor.service.endpoint;
 
+import static org.junit.Assert.*;
 import java.util.List;
 import java.util.Map;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
-
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
@@ -21,15 +19,12 @@ import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
 public class CreateStoryTest extends BaseTest {
     @Test
     public void createStorySuccessTest() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException {
-        List<UserModel> users = UserBuilder.createUsers(null);
-
-        for (int i = 0; i < users.size(); i++) {
-            ResponseEntity<CreateStoryResponse> response = storyClient.createStory(users.get(i).getCoToken(), CreateStoryBuilder.createValidStory(users, i, null));
-
-            Assert.assertEquals(HttpStatus.CREATED, response.getStatusCode());
-            Assert.assertNotNull(response.getBody());
-            Assert.assertTrue(StringUtils.hasText(response.getBody().getStoryId()));
-        }
+        UserModel leader = UserBuilder.createUser();
+        
+        ResponseEntity<CreateStoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), CreateStoryBuilder.init().build());
+        assertEquals(HttpStatus.CREATED, createStoryResponse.getStatusCode());
+        assertNotNull(createStoryResponse.getBody());
+        assertNotNull(createStoryResponse.getBody().getStoryId());
     }
 
     @Test(expected = AuthenticationUnauthorizedException.class)

@@ -1,3 +1,14 @@
+- version
+
+
+- get the story javaDate and version epoch endpoint
+- add entry updates javaDate and version epoch
+- published updates javaDate and version epoch
+- likes updates javaDate and version epoch
+- comment updates javaDate and version epoch
+- change title updates javaDate and version epoch
+- change numCharacters updates javaDate and version epoch
+- add friend updates javaDate and version epoch
 - commentTest
 - How do I back up the database?
 - Multithreaded calls on Android side to service.

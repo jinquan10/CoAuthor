@@ -34,7 +34,7 @@ import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.service.manager.AuthenticationManagerImpl;
 import com.nwm.coauthor.service.manager.StoryManagerImpl;
 import com.nwm.coauthor.service.model.AddEntryModel;
-import com.nwm.coauthor.service.model.StoryEntryModel;
+import com.nwm.coauthor.service.model.EntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.resource.request.AddEntryRequest;
 import com.nwm.coauthor.service.resource.request.ChangeTitleRequest;
@@ -199,8 +199,8 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     }
 
     protected StoryModel createStoryModelFromRequest(String fbId, CreateStoryRequest request) {
-        List<StoryEntryModel> entries = new ArrayList<StoryEntryModel>();
-        entries.add(new StoryEntryModel(fbId, request.getEntry()));
+        List<EntryModel> entries = new ArrayList<EntryModel>();
+        entries.add(new EntryModel(fbId, request.getEntry()));
 
         StoryModel model = new StoryModel();
         model.set_id(new ObjectId());
