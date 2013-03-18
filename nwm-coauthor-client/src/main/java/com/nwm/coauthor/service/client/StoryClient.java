@@ -10,11 +10,12 @@ import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.mapping.ExceptionMapperWrapper;
 import com.nwm.coauthor.service.controller.StoryController;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
+import com.nwm.coauthor.service.resource.response.MyStoriesResponse;
 import com.nwm.coauthor.service.resource.response.NewStoryResponse;
 
 public class StoryClient extends BaseClient implements StoryController{
 	private static final String CREATE_STORY_ENDPOINT = "/";
-	private static final String GET_PRIVATE_STORIES_ENDPOINT = "/privates";
+	private static final String GET_MY_STORIES_ENDPOINT = "/mine";
 	private static final String ADD_ENTRY_ENDPOINT = "/entry";
 	private static final String GET_PRIVATE_STORY_ENDPOINT = "/private";
 	private static final String LIKE_ENDPOINT = "/private/like";
@@ -43,22 +44,20 @@ public class StoryClient extends BaseClient implements StoryController{
 		}
 	}
 
-//	@Override
-//	public ResponseEntity<PrivateStoriesResponseWrapper> getPrivateStories(String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException, StoryNotFoundException{
-//		try{
-//			return restTemplate.exchange(urlStoryResolver(GET_PRIVATE_STORIES_ENDPOINT), HttpMethod.GET, httpEntity(null, coToken), PrivateStoriesResponseWrapper.class);
-//		}catch(HttpStatusCodeException e){
-//			ExceptionMapperWrapper emw = convertToExceptionMapper(e);
-//			
-//			if(emw.getClazz() == AuthenticationUnauthorizedException.class){
-//				throw new AuthenticationUnauthorizedException();
-//			}else if(emw.getClazz() == StoryNotFoundException.class){
-//				throw new StoryNotFoundException();
-//			}else{
-//				throw new SomethingWentWrongException();
-//			}
-//		}
-//	}
+	@Override
+	public ResponseEntity<MyStoriesResponse> getMyStories(String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException{
+		try{
+			return restTemplate.exchange(urlStoryResolver(GET_MY_STORIES_ENDPOINT), HttpMethod.GET, httpEntity(null, coToken), MyStoriesResponse.class);
+		}catch(HttpStatusCodeException e){
+			ExceptionMapperWrapper emw = convertToExceptionMapper(e);
+			
+			if(emw.getClazz() == AuthenticationUnauthorizedException.class){
+				throw new AuthenticationUnauthorizedException();
+			}else{
+				throw new SomethingWentWrongException();
+			}
+		}
+	}
 //
 //	@Override
 //	public ResponseEntity<AddEntryResponse> addEntry(String coToken, EntryRequest entry) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, StoryNotFoundException, AddEntryVersionException {

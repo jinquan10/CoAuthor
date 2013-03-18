@@ -1,19 +1,12 @@
 package com.nwm.coauthor.service.model;
 
-import org.bson.types.ObjectId;
 
 public class CommentModel extends BaseModel{
-	private ObjectId storyId;
+	private String storyId;
 	private String fbId;
 	private String comment;
-	private long ordinal;
+	private Long ordinal;
 	
-	public ObjectId getStoryId() {
-		return storyId;
-	}
-	public void setStoryId(ObjectId storyId) {
-		this.storyId = storyId;
-	}
 	public String getFbId() {
 		return fbId;
 	}
@@ -26,10 +19,16 @@ public class CommentModel extends BaseModel{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	public long getOrdinal() {
+	public Long getOrdinal() {
 		return ordinal;
 	}
-	public void setOrdinal(long ordinal) {
+	public void setOrdinal(Long ordinal) {
 		this.ordinal = ordinal;
-	}	
+	}
+	public String getStoryId() {
+		return storyId;
+	}
+	public void setStoryId(String storyId) {
+		this.storyId = storyId;
+	}
 }

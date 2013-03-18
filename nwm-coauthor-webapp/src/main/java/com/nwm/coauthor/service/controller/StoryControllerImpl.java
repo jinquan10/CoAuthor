@@ -19,6 +19,7 @@ import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.service.manager.AuthenticationManagerImpl;
 import com.nwm.coauthor.service.manager.StoryManagerImpl;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
+import com.nwm.coauthor.service.resource.response.MyStoriesResponse;
 import com.nwm.coauthor.service.resource.response.NewStoryResponse;
 
 @Controller
@@ -42,16 +43,15 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
         return new ResponseEntity<NewStoryResponse>(storyResponse, HttpStatus.CREATED);
     }
 
-//    @Override
-//    @RequestMapping(value = "/privates", method = RequestMethod.GET)
-//    public ResponseEntity<PrivateStoriesResponseWrapper> getPrivateStories(@RequestHeader("Authorization") String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException,
-//            StoryNotFoundException {
-//        String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
-//
-//        PrivateStoriesResponseWrapper wrapper = new PrivateStoriesResponseWrapper(storyManager.getStoriesByFbId(fbId));
-//
-//        return new ResponseEntity<PrivateStoriesResponseWrapper>(wrapper, HttpStatus.OK);
-//    }
+    @Override
+    @RequestMapping(value = "/mine", method = RequestMethod.GET)
+    public ResponseEntity<MyStoriesResponse> getMyStories(@RequestHeader("Authorization") String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException {
+        String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
+
+        MyStoriesResponse myStories = storyManager.getMyStories(fbId);
+
+        return new ResponseEntity<MyStoriesResponse>(myStories, HttpStatus.OK);
+    }
 //
 //    @Override
 //    @RequestMapping(value = "/entry", method = RequestMethod.POST)

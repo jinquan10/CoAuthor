@@ -1,14 +1,13 @@
 package com.nwm.coauthor.service.model;
 
-import org.bson.types.ObjectId;
 
 public class EntryModel extends BaseModel {
-    private ObjectId storyId;
+    private String storyId;
     private String fbId;
     private String entry;
-    private long ordinal;
+    private Long ordinal;
     
-    public static EntryModel newEntryModel(ObjectId storyId, String fbId, String entry, long ordinal){
+    public static EntryModel newEntryModel(String storyId, String fbId, String entry, Long ordinal){
     	EntryModel newEntryModel = new EntryModel();
     	
     	newEntryModel.setStoryId(storyId);
@@ -19,12 +18,6 @@ public class EntryModel extends BaseModel {
     	return newEntryModel;
     }
     
-	public ObjectId getStoryId() {
-		return storyId;
-	}
-	public void setStoryId(ObjectId storyId) {
-		this.storyId = storyId;
-	}
 	public String getFbId() {
 		return fbId;
 	}
@@ -37,10 +30,18 @@ public class EntryModel extends BaseModel {
 	public void setEntry(String entry) {
 		this.entry = entry;
 	}
-	public long getOrdinal() {
+	public Long getOrdinal() {
 		return ordinal;
 	}
-	public void setOrdinal(long ordinal) {
+	public void setOrdinal(Long ordinal) {
 		this.ordinal = ordinal;
+	}
+
+	public String getStoryId() {
+		return storyId;
+	}
+
+	public void setStoryId(String storyId) {
+		this.storyId = storyId;
 	}
 }

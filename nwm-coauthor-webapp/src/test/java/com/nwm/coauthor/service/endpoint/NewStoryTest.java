@@ -108,7 +108,7 @@ public class NewStoryTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
     	
     	try {
-            storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriends(null).build());
+            storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbIdList(null).build());
         } catch (BadRequestException e) {
             Map<String, String> batchErrors = e.getBatchErrors();
 
@@ -121,7 +121,7 @@ public class NewStoryTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
     	
     	try {
-            storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriends(new ArrayList<String>()).build());
+            storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbIdList(new ArrayList<String>()).build());
         } catch (BadRequestException e) {
             Map<String, String> batchErrors = e.getBatchErrors();
 

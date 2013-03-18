@@ -30,11 +30,21 @@ public class NewStoryBuilder {
         return this;
     }
 
-    public NewStoryBuilder fbFriends(List<String> fbFriends) {
+    public NewStoryBuilder fbIdList(List<String> fbFriends) {
         request.setFbFriends(fbFriends);
         return this;
     }
 
+    public NewStoryBuilder fbFriendsFromUserModel(UserModel friend) {
+    	List<String> fbFriends = new ArrayList<String>();
+		String fbId = friend.getFbId();
+		fbFriends.add(fbId);
+		
+		request.setFbFriends(fbFriends);
+		
+		return this;
+    }
+    
     public NewStoryBuilder title(String title) {
         request.setTitle(title);
         return this;

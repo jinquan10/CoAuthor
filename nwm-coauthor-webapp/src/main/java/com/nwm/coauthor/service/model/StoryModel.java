@@ -8,44 +8,38 @@ import org.bson.types.ObjectId;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 
 public class StoryModel extends BaseModel {
-	private ObjectId _id;
-    private String leaderFbId;    	// - changeable by the leader only
+	private String storyId;
+	private String leaderFbId;    	// - changeable by the leader only
     private String title;
     private Integer numCharacters;
     private Boolean isPublished;
     private List<String> fbFriends;
-    private Integer likes;    		// - changeable by public
+    private Long likes;    		// - changeable by public
     private String lastFriendWithEntry; // - changed when an entry is submitted
-    private Date storyLastUpdated;  // - changed when anything above is updated
+    private String lastEntry; 
+    private Long storyLastUpdated;  // - changed when anything above is updated
     private Long entryOrdinal;    	// - changed when entry is added
     private Long commentOrdinal;    // - changed when comment is added
 
 	public static StoryModel createStoryModelFromRequest(String fbId, NewStoryRequest request){
     	StoryModel storyModel = new StoryModel();
     	
-    	storyModel.set_id(new ObjectId());
+    	storyModel.setStoryId(new ObjectId().toString());
     	storyModel.setLeaderFbId(fbId);
     	storyModel.setTitle(request.getTitle());
     	storyModel.setNumCharacters(request.getNumCharacters());
     	storyModel.setIsPublished(false);
         storyModel.setFbFriends(request.getFbFriends());
-        storyModel.setLikes(0);
+        storyModel.setLikes(0L);
         storyModel.setLastFriendWithEntry(fbId);
-        storyModel.setStoryLastUpdated(new Date());
+        storyModel.setLastEntry(request.getEntry());
+        storyModel.setStoryLastUpdated(new Date().getTime());
         storyModel.setEntryOrdinal(0L);
         storyModel.setCommentOrdinal(0L);
         
         return storyModel;
     }
     
-    public ObjectId get_id() {
-		return _id;
-	}
-
-	public void set_id(ObjectId _id) {
-		this._id = _id;
-	}
-
 	public String getLeaderFbId() {
 		return leaderFbId;
 	}
@@ -86,11 +80,11 @@ public class StoryModel extends BaseModel {
 		this.fbFriends = fbFriends;
 	}
 
-	public Integer getLikes() {
+	public Long getLikes() {
 		return likes;
 	}
 
-	public void setLikes(Integer likes) {
+	public void setLikes(Long likes) {
 		this.likes = likes;
 	}
 
@@ -102,11 +96,11 @@ public class StoryModel extends BaseModel {
 		this.lastFriendWithEntry = lastFriendWithEntry;
 	}
 
-	public Date getStoryLastUpdated() {
+	public Long getStoryLastUpdated() {
 		return storyLastUpdated;
 	}
 
-	public void setStoryLastUpdated(Date storyLastUpdated) {
+	public void setStoryLastUpdated(Long storyLastUpdated) {
 		this.storyLastUpdated = storyLastUpdated;
 	}
 
@@ -124,5 +118,21 @@ public class StoryModel extends BaseModel {
 
 	public void setCommentOrdinal(Long commentOrdinal) {
 		this.commentOrdinal = commentOrdinal;
+	}
+
+	public String getLastEntry() {
+		return lastEntry;
+	}
+
+	public void setLastEntry(String lastEntry) {
+		this.lastEntry = lastEntry;
+	}
+
+	public String getStoryId() {
+		return storyId;
+	}
+
+	public void setStoryId(String storyId) {
+		this.storyId = storyId;
 	}
 }

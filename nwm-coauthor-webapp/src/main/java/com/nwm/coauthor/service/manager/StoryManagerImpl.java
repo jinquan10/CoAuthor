@@ -10,6 +10,7 @@ import com.nwm.coauthor.service.dao.UserDAOImpl;
 import com.nwm.coauthor.service.model.EntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
+import com.nwm.coauthor.service.resource.response.MyStoriesResponse;
 import com.nwm.coauthor.service.resource.response.NewStoryResponse;
 
 @Component
@@ -25,13 +26,17 @@ public class StoryManagerImpl {
     
     public NewStoryResponse createStory(String fbId, NewStoryRequest request) {
     	StoryModel newStoryModel = StoryModel.createStoryModelFromRequest(fbId, request);
-    	EntryModel newEntryModel = EntryModel.newEntryModel(newStoryModel.get_id(), fbId, request.getEntry(), newStoryModel.getEntryOrdinal()); 
+    	EntryModel newEntryModel = EntryModel.newEntryModel(newStoryModel.getStoryId(), fbId, request.getEntry(), newStoryModel.getEntryOrdinal()); 
     	
         storyDAO.createStory(newStoryModel);
         entryDAO.addEntry(newEntryModel);
         
-        return NewStoryResponse.newStoryResponse(newStoryModel.get_id().toString(), newStoryModel.getStoryLastUpdated().getTime());
+        return NewStoryResponse.newStoryResponse(newStoryModel.getStoryId(), newStoryModel.getStoryLastUpdated());
     }
+
+	public MyStoriesResponse getMyStories(String fbId) {
+		return MyStoriesResponse.wrapStoryCovers(storyDAO.getMyStories(fbId));
+	}
 
 //    public List<PrivateStoryResponse> getStoriesByFbId(String fbId) throws StoryNotFoundException {
 //        List<PrivateStoryResponse> stories = storyDAO.getStoriesByFbId(fbId);
