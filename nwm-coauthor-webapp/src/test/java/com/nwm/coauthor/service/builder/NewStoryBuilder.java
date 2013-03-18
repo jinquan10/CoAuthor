@@ -4,48 +4,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.nwm.coauthor.service.model.UserModel;
-import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
+import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 
-public class CreateStoryBuilder {
+public class NewStoryBuilder {
 
-    private CreateStoryRequest request;
+    private NewStoryRequest request;
 
-    public CreateStoryRequest getRequest() {
+    public NewStoryRequest getRequest() {
         return request;
     }
 
-    public void setRequest(CreateStoryRequest request) {
+    public void setRequest(NewStoryRequest request) {
         this.request = request;
     }
 
-    public static CreateStoryBuilder init() {
-        CreateStoryBuilder builder = new CreateStoryBuilder();
-        builder.setRequest(new CreateStoryRequest());
+    public static NewStoryBuilder init() {
+        NewStoryBuilder builder = new NewStoryBuilder();
+        builder.setRequest(new NewStoryRequest());
 
         return builder;
     }
 
-    public CreateStoryBuilder entry(String entry) {
+    public NewStoryBuilder entry(String entry) {
         request.setEntry(entry);
         return this;
     }
 
-    public CreateStoryBuilder fbFriends(List<String> fbFriends) {
+    public NewStoryBuilder fbFriends(List<String> fbFriends) {
         request.setFbFriends(fbFriends);
         return this;
     }
 
-    public CreateStoryBuilder title(String title) {
+    public NewStoryBuilder title(String title) {
         request.setTitle(title);
         return this;
     }
 
-    public CreateStoryBuilder numCharacters(Integer numCharacters) {
+    public NewStoryBuilder numCharacters(Integer numCharacters) {
         request.setNumCharacters(numCharacters);
         return this;
     }
 
-    public CreateStoryRequest build() {
+    public NewStoryRequest build() {
         request.setEntry(request.getEntry() == null ? "12345" : request.getEntry());
         request.setFbFriends(request.getFbFriends() == null ? UserBuilder.getDefaultFBFriends() : request.getFbFriends());
         request.setTitle(request.getTitle() == null ? null : request.getTitle());
@@ -64,7 +64,7 @@ public class CreateStoryBuilder {
         return fbFriends;
     }
 
-    public static CreateStoryRequest createValidStory(List<UserModel> users, int userIndex, List<String> fbFriends, Integer... numCharacters) {
+    public static NewStoryRequest createValidStory(List<UserModel> users, int userIndex, List<String> fbFriends, Integer... numCharacters) {
         if (fbFriends == null) {
             fbFriends = new ArrayList<String>();
 
@@ -75,7 +75,7 @@ public class CreateStoryBuilder {
             }
         }
 
-        CreateStoryRequest createStoryRequest = new CreateStoryRequest();
+        NewStoryRequest createStoryRequest = new NewStoryRequest();
         createStoryRequest.setEntry("12345");
         createStoryRequest.setFbFriends(fbFriends);
         createStoryRequest.setTitle(null);

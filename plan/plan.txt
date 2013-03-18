@@ -1,4 +1,4 @@
-- version
+- storyLastUpdated Long parameter on checkStoryLastUpdated refresh call
 
 
 - get the story javaDate and version epoch endpoint

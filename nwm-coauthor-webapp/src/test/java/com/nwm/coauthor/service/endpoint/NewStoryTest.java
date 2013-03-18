@@ -10,35 +10,36 @@ import org.springframework.http.ResponseEntity;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
-import com.nwm.coauthor.service.builder.CreateStoryBuilder;
+import com.nwm.coauthor.service.builder.NewStoryBuilder;
 import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
-import com.nwm.coauthor.service.resource.request.CreateStoryRequest;
-import com.nwm.coauthor.service.resource.response.CreateStoryResponse;
+import com.nwm.coauthor.service.resource.request.NewStoryRequest;
+import com.nwm.coauthor.service.resource.response.NewStoryResponse;
 
-public class CreateStoryTest extends BaseTest {
+public class NewStoryTest extends BaseTest {
     @Test
-    public void createStorySuccessTest() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException {
+    public void newStorySuccess() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException {
         UserModel leader = UserBuilder.createUser();
         
-        ResponseEntity<CreateStoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), CreateStoryBuilder.init().build());
-        assertEquals(HttpStatus.CREATED, createStoryResponse.getStatusCode());
-        assertNotNull(createStoryResponse.getBody());
-        assertNotNull(createStoryResponse.getBody().getStoryId());
+        ResponseEntity<NewStoryResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        assertEquals(HttpStatus.CREATED, newStoryResponse.getStatusCode());
+        assertNotNull(newStoryResponse.getBody());
+        assertNotNull(newStoryResponse.getBody().getStoryId());
+        assertNotNull(newStoryResponse.getBody().getStoryLastUpdated());
     }
 
     @Test(expected = AuthenticationUnauthorizedException.class)
     public void createStoryNullCoTokenTest() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException {
         List<UserModel> users = UserBuilder.createUsers(null);
 
-        storyClient.createStory(null, CreateStoryBuilder.createValidStory(users, 0, null));
+        storyClient.createStory(null, NewStoryBuilder.createValidStory(users, 0, null));
     }
 
     @Test(expected = AuthenticationUnauthorizedException.class)
     public void createStoryEmptyStringCoTokenTest() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException {
         List<UserModel> users = UserBuilder.createUsers(null);
 
-        storyClient.createStory("", CreateStoryBuilder.createValidStory(users, 0, null));
+        storyClient.createStory("", NewStoryBuilder.createValidStory(users, 0, null));
     }
 
     @Test
@@ -47,7 +48,7 @@ public class CreateStoryTest extends BaseTest {
 
         for (int i = 0; i < users.size(); i++) {
             try {
-                storyClient.createStory(users.get(i).getCoToken(), new CreateStoryRequest());
+                storyClient.createStory(users.get(i).getCoToken(), new NewStoryRequest());
             } catch (BadRequestException e) {
                 Map<String, String> batchErrors = e.getBatchErrors();
 
@@ -77,7 +78,7 @@ public class CreateStoryTest extends BaseTest {
 
         for (int i = 0; i < users.size(); i++) {
             try {
-                CreateStoryRequest request = CreateStoryBuilder.createValidStory(users, i, null);
+                NewStoryRequest request = NewStoryBuilder.createValidStory(users, i, null);
                 request.setTitle("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
                 storyClient.createStory(users.get(i).getCoToken(), request);
             } catch (BadRequestException e) {

@@ -2,10 +2,10 @@ package com.nwm.coauthor.service.resource.request;
 
 import com.nwm.coauthor.service.resource.BaseResource;
 
-public class AddEntryRequest extends BaseResource{
+public class EntryRequest extends BaseResource{
 	private String storyId;
 	private String entry;
-	private Integer version;
+	private Integer ordinal;
 	
 	public String getStoryId() {
 		return storyId;
@@ -19,10 +19,10 @@ public class AddEntryRequest extends BaseResource{
 	public void setEntry(String entry) {
 		this.entry = entry;
 	}
-	public Integer getVersion() {
-		return version;
+	public Integer getOrdinal() {
+		return ordinal;
 	}
-	public void setVersion(Integer version) {
-		this.version = version;
+	public void setOrdinal(Integer ordinal) {
+		this.ordinal = ordinal;
 	}
 }

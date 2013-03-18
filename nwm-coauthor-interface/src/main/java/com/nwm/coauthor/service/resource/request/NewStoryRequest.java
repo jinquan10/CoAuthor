@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.nwm.coauthor.service.resource.BaseResource;
 
-public class CreateStoryRequest extends BaseResource{
+public class NewStoryRequest extends BaseResource{
 	private String title;
 	private String entry;
 	private Integer numCharacters;

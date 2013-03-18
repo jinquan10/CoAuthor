@@ -8,6 +8,17 @@ public class EntryModel extends BaseModel {
     private String entry;
     private long ordinal;
     
+    public static EntryModel newEntryModel(ObjectId storyId, String fbId, String entry, long ordinal){
+    	EntryModel newEntryModel = new EntryModel();
+    	
+    	newEntryModel.setStoryId(storyId);
+    	newEntryModel.setFbId(fbId);
+    	newEntryModel.setEntry(entry);
+    	newEntryModel.setOrdinal(ordinal);
+    	
+    	return newEntryModel;
+    }
+    
 	public ObjectId getStoryId() {
 		return storyId;
 	}
