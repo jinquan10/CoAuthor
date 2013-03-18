@@ -54,6 +54,10 @@ public class NewStoryBuilder {
         return request;
     }
 
+    public NewStoryRequest buildBare() {
+        return new NewStoryRequest();
+    }
+    
     private static List<String> getFbFriendIds(List<UserModel> friends) {
         List<String> fbFriends = new ArrayList<String>();
 
