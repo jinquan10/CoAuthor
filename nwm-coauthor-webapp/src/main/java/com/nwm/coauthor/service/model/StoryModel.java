@@ -18,8 +18,8 @@ public class StoryModel extends BaseModel {
     private String lastFriendWithEntry; // - changed when an entry is submitted
     private String lastEntry; 
     private Long storyLastUpdated;  // - changed when anything above is updated
-    private Long entryOrdinal;    	// - changed when entry is added
-    private Long commentOrdinal;    // - changed when comment is added
+    private Integer entryOrdinal;    	// - changed when entry is added
+    private Integer commentOrdinal;    // - changed when comment is added
 
 	public static StoryModel createStoryModelFromRequest(String fbId, NewStoryRequest request){
     	StoryModel storyModel = new StoryModel();
@@ -34,8 +34,8 @@ public class StoryModel extends BaseModel {
         storyModel.setLastFriendWithEntry(fbId);
         storyModel.setLastEntry(request.getEntry());
         storyModel.setStoryLastUpdated(new Date().getTime());
-        storyModel.setEntryOrdinal(0L);
-        storyModel.setCommentOrdinal(0L);
+        storyModel.setEntryOrdinal(0);
+        storyModel.setCommentOrdinal(0);
         
         return storyModel;
     }
@@ -104,19 +104,19 @@ public class StoryModel extends BaseModel {
 		this.storyLastUpdated = storyLastUpdated;
 	}
 
-	public Long getEntryOrdinal() {
+	public Integer getEntryOrdinal() {
 		return entryOrdinal;
 	}
 
-	public void setEntryOrdinal(Long entryOrdinal) {
+	public void setEntryOrdinal(Integer entryOrdinal) {
 		this.entryOrdinal = entryOrdinal;
 	}
 
-	public Long getCommentOrdinal() {
+	public Integer getCommentOrdinal() {
 		return commentOrdinal;
 	}
 
-	public void setCommentOrdinal(Long commentOrdinal) {
+	public void setCommentOrdinal(Integer commentOrdinal) {
 		this.commentOrdinal = commentOrdinal;
 	}
 

@@ -10,7 +10,7 @@ import com.nwm.coauthor.service.dao.UserDAOImpl;
 import com.nwm.coauthor.service.model.EntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
-import com.nwm.coauthor.service.resource.response.MyStoriesResponse;
+import com.nwm.coauthor.service.resource.response.StoriesResponse;
 import com.nwm.coauthor.service.resource.response.NewStoryResponse;
 
 @Component
@@ -34,8 +34,8 @@ public class StoryManagerImpl {
         return NewStoryResponse.newStoryResponse(newStoryModel.getStoryId(), newStoryModel.getStoryLastUpdated());
     }
 
-	public MyStoriesResponse getMyStories(String fbId) {
-		return MyStoriesResponse.wrapStoryCovers(storyDAO.getMyStories(fbId));
+	public StoriesResponse getMyStories(String fbId) {
+		return StoriesResponse.wrapStoryCovers(storyDAO.getMyStories(fbId));
 	}
 
 //    public List<PrivateStoryResponse> getStoriesByFbId(String fbId) throws StoryNotFoundException {

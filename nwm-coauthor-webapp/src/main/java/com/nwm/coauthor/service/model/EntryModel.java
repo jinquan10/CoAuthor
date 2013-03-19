@@ -5,9 +5,9 @@ public class EntryModel extends BaseModel {
     private String storyId;
     private String fbId;
     private String entry;
-    private Long ordinal;
+    private Integer ordinal;
     
-    public static EntryModel newEntryModel(String storyId, String fbId, String entry, Long ordinal){
+    public static EntryModel newEntryModel(String storyId, String fbId, String entry, Integer ordinal){
     	EntryModel newEntryModel = new EntryModel();
     	
     	newEntryModel.setStoryId(storyId);
@@ -30,10 +30,10 @@ public class EntryModel extends BaseModel {
 	public void setEntry(String entry) {
 		this.entry = entry;
 	}
-	public Long getOrdinal() {
+	public Integer getOrdinal() {
 		return ordinal;
 	}
-	public void setOrdinal(Long ordinal) {
+	public void setOrdinal(Integer ordinal) {
 		this.ordinal = ordinal;
 	}
 

@@ -10,7 +10,7 @@ import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.mapping.ExceptionMapperWrapper;
 import com.nwm.coauthor.service.controller.StoryController;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
-import com.nwm.coauthor.service.resource.response.MyStoriesResponse;
+import com.nwm.coauthor.service.resource.response.StoriesResponse;
 import com.nwm.coauthor.service.resource.response.NewStoryResponse;
 
 public class StoryClient extends BaseClient implements StoryController{
@@ -45,9 +45,9 @@ public class StoryClient extends BaseClient implements StoryController{
 	}
 
 	@Override
-	public ResponseEntity<MyStoriesResponse> getMyStories(String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException{
+	public ResponseEntity<StoriesResponse> getMyStories(String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException{
 		try{
-			return restTemplate.exchange(urlStoryResolver(GET_MY_STORIES_ENDPOINT), HttpMethod.GET, httpEntity(null, coToken), MyStoriesResponse.class);
+			return restTemplate.exchange(urlStoryResolver(GET_MY_STORIES_ENDPOINT), HttpMethod.GET, httpEntity(null, coToken), StoriesResponse.class);
 		}catch(HttpStatusCodeException e){
 			ExceptionMapperWrapper emw = convertToExceptionMapper(e);
 			

@@ -19,7 +19,7 @@ import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.service.manager.AuthenticationManagerImpl;
 import com.nwm.coauthor.service.manager.StoryManagerImpl;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
-import com.nwm.coauthor.service.resource.response.MyStoriesResponse;
+import com.nwm.coauthor.service.resource.response.StoriesResponse;
 import com.nwm.coauthor.service.resource.response.NewStoryResponse;
 
 @Controller
@@ -45,12 +45,12 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 
     @Override
     @RequestMapping(value = "/mine", method = RequestMethod.GET)
-    public ResponseEntity<MyStoriesResponse> getMyStories(@RequestHeader("Authorization") String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException {
+    public ResponseEntity<StoriesResponse> getMyStories(@RequestHeader("Authorization") String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException {
         String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
 
-        MyStoriesResponse myStories = storyManager.getMyStories(fbId);
+        StoriesResponse myStories = storyManager.getMyStories(fbId);
 
-        return new ResponseEntity<MyStoriesResponse>(myStories, HttpStatus.OK);
+        return new ResponseEntity<StoriesResponse>(myStories, HttpStatus.OK);
     }
 //
 //    @Override

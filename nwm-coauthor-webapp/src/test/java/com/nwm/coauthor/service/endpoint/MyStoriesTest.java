@@ -15,15 +15,15 @@ import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.service.builder.NewStoryBuilder;
 import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
-import com.nwm.coauthor.service.resource.response.MyStoriesResponse;
-import com.nwm.coauthor.service.resource.response.StoryCoverResponse;
+import com.nwm.coauthor.service.resource.response.StoriesResponse;
+import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 public class MyStoriesTest extends BaseTest {
     @Test
     public void hasNoStory() throws AuthenticationUnauthorizedException, SomethingWentWrongException{
         UserModel nonMember = UserBuilder.createUser();
 
-        ResponseEntity<MyStoriesResponse> myStoriesResponse = storyClient.getMyStories(nonMember.getCoToken());
+        ResponseEntity<StoriesResponse> myStoriesResponse = storyClient.getMyStories(nonMember.getCoToken());
         assertNotNull(myStoriesResponse.getBody().getMyStories());
         assertEquals(0, myStoriesResponse.getBody().getMyStories().size());
     }
@@ -34,18 +34,22 @@ public class MyStoriesTest extends BaseTest {
     	
     	storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().title("asdf").build());
     	
-    	ResponseEntity<MyStoriesResponse> myStoriesResponse = storyClient.getMyStories(leader.getCoToken());
+    	ResponseEntity<StoriesResponse> myStoriesResponse = storyClient.getMyStories(leader.getCoToken());
     	assertNotNull(myStoriesResponse.getBody().getMyStories());
     	
-    	StoryCoverResponse myStory = myStoriesResponse.getBody().getMyStories().get(0);
-    	assertFalse(myStory.getIsPublished());
-    	assertTrue(StringUtils.hasText(myStory.getLastEntry()));
-    	assertTrue(StringUtils.hasText(myStory.getLastFriendWithEntry()));
-    	assertEquals(leader.getFbId(), myStory.getLeaderFbId());
-    	assertEquals(new Long(0), myStory.getLikes());
+    	StoryResponse myStory = myStoriesResponse.getBody().getMyStories().get(0);
     	assertNotNull(myStory.getStoryId());
-    	assertNotNull(myStory.getStoryLastUpdated());
+    	assertEquals(leader.getFbId(), myStory.getLeaderFbId());
     	assertTrue(StringUtils.hasText(myStory.getTitle()));
+    	assertNotNull(myStory.getNumCharacters());
+    	assertFalse(myStory.getIsPublished());
+    	assertEquals(2, myStory.getFbFriends().size());
+    	assertEquals(new Long(0), myStory.getLikes());
+    	assertTrue(StringUtils.hasText(myStory.getLastFriendWithEntry()));
+    	assertTrue(StringUtils.hasText(myStory.getLastEntry()));
+    	assertNotNull(myStory.getStoryLastUpdated());
+    	assertNotNull(myStory.getEntryOrdinal());
+    	assertNotNull(myStory.getCommentOrdinal());
     }
     
     @Test
@@ -55,7 +59,7 @@ public class MyStoriesTest extends BaseTest {
     	storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
     	storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
     	
-    	ResponseEntity<MyStoriesResponse> myStoriesResponse = storyClient.getMyStories(leader.getCoToken());
+    	ResponseEntity<StoriesResponse> myStoriesResponse = storyClient.getMyStories(leader.getCoToken());
     	assertNotNull(myStoriesResponse.getBody().getMyStories());
     	assertEquals(2, myStoriesResponse.getBody().getMyStories().size());
     }
@@ -68,7 +72,7 @@ public class MyStoriesTest extends BaseTest {
     	storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).build());
     	storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).build());
     	
-    	ResponseEntity<MyStoriesResponse> myStoriesResponse = storyClient.getMyStories(member.getCoToken());
+    	ResponseEntity<StoriesResponse> myStoriesResponse = storyClient.getMyStories(member.getCoToken());
     	assertNotNull(myStoriesResponse.getBody().getMyStories());
     	assertEquals(2, myStoriesResponse.getBody().getMyStories().size());
     }
@@ -81,7 +85,7 @@ public class MyStoriesTest extends BaseTest {
     	storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).build());
     	storyClient.createStory(member.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(leader).build());
     	
-    	ResponseEntity<MyStoriesResponse> myStoriesResponse = storyClient.getMyStories(leader.getCoToken());
+    	ResponseEntity<StoriesResponse> myStoriesResponse = storyClient.getMyStories(leader.getCoToken());
     	assertNotNull(myStoriesResponse.getBody().getMyStories());
     	assertEquals(2, myStoriesResponse.getBody().getMyStories().size());
     	
