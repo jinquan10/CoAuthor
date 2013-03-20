@@ -1,8 +1,11 @@
 package com.nwm.coauthor.service.manager;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.nwm.coauthor.exception.CannotGetEntriesException;
 import com.nwm.coauthor.service.dao.CommentDAOImpl;
 import com.nwm.coauthor.service.dao.EntryDAOImpl;
 import com.nwm.coauthor.service.dao.StoryDAOImpl;
@@ -10,6 +13,8 @@ import com.nwm.coauthor.service.dao.UserDAOImpl;
 import com.nwm.coauthor.service.model.EntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
+import com.nwm.coauthor.service.resource.response.EntriesResponse;
+import com.nwm.coauthor.service.resource.response.EntryResponse;
 import com.nwm.coauthor.service.resource.response.StoriesResponse;
 import com.nwm.coauthor.service.resource.response.NewStoryResponse;
 
@@ -26,7 +31,7 @@ public class StoryManagerImpl {
     
     public NewStoryResponse createStory(String fbId, NewStoryRequest request) {
     	StoryModel newStoryModel = StoryModel.createStoryModelFromRequest(fbId, request);
-    	EntryModel newEntryModel = EntryModel.newEntryModel(newStoryModel.getStoryId(), fbId, request.getEntry(), newStoryModel.getEntryOrdinal()); 
+    	EntryModel newEntryModel = EntryModel.newEntryModel(newStoryModel.getStoryId(), fbId, request.getEntry(), newStoryModel.currEntryCount()); 
     	
         storyDAO.createStory(newStoryModel);
         entryDAO.addEntry(newEntryModel);
@@ -36,6 +41,19 @@ public class StoryManagerImpl {
 
 	public StoriesResponse getMyStories(String fbId) {
 		return StoriesResponse.wrapStoryCovers(storyDAO.getMyStories(fbId));
+	}
+
+	public EntriesResponse getEntries(String fbId, String storyId, Integer min, Integer max) throws CannotGetEntriesException {
+		if(storyDAO.canGetEntries(fbId, storyId, min, max)){
+			List<EntryResponse> entries = entryDAO.getEntries(storyId, min, max);
+			
+			EntriesResponse response = new EntriesResponse();
+			response.setEntries(entries);
+			
+			return response;
+		}else{
+			throw new CannotGetEntriesException(); 
+		}
 	}
 
 //    public List<PrivateStoryResponse> getStoriesByFbId(String fbId) throws StoryNotFoundException {

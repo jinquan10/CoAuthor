@@ -5,15 +5,15 @@ public class EntryModel extends BaseModel {
     private String storyId;
     private String fbId;
     private String entry;
-    private Long theTotalCharCountUpToTheEndOfThisEntry;
+    private Integer currCharCount;
     
-    public static EntryModel newEntryModel(String storyId, String fbId, String entry, Long theTotalCharCountUpToTheEndOfThisEntry){
+    public static EntryModel newEntryModel(String storyId, String fbId, String entry, Integer currCharCount){
     	EntryModel newEntryModel = new EntryModel();
     	
     	newEntryModel.setStoryId(storyId);
     	newEntryModel.setFbId(fbId);
     	newEntryModel.setEntry(entry);
-    	newEntryModel.setTheTotalCharCountUpToTheEndOfThisEntry(theTotalCharCountUpToTheEndOfThisEntry);
+    	newEntryModel.setCurrCharCount(currCharCount);
     	
     	return newEntryModel;
     }
@@ -33,17 +33,13 @@ public class EntryModel extends BaseModel {
 	public String getStoryId() {
 		return storyId;
 	}
-
 	public void setStoryId(String storyId) {
 		this.storyId = storyId;
 	}
-
-	public Long getTheTotalCharCountUpToTheEndOfThisEntry() {
-		return theTotalCharCountUpToTheEndOfThisEntry;
+	public Integer getCurrCharCount() {
+		return currCharCount;
 	}
-
-	public void setTheTotalCharCountUpToTheEndOfThisEntry(
-			Long theTotalCharCountUpToTheEndOfThisEntry) {
-		this.theTotalCharCountUpToTheEndOfThisEntry = theTotalCharCountUpToTheEndOfThisEntry;
+	public void setCurrCharCount(Integer currCharCount) {
+		this.currCharCount = currCharCount;
 	}
 }

@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import com.nwm.coauthor.service.model.StoryModel;
+import com.nwm.coauthor.service.resource.response.EntryResponse;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 @Component
@@ -33,6 +34,20 @@ public class StoryDAOImpl {
 		return mongoTemplate.find(q, StoryResponse.class, "storyModel");
 	}
 
+	public boolean canGetEntries(String fbId, String storyId, Integer min, Integer max){
+		Query query = new Query();
+		
+		Criteria c = new Criteria();
+		c.orOperator(where("leaderFbId").is(fbId), where("fbFriends").is(fbId), where("isPublished").is(true));
+		
+		Criteria b = new Criteria();
+		b.andOperator(c, where("storyId").is(storyId));
+		
+		query.addCriteria(b);
+		
+		return mongoTemplate.count(query, StoryModel.class) > 0 ? true : false;
+	}
+	
 //    public List<PrivateStoryResponse> getStoriesByFbId(String fbId) {
 //        Criteria c = new Criteria();
 //        c.orOperator(where("leaderFbId").is(fbId), where("fbFriends").is(fbId));

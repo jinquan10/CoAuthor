@@ -18,8 +18,8 @@ public class StoryModel extends BaseModel {
     private String lastFriendWithEntry; // - changed when an entry is submitted
     private String lastEntry; 
     private Long storyLastUpdated;  // - changed when anything above is updated
-    private Integer entryOrdinal;    	// - changed when entry is added
-    private Integer commentOrdinal;    // - changed when comment is added
+    private Integer currEntryCount;    	// - changed when entry is added
+    private Integer currCommentCount;    // - changed when comment is added
 
 	public static StoryModel createStoryModelFromRequest(String fbId, NewStoryRequest request){
     	StoryModel storyModel = new StoryModel();
@@ -34,8 +34,8 @@ public class StoryModel extends BaseModel {
         storyModel.setLastFriendWithEntry(fbId);
         storyModel.setLastEntry(request.getEntry());
         storyModel.setStoryLastUpdated(new Date().getTime());
-        storyModel.setEntryOrdinal(0);
-        storyModel.setCommentOrdinal(0);
+        storyModel.setCurrEntryCount(request.getEntry().length());
+        storyModel.setCurrCommentCount(0);
         
         return storyModel;
     }
@@ -104,20 +104,20 @@ public class StoryModel extends BaseModel {
 		this.storyLastUpdated = storyLastUpdated;
 	}
 
-	public Integer getEntryOrdinal() {
-		return entryOrdinal;
+	public Integer currEntryCount() {
+		return currEntryCount;
 	}
 
-	public void setEntryOrdinal(Integer entryOrdinal) {
-		this.entryOrdinal = entryOrdinal;
+	public void setCurrEntryCount(Integer currEntryCount) {
+		this.currEntryCount = currEntryCount;
 	}
 
 	public Integer getCommentOrdinal() {
-		return commentOrdinal;
+		return currCommentCount;
 	}
 
-	public void setCommentOrdinal(Integer commentOrdinal) {
-		this.commentOrdinal = commentOrdinal;
+	public void setCurrCommentCount(Integer currCommentCount) {
+		this.currCommentCount = currCommentCount;
 	}
 
 	public String getLastEntry() {

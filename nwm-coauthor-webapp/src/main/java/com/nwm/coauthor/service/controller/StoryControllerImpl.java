@@ -8,17 +8,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
+import com.nwm.coauthor.exception.CannotGetEntriesException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.service.manager.AuthenticationManagerImpl;
 import com.nwm.coauthor.service.manager.StoryManagerImpl;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
+import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.StoriesResponse;
 import com.nwm.coauthor.service.resource.response.NewStoryResponse;
 
@@ -52,7 +56,37 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 
         return new ResponseEntity<StoriesResponse>(myStories, HttpStatus.OK);
     }
-//
+
+    @Override
+    @RequestMapping(value = "/{storyId}/entries", method = RequestMethod.GET)
+    public ResponseEntity<EntriesResponse> getEntries(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestParam Integer min, @RequestParam Integer max) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException{
+    	validateGetEntries(min, max);
+    	
+    	String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
+    	
+    	EntriesResponse entries = storyManager.getEntries(fbId, storyId, min, max);
+    	return new ResponseEntity<EntriesResponse>(entries, HttpStatus.OK);
+    }
+    
+	private void validateGetEntries(Integer min, Integer max) throws BadRequestException {
+		boolean isError = false;
+		Map<String, String> batchErrors = new HashMap<String, String>();
+		
+		if(min == null){
+            batchErrors.put("min", "The min current characters can't be null.");
+            isError = true;			
+		}
+
+		if(max == null){
+            batchErrors.put("max", "The max current characters can't be null.");
+            isError = true;			
+		}
+		
+		if (isError) {
+            throw new BadRequestException(batchErrors);
+        }
+	}
+
 //    @Override
 //    @RequestMapping(value = "/entry", method = RequestMethod.POST)
 //    public ResponseEntity<AddEntryResponse> addEntry(@RequestHeader("Authorization") String coToken, @RequestBody EntryRequest entry) throws SomethingWentWrongException,

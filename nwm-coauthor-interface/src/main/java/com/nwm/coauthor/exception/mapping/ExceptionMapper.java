@@ -7,6 +7,7 @@ import com.nwm.coauthor.exception.AlreadyPublishedException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BaseException;
 import com.nwm.coauthor.exception.BadRequestException;
+import com.nwm.coauthor.exception.CannotGetEntriesException;
 import com.nwm.coauthor.exception.MemberOrLeaderException;
 import com.nwm.coauthor.exception.NoTitleForPublishingException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
@@ -32,7 +33,8 @@ public enum ExceptionMapper {
 	UNPUBLISHED_STORY_LIKED_EXCEPTION(UnpublishedStoryLikedException.class),
 	ALREADY_PUBLISHED_EXCEPTION(AlreadyPublishedException.class),
 	STORY_NOT_PUBLISHED_YET_EXCEPTION(StoryNotPublishedYetException.class),
-	MEMBER_OR_LEADER_EXCEPTION(MemberOrLeaderException.class);
+	MEMBER_OR_LEADER_EXCEPTION(MemberOrLeaderException.class),
+	CANNOT_GET_ENTRIES_EXCEPTION(CannotGetEntriesException.class);
 	
 	private Class<? extends BaseException> clazz;
 	
