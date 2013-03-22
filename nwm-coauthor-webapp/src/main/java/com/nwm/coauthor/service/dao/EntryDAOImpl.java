@@ -20,15 +20,14 @@ public class EntryDAOImpl {
 	@Qualifier("mongoTemplate")
 	private MongoTemplate mongoTemplate;
 
-	public List<EntryResponse> getEntries(String storyId, Integer min, Integer max) {
+	public List<EntryResponse> getEntries(String storyId, Integer beginIndex, Integer endIndex) {
 		Query query = new Query();
 		
 		Criteria c = new Criteria();
-		c.andOperator(where("storyId").is(storyId), where("currCharCount").lt(max), where("currCharCount").gte(min));
+		c.andOperator(where("storyId").is(storyId), where("currCharCount").lte(endIndex), where("currCharCount").gt(beginIndex));
 
 		query.addCriteria(c);
-		query.addCriteria(where("currCharCount").gte(max)).limit(1);
-		query.fields().exclude("storyId");
+		query.fields().exclude("storyId").exclude("currCharCount");
 		
 		return mongoTemplate.find(query, EntryResponse.class);
 	}

@@ -31,7 +31,7 @@ public class StoryManagerImpl {
     @Autowired
     private EntryDAOImpl entryDAO;
     
-    int maxEntryCharTransfer = 100000;
+    int numCharToGet = 100000;
     
     public StoryResponse createStory(String fbId, NewStoryRequest request) {
     	StoryModel newStoryModel = StoryModel.createStoryModelFromRequest(fbId, request);
@@ -50,15 +50,15 @@ public class StoryManagerImpl {
 		return StoriesResponse.wrapStoryCovers(storyDAO.getMyStories(fbId));
 	}
 
-	public EntriesResponse getEntries(String fbId, String storyId, Integer min, Integer max) throws CannotGetEntriesException, PartialEntriesResponse {
+	public EntriesResponse getEntries(String fbId, String storyId, Integer beginIndex) throws CannotGetEntriesException, PartialEntriesResponse {
 		if(storyDAO.canGetEntries(fbId, storyId)){
-		    if(max - min > maxEntryCharTransfer){
-		        max = maxEntryCharTransfer;
-		        EntriesResponse response = getEntries(storyId, min, max);
+	        int endIndex = beginIndex + numCharToGet;
+		    
+	        EntriesResponse response = getEntries(storyId, beginIndex, endIndex);
 		        
-		        throw new PartialEntriesResponse(response);
+	        throw new PartialEntriesResponse(response);
 		    }else{
-		        return getEntries(storyId, min, max);
+		        return getEntries(storyId, beginIndex, max);
 		    }
 		}else{
 			throw new CannotGetEntriesException(); 
