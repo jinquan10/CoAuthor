@@ -24,12 +24,17 @@ import com.nwm.coauthor.service.manager.StoryManagerImpl;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.StoriesResponse;
-import com.nwm.coauthor.service.resource.response.NewStoryResponse;
+import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 @Controller
 @RequestMapping(value = "/story", produces = "application/json", consumes = "application/json")
 public class StoryControllerImpl extends BaseControllerImpl implements StoryController {
-    @Autowired
+    int minCharsPerEntry = 3;
+    int maxCharsPerEntry = 10000;
+    int maxCharsTitle = 1000;
+    int minFriends = 1;
+	
+	@Autowired
     private AuthenticationManagerImpl authenticationManager;
 
     @Autowired
@@ -37,14 +42,14 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 
     @Override
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<NewStoryResponse> createStory(@RequestHeader("Authorization") String coToken, @RequestBody NewStoryRequest createStoryRequest) throws SomethingWentWrongException,
+    public ResponseEntity<StoryResponse> createStory(@RequestHeader("Authorization") String coToken, @RequestBody NewStoryRequest createStoryRequest) throws SomethingWentWrongException,
             AuthenticationUnauthorizedException, BadRequestException {
         validateCreateStoryRequest(createStoryRequest);
 
         String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
-        NewStoryResponse storyResponse = storyManager.createStory(fbId, createStoryRequest);
+        StoryResponse storyResponse = storyManager.createStory(fbId, createStoryRequest);
 
-        return new ResponseEntity<NewStoryResponse>(storyResponse, HttpStatus.CREATED);
+        return new ResponseEntity<StoryResponse>(storyResponse, HttpStatus.CREATED);
     }
 
     @Override
@@ -220,33 +225,33 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
         boolean isError = false;
         Map<String, String> batchErrors = new HashMap<String, String>();
 
-        if (createStoryRequest.getNumCharacters() == null || createStoryRequest.getNumCharacters() < 1) {
-            batchErrors.put("numCharacters", "There must be at least 1 character per entry.");
+        if (createStoryRequest.getNumCharacters() == null || createStoryRequest.getNumCharacters() < minCharsPerEntry) {
+            batchErrors.put("numCharacters", "There must be at least " + minCharsPerEntry + " characters per entry.");
             isError = true;
-        } else if (createStoryRequest.getNumCharacters() > 1000) {
-            batchErrors.put("numCharacters", "There must be less than 1000 characters per entry.");
+        } else if (createStoryRequest.getNumCharacters() > maxCharsPerEntry) {
+            batchErrors.put("numCharacters", "There must be less than " + maxCharsPerEntry + " characters per entry.");
             isError = true;
         }
 
         if (createStoryRequest.getEntry() == null) {
             batchErrors.put("entry", "You must fill out an entry.");
             isError = true;
-        } else if (createStoryRequest.getEntry().length() < 1) {
-            batchErrors.put("entry", "Your entry must be at least 1 character long.");
+        } else if (createStoryRequest.getEntry().length() < minCharsPerEntry) {
+            batchErrors.put("entry", "Your entry must be at least " + minCharsPerEntry + " characters long.");
             isError = true;
-        } else if (createStoryRequest.getNumCharacters() != null && createStoryRequest.getEntry().length() > createStoryRequest.getNumCharacters()) {
+        } else if (createStoryRequest.getNumCharacters() != null && (createStoryRequest.getEntry().length() > createStoryRequest.getNumCharacters() || createStoryRequest.getEntry().length() > maxCharsPerEntry)) {
             batchErrors.put("entry", "Your entry exceeds the number of characters specified.");
             isError = true;
         }
 
-        if (createStoryRequest.getFbFriends() == null || createStoryRequest.getFbFriends().size() < 1) {
-            batchErrors.put("fbFriends", "You must include at least one Facebook friend.");
+        if (createStoryRequest.getFbFriends() == null || createStoryRequest.getFbFriends().size() < minFriends) {
+            batchErrors.put("fbFriends", "You must include at least " + minFriends + " Facebook friend.");
             isError = true;
         }
 
         if (StringUtils.hasText(createStoryRequest.getTitle())) {
-            if (createStoryRequest.getTitle().length() > 100) {
-                batchErrors.put("title", "The length of your title must not exceed 100.");
+            if (createStoryRequest.getTitle().length() > maxCharsTitle) {
+                batchErrors.put("title", "The length of your title must not exceed " + maxCharsTitle);
                 isError = true;
             }
         }

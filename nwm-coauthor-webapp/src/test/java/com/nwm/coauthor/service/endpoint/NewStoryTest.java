@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
@@ -17,7 +18,7 @@ import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.service.builder.NewStoryBuilder;
 import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
-import com.nwm.coauthor.service.resource.response.NewStoryResponse;
+import com.nwm.coauthor.service.resource.response.StoryResponse;
 import com.nwm.coauthor.service.util.StringUtil;
 
 public class NewStoryTest extends BaseTest {
@@ -25,13 +26,34 @@ public class NewStoryTest extends BaseTest {
     public void newStorySuccess() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException {
         UserModel leader = UserBuilder.createUser();
         
-        ResponseEntity<NewStoryResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        ResponseEntity<StoryResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
         assertEquals(HttpStatus.CREATED, newStoryResponse.getStatusCode());
-        assertNotNull(newStoryResponse.getBody());
-        assertNotNull(newStoryResponse.getBody().getStoryId());
-        assertNotNull(newStoryResponse.getBody().getStoryLastUpdated());
+        
+        StoryResponse responseBody = newStoryResponse.getBody();
+        
+        assertNotNull(responseBody);
+        assertNotNull(responseBody.getStoryId());
+        assertNotNull(responseBody.getLeaderFbId());
+        assertNotNull(responseBody.getTitle());
+        assertNotNull(responseBody.getNumCharacters());
+        assertNotNull(responseBody.getIsPublished());
+        assertFbFriends(responseBody);
+        assertNotNull(responseBody.getLikes());
+        assertNotNull(responseBody.getLastFriendWithEntry());
+        assertNotNull(responseBody.getLastEntry());
+        assertNotNull(responseBody.getStoryLastUpdated());
+        assertNotNull(responseBody.getCurrEntryCount());
     }
 
+    private void assertFbFriends(StoryResponse responseBody){
+        List<String> fbFriends = responseBody.getFbFriends();
+        assertNotNull(fbFriends);
+        
+        for(String fbFriend : fbFriends){
+            assertNotNull(fbFriend);
+        }        
+    }
+    
     @Test(expected = AuthenticationUnauthorizedException.class)
     public void nullCoAuthorToken() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException {
         storyClient.createStory(null, NewStoryBuilder.init().build());
@@ -91,11 +113,24 @@ public class NewStoryTest extends BaseTest {
     }    
 
     @Test
+    public void tooLittleEntry() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException {
+        UserModel leader = UserBuilder.createUser();
+    	
+    	try {
+            storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().entry("12").build());
+        } catch (BadRequestException e) {
+            Map<String, String> batchErrors = e.getBatchErrors();
+
+            Assert.assertTrue(batchErrors.containsKey("entry"));
+        }
+    }        
+    
+    @Test
     public void entryTooBig() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException {
         UserModel leader = UserBuilder.createUser();
     	
     	try {
-            storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().entry(StringUtil.repeat('a', 100)).build());
+            storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().entry(StringUtil.repeat('a', 10001)).build());
         } catch (BadRequestException e) {
             Map<String, String> batchErrors = e.getBatchErrors();
 
@@ -143,11 +178,24 @@ public class NewStoryTest extends BaseTest {
     }    
 
     @Test
+    public void tooLittleCharacters() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException {
+        UserModel leader = UserBuilder.createUser();
+    	
+    	try {
+            storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().numCharacters(2).build());
+        } catch (BadRequestException e) {
+            Map<String, String> batchErrors = e.getBatchErrors();
+
+            Assert.assertTrue(batchErrors.containsKey("numCharacters"));
+        }
+    }    
+    
+    @Test
     public void tooManyCharacters() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException {
         UserModel leader = UserBuilder.createUser();
     	
     	try {
-            storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().numCharacters(10000).build());
+            storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().numCharacters(10001).build());
         } catch (BadRequestException e) {
             Map<String, String> batchErrors = e.getBatchErrors();
 

@@ -2,6 +2,7 @@ package com.nwm.coauthor.service.manager;
 
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +17,7 @@ import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.EntryResponse;
 import com.nwm.coauthor.service.resource.response.StoriesResponse;
-import com.nwm.coauthor.service.resource.response.NewStoryResponse;
+import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 @Component
 public class StoryManagerImpl {
@@ -29,14 +30,17 @@ public class StoryManagerImpl {
     @Autowired
     private EntryDAOImpl entryDAO;
     
-    public NewStoryResponse createStory(String fbId, NewStoryRequest request) {
+    public StoryResponse createStory(String fbId, NewStoryRequest request) {
     	StoryModel newStoryModel = StoryModel.createStoryModelFromRequest(fbId, request);
     	EntryModel newEntryModel = EntryModel.newEntryModel(newStoryModel.getStoryId(), fbId, request.getEntry(), newStoryModel.currEntryCount()); 
     	
         storyDAO.createStory(newStoryModel);
         entryDAO.addEntry(newEntryModel);
         
-        return NewStoryResponse.newStoryResponse(newStoryModel.getStoryId(), newStoryModel.getStoryLastUpdated());
+        StoryResponse storyResponse = new StoryResponse();
+        BeanUtils.copyProperties(newStoryModel, storyResponse);
+        
+        return storyResponse;
     }
 
 	public StoriesResponse getMyStories(String fbId) {

@@ -15,8 +15,7 @@ public class StoryResponse extends BaseResource{
     private String lastFriendWithEntry; // - changed when an entry is submitted
     private String lastEntry; 
     private Long storyLastUpdated;  // - changed when anything above is updated
-    private Integer entryOrdinal;    	// - changed when entry is added
-    private Integer commentOrdinal;    // - changed when comment is added
+    private Integer currEntryCount;    	// - changed when entry is added
     
 	public String getStoryId() {
 		return storyId;
@@ -78,16 +77,10 @@ public class StoryResponse extends BaseResource{
 	public void setStoryLastUpdated(Long storyLastUpdated) {
 		this.storyLastUpdated = storyLastUpdated;
 	}
-	public Integer getEntryOrdinal() {
-		return entryOrdinal;
+	public Integer getCurrEntryCount() {
+		return currEntryCount;
 	}
-	public void setEntryOrdinal(Integer entryOrdinal) {
-		this.entryOrdinal = entryOrdinal;
-	}
-	public Integer getCommentOrdinal() {
-		return commentOrdinal;
-	}
-	public void setCommentOrdinal(Integer commentOrdinal) {
-		this.commentOrdinal = commentOrdinal;
+	public void setCurrEntryCount(Integer currEntryCount) {
+		this.currEntryCount = currEntryCount;
 	}
 }

@@ -5,7 +5,6 @@ public class CommentModel extends BaseModel{
 	private String storyId;
 	private String fbId;
 	private String comment;
-	private Long ordinal;
 	
 	public String getFbId() {
 		return fbId;
@@ -18,12 +17,6 @@ public class CommentModel extends BaseModel{
 	}
 	public void setComment(String comment) {
 		this.comment = comment;
-	}
-	public Long getOrdinal() {
-		return ordinal;
-	}
-	public void setOrdinal(Long ordinal) {
-		this.ordinal = ordinal;
 	}
 	public String getStoryId() {
 		return storyId;

@@ -1,7 +1,8 @@
 package com.nwm.coauthor.service.endpoint;
 
 
-public class AddEntryTest extends BaseTest {
+public class EntryTest extends BaseTest {
+	
 //    @Test
 //    public void takeTurns_AddingEntries_To_OneStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, InterruptedException,
 //            StoryNotFoundException, AddEntryVersionException {

@@ -6,14 +6,13 @@ import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
-import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.StoriesResponse;
-import com.nwm.coauthor.service.resource.response.NewStoryResponse;
+import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 public interface StoryController {
-	public ResponseEntity<NewStoryResponse> createStory(String coToken, NewStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException;
+	public ResponseEntity<StoryResponse> createStory(String coToken, NewStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException;
 	public ResponseEntity<StoriesResponse> getMyStories(String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException;
 	public ResponseEntity<EntriesResponse> getEntries(String coToken, String storyId, Integer min, Integer max) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException;
 //	public ResponseEntity<PrivateStoryResponse> getStoryForEdit(String coToken, String storyId) throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, UnauthorizedException;
