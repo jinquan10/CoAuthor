@@ -19,6 +19,7 @@ import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
+import com.nwm.coauthor.service.exception.redirection.PartialEntriesResponse;
 import com.nwm.coauthor.service.manager.AuthenticationManagerImpl;
 import com.nwm.coauthor.service.manager.StoryManagerImpl;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
@@ -69,8 +70,13 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     	
     	String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
     	
-    	EntriesResponse entries = storyManager.getEntries(fbId, storyId, min, max);
-    	return new ResponseEntity<EntriesResponse>(entries, HttpStatus.OK);
+    	EntriesResponse entries;
+        try {
+            entries = storyManager.getEntries(fbId, storyId, min, max);
+            return new ResponseEntity<EntriesResponse>(entries, HttpStatus.OK);
+        } catch (PartialEntriesResponse e) {
+            return new ResponseEntity<EntriesResponse>(e.getEntries(), HttpStatus.PARTIAL_CONTENT);
+        }
     }
     
 	private void validateGetEntries(Integer min, Integer max) throws BadRequestException {

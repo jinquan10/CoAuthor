@@ -34,7 +34,7 @@ public class StoryDAOImpl {
 		return mongoTemplate.find(q, StoryResponse.class, "storyModel");
 	}
 
-	public boolean canGetEntries(String fbId, String storyId, Integer min, Integer max){
+	public boolean canGetEntries(String fbId, String storyId){
 		Query query = new Query();
 		
 		Criteria c = new Criteria();

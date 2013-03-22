@@ -18,8 +18,8 @@ public class StoryModel extends BaseModel {
     private String lastFriendWithEntry; // - changed when an entry is submitted
     private String lastEntry; 
     private Long storyLastUpdated;  // - changed when anything above is updated
-    private Integer currEntryCount;    	// - changed when entry is added
-
+    private Integer currEntryCharCount;
+    
 	public static StoryModel createStoryModelFromRequest(String fbId, NewStoryRequest request){
     	StoryModel storyModel = new StoryModel();
     	
@@ -33,7 +33,7 @@ public class StoryModel extends BaseModel {
         storyModel.setLastFriendWithEntry(fbId);
         storyModel.setLastEntry(request.getEntry());
         storyModel.setStoryLastUpdated(new Date().getTime());
-        storyModel.setCurrEntryCount(request.getEntry().length());
+        storyModel.setCurrEntryCharCount(request.getEntry().length());
         
         return storyModel;
     }
@@ -102,14 +102,6 @@ public class StoryModel extends BaseModel {
 		this.storyLastUpdated = storyLastUpdated;
 	}
 
-	public Integer currEntryCount() {
-		return currEntryCount;
-	}
-
-	public void setCurrEntryCount(Integer currEntryCount) {
-		this.currEntryCount = currEntryCount;
-	}
-
 	public String getLastEntry() {
 		return lastEntry;
 	}
@@ -125,4 +117,12 @@ public class StoryModel extends BaseModel {
 	public void setStoryId(String storyId) {
 		this.storyId = storyId;
 	}
+
+    public Integer getCurrEntryCharCount() {
+        return currEntryCharCount;
+    }
+
+    public void setCurrEntryCharCount(Integer currEntryCharCount) {
+        this.currEntryCharCount = currEntryCharCount;
+    }
 }

@@ -28,7 +28,7 @@ public class EntryDAOImpl {
 
 		query.addCriteria(c);
 		query.addCriteria(where("currCharCount").gte(max)).limit(1);
-		query.fields().exclude("storyId").exclude("currCharCount");
+		query.fields().exclude("storyId");
 		
 		return mongoTemplate.find(query, EntryResponse.class);
 	}

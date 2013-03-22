@@ -1,7 +1,9 @@
 package com.nwm.coauthor.service.endpoint;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +13,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
@@ -43,6 +46,14 @@ public class NewStoryTest extends BaseTest {
         assertNotNull(responseBody.getLastEntry());
         assertNotNull(responseBody.getStoryLastUpdated());
         assertNotNull(responseBody.getCurrEntryCount());
+        
+        assertEquals(leader.getFbId(), responseBody.getLeaderFbId());
+        assertTrue(StringUtils.hasText(responseBody.getTitle()));
+        assertFalse(responseBody.getIsPublished());
+        assertEquals(2, responseBody.getFbFriends().size());
+        assertEquals(new Long(0), responseBody.getLikes());
+        assertTrue(StringUtils.hasText(responseBody.getLastFriendWithEntry()));
+        assertTrue(StringUtils.hasText(responseBody.getLastEntry()));
     }
 
     private void assertFbFriends(StoryResponse responseBody){

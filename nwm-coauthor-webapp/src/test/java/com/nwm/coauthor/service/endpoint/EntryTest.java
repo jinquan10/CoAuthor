@@ -1,8 +1,28 @@
 package com.nwm.coauthor.service.endpoint;
 
+import org.junit.Test;
+import org.springframework.http.ResponseEntity;
+
+import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
+import com.nwm.coauthor.exception.BadRequestException;
+import com.nwm.coauthor.exception.SomethingWentWrongException;
+import com.nwm.coauthor.service.builder.NewStoryBuilder;
+import com.nwm.coauthor.service.builder.UserBuilder;
+import com.nwm.coauthor.service.model.UserModel;
+import com.nwm.coauthor.service.resource.response.StoryResponse;
+
 
 public class EntryTest extends BaseTest {
-	
+    @Test
+    public void createAndGet() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException{
+        UserModel leader = UserBuilder.createUser();
+        
+        ResponseEntity<StoryResponse> storyHttpResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryResponse storyResponse = storyHttpResponse.getBody();
+        
+        
+    }
+    
 //    @Test
 //    public void takeTurns_AddingEntries_To_OneStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, InterruptedException,
 //            StoryNotFoundException, AddEntryVersionException {

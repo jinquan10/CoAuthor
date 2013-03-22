@@ -11,6 +11,7 @@ import com.nwm.coauthor.service.dao.CommentDAOImpl;
 import com.nwm.coauthor.service.dao.EntryDAOImpl;
 import com.nwm.coauthor.service.dao.StoryDAOImpl;
 import com.nwm.coauthor.service.dao.UserDAOImpl;
+import com.nwm.coauthor.service.exception.redirection.PartialEntriesResponse;
 import com.nwm.coauthor.service.model.EntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
@@ -30,9 +31,11 @@ public class StoryManagerImpl {
     @Autowired
     private EntryDAOImpl entryDAO;
     
+    int maxEntryCharTransfer = 100000;
+    
     public StoryResponse createStory(String fbId, NewStoryRequest request) {
     	StoryModel newStoryModel = StoryModel.createStoryModelFromRequest(fbId, request);
-    	EntryModel newEntryModel = EntryModel.newEntryModel(newStoryModel.getStoryId(), fbId, request.getEntry(), newStoryModel.currEntryCount()); 
+    	EntryModel newEntryModel = EntryModel.newEntryModel(newStoryModel.getStoryId(), fbId, request.getEntry(), newStoryModel.getCurrEntryCharCount()); 
     	
         storyDAO.createStory(newStoryModel);
         entryDAO.addEntry(newEntryModel);
@@ -47,18 +50,28 @@ public class StoryManagerImpl {
 		return StoriesResponse.wrapStoryCovers(storyDAO.getMyStories(fbId));
 	}
 
-	public EntriesResponse getEntries(String fbId, String storyId, Integer min, Integer max) throws CannotGetEntriesException {
-		if(storyDAO.canGetEntries(fbId, storyId, min, max)){
-			List<EntryResponse> entries = entryDAO.getEntries(storyId, min, max);
-			
-			EntriesResponse response = new EntriesResponse();
-			response.setEntries(entries);
-			
-			return response;
+	public EntriesResponse getEntries(String fbId, String storyId, Integer min, Integer max) throws CannotGetEntriesException, PartialEntriesResponse {
+		if(storyDAO.canGetEntries(fbId, storyId)){
+		    if(max - min > maxEntryCharTransfer){
+		        max = maxEntryCharTransfer;
+		        EntriesResponse response = getEntries(storyId, min, max);
+		        
+		        throw new PartialEntriesResponse(response);
+		    }else{
+		        return getEntries(storyId, min, max);
+		    }
 		}else{
 			throw new CannotGetEntriesException(); 
 		}
 	}
+
+    private EntriesResponse getEntries(String storyId, Integer min, Integer max) {
+        List<EntryResponse> entries = entryDAO.getEntries(storyId, min, max);
+        
+        EntriesResponse response = new EntriesResponse();
+        response.setEntries(entries);
+        return response;
+    }
 
 //    public List<PrivateStoryResponse> getStoriesByFbId(String fbId) throws StoryNotFoundException {
 //        List<PrivateStoryResponse> stories = storyDAO.getStoriesByFbId(fbId);

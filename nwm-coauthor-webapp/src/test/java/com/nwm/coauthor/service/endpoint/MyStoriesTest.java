@@ -5,6 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -37,20 +39,41 @@ public class MyStoriesTest extends BaseTest {
     	ResponseEntity<StoriesResponse> myStoriesResponse = storyClient.getMyStories(leader.getCoToken());
     	assertNotNull(myStoriesResponse.getBody().getMyStories());
     	
-    	StoryResponse myStory = myStoriesResponse.getBody().getMyStories().get(0);
-    	assertNotNull(myStory.getStoryId());
-    	assertEquals(leader.getFbId(), myStory.getLeaderFbId());
-    	assertTrue(StringUtils.hasText(myStory.getTitle()));
-    	assertNotNull(myStory.getNumCharacters());
-    	assertFalse(myStory.getIsPublished());
-    	assertEquals(2, myStory.getFbFriends().size());
-    	assertEquals(new Long(0), myStory.getLikes());
-    	assertTrue(StringUtils.hasText(myStory.getLastFriendWithEntry()));
-    	assertTrue(StringUtils.hasText(myStory.getLastEntry()));
-    	assertNotNull(myStory.getStoryLastUpdated());
-    	assertNotNull(myStory.getEntryOrdinal());
-    	assertNotNull(myStory.getCommentOrdinal());
+    	StoryResponse responseBody = myStoriesResponse.getBody().getMyStories().get(0);
+    	
+        assertNotNull(responseBody);
+        assertNotNull(responseBody.getStoryId());
+        assertNotNull(responseBody.getLeaderFbId());
+        assertNotNull(responseBody.getTitle());
+        assertNotNull(responseBody.getNumCharacters());
+        assertNotNull(responseBody.getIsPublished());
+        assertFbFriends(responseBody);
+        assertNotNull(responseBody.getLikes());
+        assertNotNull(responseBody.getLastFriendWithEntry());
+        assertNotNull(responseBody.getLastEntry());
+        assertNotNull(responseBody.getStoryLastUpdated());
+        assertNotNull(responseBody.getCurrEntryCount());
+    	
+    	assertNotNull(responseBody.getStoryId());
+    	assertEquals(leader.getFbId(), responseBody.getLeaderFbId());
+    	assertTrue(StringUtils.hasText(responseBody.getTitle()));
+    	assertNotNull(responseBody.getNumCharacters());
+    	assertFalse(responseBody.getIsPublished());
+    	assertEquals(2, responseBody.getFbFriends().size());
+    	assertEquals(new Long(0), responseBody.getLikes());
+    	assertTrue(StringUtils.hasText(responseBody.getLastFriendWithEntry()));
+    	assertTrue(StringUtils.hasText(responseBody.getLastEntry()));
+    	assertNotNull(responseBody.getStoryLastUpdated());
     }
+    
+    private void assertFbFriends(StoryResponse responseBody){
+        List<String> fbFriends = responseBody.getFbFriends();
+        assertNotNull(fbFriends);
+        
+        for(String fbFriend : fbFriends){
+            assertNotNull(fbFriend);
+        }        
+    }    
     
     @Test
     public void getMyStoriesAsLeader() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException{
