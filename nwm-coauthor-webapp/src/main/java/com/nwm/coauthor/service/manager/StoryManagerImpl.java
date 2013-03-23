@@ -11,7 +11,6 @@ import com.nwm.coauthor.service.dao.CommentDAOImpl;
 import com.nwm.coauthor.service.dao.EntryDAOImpl;
 import com.nwm.coauthor.service.dao.StoryDAOImpl;
 import com.nwm.coauthor.service.dao.UserDAOImpl;
-import com.nwm.coauthor.service.exception.redirection.PartialEntriesResponse;
 import com.nwm.coauthor.service.model.EntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
@@ -50,16 +49,11 @@ public class StoryManagerImpl {
 		return StoriesResponse.wrapStoryCovers(storyDAO.getMyStories(fbId));
 	}
 
-	public EntriesResponse getEntries(String fbId, String storyId, Integer beginIndex) throws CannotGetEntriesException, PartialEntriesResponse {
+	public EntriesResponse getEntries(String fbId, String storyId, Integer beginIndex) throws CannotGetEntriesException{
 		if(storyDAO.canGetEntries(fbId, storyId)){
 	        int endIndex = beginIndex + numCharToGet;
 		    
-	        EntriesResponse response = getEntries(storyId, beginIndex, endIndex);
-		        
-	        throw new PartialEntriesResponse(response);
-		    }else{
-		        return getEntries(storyId, beginIndex, max);
-		    }
+	        return getEntries(storyId, beginIndex, endIndex);
 		}else{
 			throw new CannotGetEntriesException(); 
 		}

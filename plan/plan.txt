@@ -1,5 +1,8 @@
+- automatic refresh interval duration
 - entryCharCount for versioning on a newEntry
 - callback function for getEntries client to 
 - create a service to keep validation properties
 
 - load test big entry downloads
+
+* precondition separately for story and entry and comments

@@ -19,9 +19,9 @@ import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
-import com.nwm.coauthor.service.exception.redirection.PartialEntriesResponse;
 import com.nwm.coauthor.service.manager.AuthenticationManagerImpl;
 import com.nwm.coauthor.service.manager.StoryManagerImpl;
+import com.nwm.coauthor.service.resource.request.NewEntryRequest;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.StoriesResponse;
@@ -65,31 +65,29 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 
     @Override
     @RequestMapping(value = "/{storyId}/entries", method = RequestMethod.GET)
-    public ResponseEntity<EntriesResponse> getEntries(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestParam Integer min, @RequestParam Integer max) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException{
-    	validateGetEntries(min, max);
+    public ResponseEntity<EntriesResponse> getEntries(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestParam Integer beginIndex) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException{
+    	validateGetEntries(beginIndex);
     	
     	String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
     	
-    	EntriesResponse entries;
-        try {
-            entries = storyManager.getEntries(fbId, storyId, min, max);
-            return new ResponseEntity<EntriesResponse>(entries, HttpStatus.OK);
-        } catch (PartialEntriesResponse e) {
-            return new ResponseEntity<EntriesResponse>(e.getEntries(), HttpStatus.PARTIAL_CONTENT);
-        }
+    	EntriesResponse entries = storyManager.getEntries(fbId, storyId, beginIndex);
+        return new ResponseEntity<EntriesResponse>(entries, HttpStatus.PARTIAL_CONTENT);
     }
     
-	private void validateGetEntries(Integer min, Integer max) throws BadRequestException {
+    @Override
+    @RequestMapping(value = "/{storyId}/entry", method = RequestMethod.PUT)
+    public void newEntry(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestBody NewEntryRequest newEntryRequest){
+        // validate
+        // get fbId
+        // addEntry
+    }
+    
+	private void validateGetEntries(Integer beginIndex) throws BadRequestException {
 		boolean isError = false;
 		Map<String, String> batchErrors = new HashMap<String, String>();
 		
-		if(min == null){
+		if(beginIndex == null){
             batchErrors.put("min", "The min current characters can't be null.");
-            isError = true;			
-		}
-
-		if(max == null){
-            batchErrors.put("max", "The max current characters can't be null.");
             isError = true;			
 		}
 		

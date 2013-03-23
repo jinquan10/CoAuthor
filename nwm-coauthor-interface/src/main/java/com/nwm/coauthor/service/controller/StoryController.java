@@ -14,7 +14,7 @@ import com.nwm.coauthor.service.resource.response.StoryResponse;
 public interface StoryController {
 	public ResponseEntity<StoryResponse> createStory(String coToken, NewStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException;
 	public ResponseEntity<StoriesResponse> getMyStories(String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException;
-	public ResponseEntity<EntriesResponse> getEntries(String coToken, String storyId, Integer min, Integer max) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException;
+	public ResponseEntity<EntriesResponse> getEntries(String coToken, String storyId, Integer beginIndex) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException;
 //	public ResponseEntity<PrivateStoryResponse> getStoryForEdit(String coToken, String storyId) throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, UnauthorizedException;
 //	public ResponseEntity<AddEntryResponse> addEntry(String coToken, EntryRequest entry) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AddEntryException, StoryNotFoundException, AddEntryVersionException;
 //	public void likeStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException, SomethingWentWrongException, UserLikingOwnStoryException, UnpublishedStoryLikedException;

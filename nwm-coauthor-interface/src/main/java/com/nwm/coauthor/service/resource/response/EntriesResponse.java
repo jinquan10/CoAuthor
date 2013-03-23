@@ -6,7 +6,6 @@ import com.nwm.coauthor.service.resource.BaseResource;
 
 public class EntriesResponse extends BaseResource{
 	private List<EntryResponse> entries;
-	private int lastEntryCharCount;
 	
 	public List<EntryResponse> getEntries() {
 		return entries;
@@ -15,12 +14,4 @@ public class EntriesResponse extends BaseResource{
 	public void setEntries(List<EntryResponse> entries) {
 		this.entries = entries;
 	}
-
-    public int getLastEntryCharCount() {
-        return lastEntryCharCount;
-    }
-
-    public void setLastEntryCharCount(int lastEntryCharCount) {
-        this.lastEntryCharCount = lastEntryCharCount;
-    } 
 }

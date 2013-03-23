@@ -20,7 +20,7 @@ public class EntryTest extends BaseTest {
         ResponseEntity<StoryResponse> storyHttpResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
         StoryResponse storyResponse = storyHttpResponse.getBody();
         
-        
+//        storyClient.get
     }
     
 //    @Test
