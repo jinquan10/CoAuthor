@@ -26,7 +26,6 @@ public class StoryModel extends BaseModel {
     	storyModel.setStoryId(new ObjectId().toString());
     	storyModel.setLeaderFbId(fbId);
     	storyModel.setTitle(request.getTitle());
-    	storyModel.setNumCharacters(request.getNumCharacters());
     	storyModel.setIsPublished(false);
         storyModel.setFbFriends(request.getFbFriends());
         storyModel.setLikes(0L);

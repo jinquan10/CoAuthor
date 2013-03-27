@@ -176,45 +176,6 @@ public class NewStoryTest extends BaseTest {
     }    
     
     @Test
-    public void nullCharacters() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException {
-        UserModel leader = UserBuilder.createUser();
-    	
-    	try {
-            storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().numCharacters(null).build());
-        } catch (BadRequestException e) {
-            Map<String, String> batchErrors = e.getBatchErrors();
-
-            Assert.assertTrue(batchErrors.containsKey("numCharacters"));
-        }
-    }    
-
-    @Test
-    public void tooLittleCharacters() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException {
-        UserModel leader = UserBuilder.createUser();
-    	
-    	try {
-            storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().numCharacters(2).build());
-        } catch (BadRequestException e) {
-            Map<String, String> batchErrors = e.getBatchErrors();
-
-            Assert.assertTrue(batchErrors.containsKey("numCharacters"));
-        }
-    }    
-    
-    @Test
-    public void tooManyCharacters() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException {
-        UserModel leader = UserBuilder.createUser();
-    	
-    	try {
-            storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().numCharacters(10001).build());
-        } catch (BadRequestException e) {
-            Map<String, String> batchErrors = e.getBatchErrors();
-
-            Assert.assertTrue(batchErrors.containsKey("numCharacters"));
-        }
-    }        
-    
-    @Test
     public void titleTooLong() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException {
         UserModel leader = UserBuilder.createUser();
     	

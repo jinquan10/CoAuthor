@@ -18,7 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
+import com.nwm.coauthor.exception.ConsecutiveNewEntryException;
+import com.nwm.coauthor.exception.NonMemberOrLeaderException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
+import com.nwm.coauthor.exception.StoryNotFoundException;
+import com.nwm.coauthor.exception.VersioningException;
 import com.nwm.coauthor.service.manager.AuthenticationManagerImpl;
 import com.nwm.coauthor.service.manager.StoryManagerImpl;
 import com.nwm.coauthor.service.resource.request.NewEntryRequest;
@@ -76,18 +80,42 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     
     @Override
     @RequestMapping(value = "/{storyId}/entry", method = RequestMethod.PUT)
-    public void newEntry(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestBody NewEntryRequest newEntryRequest){
-        // validate
-        // get fbId
-        // addEntry
+    public void newEntry(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestBody NewEntryRequest newEntryRequest) throws BadRequestException, AuthenticationUnauthorizedException, VersioningException, StoryNotFoundException, NonMemberOrLeaderException, ConsecutiveNewEntryException{
+        validateNewEntry(newEntryRequest);
+        
+        String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
+
+        storyManager.addEntry(fbId, storyId, newEntryRequest.getEntry(), newEntryRequest.getCharCountForVersioning());
     }
     
-	private void validateGetEntries(Integer beginIndex) throws BadRequestException {
+	private void validateNewEntry(NewEntryRequest newEntryRequest) throws BadRequestException {
+	    boolean isError = false;
+        Map<String, String> batchErrors = new HashMap<String, String>();
+        
+        if(newEntryRequest.getCharCountForVersioning() == null){
+            batchErrors.put("charCountForVersioning", "The char count can't be null.");
+            isError = true;         
+        }
+
+        if(!StringUtils.hasText(newEntryRequest.getEntry())){
+            batchErrors.put("entry", "The entry can't be null or empty.");
+            isError = true;         
+        }else if(newEntryRequest.getEntry().length() < minCharsPerEntry){
+            batchErrors.put("entry", String.format("The entry must be at least %s characters long.", minCharsPerEntry));
+            isError = true;         
+        }
+        
+        if (isError) {
+            throw new BadRequestException(batchErrors);
+        }
+    }
+
+    private void validateGetEntries(Integer beginIndex) throws BadRequestException {
 		boolean isError = false;
 		Map<String, String> batchErrors = new HashMap<String, String>();
 		
 		if(beginIndex == null){
-            batchErrors.put("min", "The min current characters can't be null.");
+            batchErrors.put("beginIndex", "The beginIndex can't be null.");
             isError = true;			
 		}
 		
@@ -229,21 +257,13 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
         boolean isError = false;
         Map<String, String> batchErrors = new HashMap<String, String>();
 
-        if (createStoryRequest.getNumCharacters() == null || createStoryRequest.getNumCharacters() < minCharsPerEntry) {
-            batchErrors.put("numCharacters", "There must be at least " + minCharsPerEntry + " characters per entry.");
-            isError = true;
-        } else if (createStoryRequest.getNumCharacters() > maxCharsPerEntry) {
-            batchErrors.put("numCharacters", "There must be less than " + maxCharsPerEntry + " characters per entry.");
-            isError = true;
-        }
-
         if (createStoryRequest.getEntry() == null) {
             batchErrors.put("entry", "You must fill out an entry.");
             isError = true;
         } else if (createStoryRequest.getEntry().length() < minCharsPerEntry) {
             batchErrors.put("entry", "Your entry must be at least " + minCharsPerEntry + " characters long.");
             isError = true;
-        } else if (createStoryRequest.getNumCharacters() != null && (createStoryRequest.getEntry().length() > createStoryRequest.getNumCharacters() || createStoryRequest.getEntry().length() > maxCharsPerEntry)) {
+        } else if (createStoryRequest.getEntry().length() > maxCharsPerEntry) {
             batchErrors.put("entry", "Your entry exceeds the number of characters specified.");
             isError = true;
         }

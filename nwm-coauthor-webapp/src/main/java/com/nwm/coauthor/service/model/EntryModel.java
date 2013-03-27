@@ -1,6 +1,5 @@
 package com.nwm.coauthor.service.model;
 
-
 public class EntryModel extends BaseModel {
     private String storyId;
     private String fbId;

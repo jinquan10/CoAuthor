@@ -7,7 +7,6 @@ import com.nwm.coauthor.service.resource.BaseResource;
 public class NewStoryRequest extends BaseResource{
 	private String title;
 	private String entry;
-	private Integer numCharacters;
 	private List<String> fbFriends;
 	
 	public String getTitle() {
@@ -21,12 +20,6 @@ public class NewStoryRequest extends BaseResource{
 	}
 	public void setEntry(String entry) {
 		this.entry = entry;
-	}
-	public Integer getNumCharacters() {
-		return numCharacters;
-	}
-	public void setNumCharacters(Integer numCharacters) {
-		this.numCharacters = numCharacters;
 	}
 	public List<String> getFbFriends() {
 		return fbFriends;

@@ -9,10 +9,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
+import com.mongodb.WriteResult;
 import com.nwm.coauthor.service.model.StoryModel;
-import com.nwm.coauthor.service.resource.response.EntryResponse;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 @Component
@@ -34,19 +35,25 @@ public class StoryDAOImpl {
 		return mongoTemplate.find(q, StoryResponse.class, "storyModel");
 	}
 
-	public boolean canGetEntries(String fbId, String storyId){
-		Query query = new Query();
-		
-		Criteria c = new Criteria();
-		c.orOperator(where("leaderFbId").is(fbId), where("fbFriends").is(fbId), where("isPublished").is(true));
-		
-		Criteria b = new Criteria();
-		b.andOperator(c, where("storyId").is(storyId));
-		
-		query.addCriteria(b);
-		
-		return mongoTemplate.count(query, StoryModel.class) > 0 ? true : false;
-	}
+    public StoryModel getStory(String storyId) {
+        return mongoTemplate.findOne(new Query(where("storyId").is(storyId)), StoryModel.class);
+    }
+
+    public WriteResult updateStoryForAddingEntry(String fbId, String storyId, String entry, Integer charCountForVersioning) {
+        Query q = new Query();
+        
+        Criteria a = new Criteria();
+        a.orOperator(where("leaderFbId").is(fbId), where("fbFriends").is(fbId));
+
+        Criteria b = new Criteria();
+        b.andOperator(where("storyId"), where("currEntryCharCount").is(charCountForVersioning), where("lastFriendWithEntry").ne(fbId));
+        
+        Update u = new Update();
+        u.inc("currEntryCharCount", entry.length());
+        u.set("lastEntry", entry);
+        
+        return mongoTemplate.updateFirst(q, u, StoryModel.class);
+    }
 	
 //    public List<PrivateStoryResponse> getStoriesByFbId(String fbId) {
 //        Criteria c = new Criteria();

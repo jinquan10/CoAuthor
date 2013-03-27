@@ -1,12 +1,22 @@
 package com.nwm.coauthor.service.manager;
 
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
+import com.mongodb.WriteResult;
+import com.nwm.coauthor.exception.AlreadyPublishedException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
+import com.nwm.coauthor.exception.ConsecutiveNewEntryException;
+import com.nwm.coauthor.exception.NonMemberOrLeaderException;
+import com.nwm.coauthor.exception.StoryNotFoundException;
+import com.nwm.coauthor.exception.VersioningException;
 import com.nwm.coauthor.service.dao.CommentDAOImpl;
 import com.nwm.coauthor.service.dao.EntryDAOImpl;
 import com.nwm.coauthor.service.dao.StoryDAOImpl;
@@ -50,7 +60,7 @@ public class StoryManagerImpl {
 	}
 
 	public EntriesResponse getEntries(String fbId, String storyId, Integer beginIndex) throws CannotGetEntriesException{
-		if(storyDAO.canGetEntries(fbId, storyId)){
+		if(canGetEntries(fbId, storyId)){
 	        int endIndex = beginIndex + numCharToGet;
 		    
 	        return getEntries(storyId, beginIndex, endIndex);
@@ -59,12 +69,59 @@ public class StoryManagerImpl {
 		}
 	}
 
+    private boolean canGetEntries(String fbId, String storyId) {
+        StoryModel story = storyDAO.getStory(storyId);
+        
+        if(story.getLeaderFbId().equals(fbId)){
+            return true;
+        }
+        
+        if(story.getFbFriends().contains(fbId)){
+            return true;
+        }
+        
+        if(story.getIsPublished() != null && story.getIsPublished()){
+            return true;
+        }
+        
+        return false;
+    }
+
     private EntriesResponse getEntries(String storyId, Integer min, Integer max) {
         List<EntryResponse> entries = entryDAO.getEntries(storyId, min, max);
         
         EntriesResponse response = new EntriesResponse();
         response.setEntries(entries);
         return response;
+    }
+
+    public void addEntry(String fbId, String storyId, String entry, Integer charCountForVersioning) throws VersioningException, StoryNotFoundException, NonMemberOrLeaderException, ConsecutiveNewEntryException {
+        WriteResult result = storyDAO.updateStoryForAddingEntry(fbId, storyId, entry, charCountForVersioning);
+        parseAddEntryExceptions(fbId, storyId, charCountForVersioning, result);
+        entryDAO.addEntry(EntryModel.newEntryModel(storyId, fbId, entry, charCountForVersioning));
+    }
+
+    private void parseAddEntryExceptions(String fbId, String storyId, Integer charCountForVersioning, WriteResult result) throws StoryNotFoundException, NonMemberOrLeaderException,
+            VersioningException, ConsecutiveNewEntryException {
+        if(result.getN() == 0){
+            StoryModel storyModel = storyDAO.getStory(storyId);
+
+            if(storyModel == null){
+                throw new StoryNotFoundException();
+            }
+            
+            if(!storyModel.getLeaderFbId().equals(fbId) && !storyModel.getFbFriends().contains(fbId)){
+                throw new NonMemberOrLeaderException();
+            }
+            
+            if(storyModel.getCurrEntryCharCount() != charCountForVersioning){
+                throw new VersioningException();
+            }
+            
+            if(storyModel.getLastFriendWithEntry().equals(fbId)){
+                throw new ConsecutiveNewEntryException();
+            }
+        }
     }
 
 //    public List<PrivateStoryResponse> getStoriesByFbId(String fbId) throws StoryNotFoundException {

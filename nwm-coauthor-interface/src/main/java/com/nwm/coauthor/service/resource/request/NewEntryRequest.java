@@ -2,7 +2,7 @@ package com.nwm.coauthor.service.resource.request;
 
 public class NewEntryRequest {
     private String entry;
-    private Integer currEntryCharCount;
+    private Integer charCountForVersioning;
     
     public String getEntry() {
         return entry;
@@ -10,10 +10,10 @@ public class NewEntryRequest {
     public void setEntry(String entry) {
         this.entry = entry;
     }
-    public Integer getCurrEntryCharCount() {
-        return currEntryCharCount;
+    public Integer getCharCountForVersioning() {
+        return charCountForVersioning;
     }
-    public void setCurrEntryCharCount(Integer currEntryCharCount) {
-        this.currEntryCharCount = currEntryCharCount;
+    public void setCharCountForVersioning(Integer charCountForVersioning) {
+        this.charCountForVersioning = charCountForVersioning;
     }
 }

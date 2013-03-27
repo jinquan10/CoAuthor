@@ -7,9 +7,14 @@ import org.springframework.web.client.HttpStatusCodeException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
+import com.nwm.coauthor.exception.ConsecutiveNewEntryException;
+import com.nwm.coauthor.exception.NonMemberOrLeaderException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
+import com.nwm.coauthor.exception.StoryNotFoundException;
+import com.nwm.coauthor.exception.VersioningException;
 import com.nwm.coauthor.exception.mapping.ExceptionMapperWrapper;
 import com.nwm.coauthor.service.controller.StoryController;
+import com.nwm.coauthor.service.resource.request.NewEntryRequest;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.StoriesResponse;
@@ -62,10 +67,16 @@ public class StoryClient extends BaseClient implements StoryController {
     }
 
     @Override
-    public ResponseEntity<EntriesResponse> getEntries(String coToken, String storyId, Integer min, Integer max) throws BadRequestException, AuthenticationUnauthorizedException,
-            CannotGetEntriesException {
+    public ResponseEntity<EntriesResponse> getEntries(String coToken, String storyId, Integer beginIndex) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public void newEntry(String coToken, String storyId, NewEntryRequest newEntryRequest) throws BadRequestException, AuthenticationUnauthorizedException, VersioningException, StoryNotFoundException,
+            NonMemberOrLeaderException, ConsecutiveNewEntryException {
+        // TODO Auto-generated method stub
+        
     }
 
     //
