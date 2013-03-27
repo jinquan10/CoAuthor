@@ -59,7 +59,7 @@ public class StoryManagerImpl {
 		return StoriesResponse.wrapStoryCovers(storyDAO.getMyStories(fbId));
 	}
 
-	public EntriesResponse getEntries(String fbId, String storyId, Integer beginIndex) throws CannotGetEntriesException{
+	public EntriesResponse getEntries(String fbId, String storyId, Integer beginIndex) throws CannotGetEntriesException, StoryNotFoundException{
 		if(canGetEntries(fbId, storyId)){
 	        int endIndex = beginIndex + numCharToGet;
 		    
@@ -69,8 +69,12 @@ public class StoryManagerImpl {
 		}
 	}
 
-    private boolean canGetEntries(String fbId, String storyId) {
+    private boolean canGetEntries(String fbId, String storyId) throws StoryNotFoundException {
         StoryModel story = storyDAO.getStory(storyId);
+        
+        if(story == null){
+            throw new StoryNotFoundException();
+        }
         
         if(story.getLeaderFbId().equals(fbId)){
             return true;

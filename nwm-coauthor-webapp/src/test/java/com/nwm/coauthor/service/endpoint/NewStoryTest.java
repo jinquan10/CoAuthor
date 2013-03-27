@@ -86,7 +86,6 @@ public class NewStoryTest extends BaseTest {
 
             Assert.assertTrue(batchErrors.containsKey("entry"));
             Assert.assertTrue(batchErrors.containsKey("fbFriends"));
-            Assert.assertTrue(batchErrors.containsKey("numCharacters"));
         }
     }
 

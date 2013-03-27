@@ -6,7 +6,9 @@ import java.util.List;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
@@ -14,8 +16,10 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import com.nwm.coauthor.exception.BaseException;
+import com.nwm.coauthor.exception.HttpException;
 import com.nwm.coauthor.exception.WebApplicationException;
 import com.nwm.coauthor.exception.mapping.ExceptionMapperWrapper;
+import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 public class BaseClient {
 	protected static final String HOST = "http://localhost:8081";
@@ -64,5 +68,13 @@ public class BaseClient {
 		}
 		
 		return new ExceptionMapperWrapper(baseException.getId(), baseException);
+	}
+	
+	protected <T, E> ResponseEntity<E> doExchange(String endpoint, HttpMethod httpMethod, HttpEntity<T> entity, Class<E> responseClass) throws HttpException{
+	    try{
+	        return restTemplate.exchange(urlStoryResolver(endpoint), httpMethod, entity, responseClass);
+	    }catch(HttpStatusCodeException e){
+	        throw new HttpException(e);
+	    }
 	}
 }

@@ -8,6 +8,7 @@ import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
 import com.nwm.coauthor.exception.ConsecutiveNewEntryException;
+import com.nwm.coauthor.exception.HttpException;
 import com.nwm.coauthor.exception.NonMemberOrLeaderException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
@@ -37,9 +38,9 @@ public class StoryClient extends BaseClient implements StoryController {
     @Override
     public ResponseEntity<StoryResponse> createStory(String coToken, NewStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
         try {
-            return restTemplate.exchange(urlStoryResolver(CREATE_STORY_ENDPOINT), HttpMethod.POST, httpEntity(createStoryRequest, coToken), StoryResponse.class);
-        } catch (HttpStatusCodeException e) {
-            ExceptionMapperWrapper emw = convertToExceptionMapper(e);
+            return doExchange(CREATE_STORY_ENDPOINT, HttpMethod.POST, httpEntity(createStoryRequest, coToken), StoryResponse.class);
+        } catch (HttpException e) {
+            ExceptionMapperWrapper emw = convertToExceptionMapper(e.getHttpStatusCodeException());
 
             if (emw.getClazz() == SomethingWentWrongException.class) {
                 throw new SomethingWentWrongException();
@@ -54,9 +55,9 @@ public class StoryClient extends BaseClient implements StoryController {
     @Override
     public ResponseEntity<StoriesResponse> getMyStories(String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException {
         try {
-            return restTemplate.exchange(urlStoryResolver(GET_MY_STORIES_ENDPOINT), HttpMethod.GET, httpEntity(null, coToken), StoriesResponse.class);
-        } catch (HttpStatusCodeException e) {
-            ExceptionMapperWrapper emw = convertToExceptionMapper(e);
+            return doExchange(GET_MY_STORIES_ENDPOINT, HttpMethod.GET, httpEntity(null, coToken), StoriesResponse.class);
+        } catch (HttpException e) {
+            ExceptionMapperWrapper emw = convertToExceptionMapper(e.getHttpStatusCodeException());
 
             if (emw.getClazz() == AuthenticationUnauthorizedException.class) {
                 throw new AuthenticationUnauthorizedException();
@@ -67,8 +68,9 @@ public class StoryClient extends BaseClient implements StoryController {
     }
 
     @Override
-    public ResponseEntity<EntriesResponse> getEntries(String coToken, String storyId, Integer beginIndex) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException {
-        // TODO Auto-generated method stub
+    public ResponseEntity<EntriesResponse> getEntries(String coToken, String storyId, Integer beginIndex) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException, StoryNotFoundException{
+        
+        
         return null;
     }
 
