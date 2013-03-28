@@ -8,10 +8,10 @@ import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BaseException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
-import com.nwm.coauthor.exception.ConsecutiveNewEntryException;
+import com.nwm.coauthor.exception.ConsecutiveEntryBySameMemberException;
 import com.nwm.coauthor.exception.MemberOrLeaderException;
 import com.nwm.coauthor.exception.NoTitleForPublishingException;
-import com.nwm.coauthor.exception.NonMemberOrLeaderException;
+import com.nwm.coauthor.exception.NonMemberException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.StoryNotPublishedYetException;
@@ -38,9 +38,9 @@ public enum ExceptionMapper {
 	STORY_NOT_PUBLISHED_YET_EXCEPTION(StoryNotPublishedYetException.class),
 	MEMBER_OR_LEADER_EXCEPTION(MemberOrLeaderException.class),
 	CANNOT_GET_ENTRIES_EXCEPTION(CannotGetEntriesException.class),
-	NON_MEMBER_OR_LEADER_EXCEPTION(NonMemberOrLeaderException.class),
+	NON_MEMBER_OR_LEADER_EXCEPTION(NonMemberException.class),
 	VERSIONING_EXCEPTION(VersioningException.class),
-	CONSECUTIVE_NEW_ENTRY_EXCEPTION(ConsecutiveNewEntryException.class);
+	CONSECUTIVE_NEW_ENTRY_EXCEPTION(ConsecutiveEntryBySameMemberException.class);
 	
 	private Class<? extends BaseException> clazz;
 	

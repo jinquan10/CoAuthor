@@ -19,7 +19,7 @@ import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 public class GetEntriesTest extends BaseTest {
     @Test
-    public void zeroEntriesRightAfterNewStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, CannotGetEntriesException, StoryNotFoundException {
+    public void getZeroEntriesRightAfterNewStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, CannotGetEntriesException, StoryNotFoundException {
         UserModel leader = UserBuilder.createUser();
 
         ResponseEntity<StoryResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
@@ -31,18 +31,54 @@ public class GetEntriesTest extends BaseTest {
         assertEquals(0, entries.getEntries().size());
     }
 
-    @Test(expected = StoryNotFoundException.class)
-    public void storyNotFound() throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException, SomethingWentWrongException, StoryNotFoundException {
+    @Test
+    public void getOneEntryRightAfterNewStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, CannotGetEntriesException, StoryNotFoundException {
         UserModel leader = UserBuilder.createUser();
 
         ResponseEntity<StoryResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
         StoryResponse newStory = newStoryResponse.getBody();
 
+        ResponseEntity<EntriesResponse> entriesResponse = storyClient.getEntries(leader.getCoToken(), newStory.getStoryId(), 0);
+        EntriesResponse entries = entriesResponse.getBody();
+
+        assertEquals(1, entries.getEntries().size());
+    }
+
+    @Test
+    public void nonMemberWhenPublished() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, CannotGetEntriesException, StoryNotFoundException {
+        UserModel leader = UserBuilder.createUser();
+        UserModel nonMember = UserBuilder.createUser();
+
+        ResponseEntity<StoryResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryResponse newStory = newStoryResponse.getBody();
+
+        // - publish story here
+        
+        ResponseEntity<EntriesResponse> entriesResponse = storyClient.getEntries(nonMember.getCoToken(), newStory.getStoryId(), 0);
+        EntriesResponse entries = entriesResponse.getBody();
+        
+        assertNotNull(entries);
+        assertEquals(1, entries.getEntries().size());
+    }
+    
+    @Test(expected = StoryNotFoundException.class)
+    public void storyNotFound() throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException, SomethingWentWrongException, StoryNotFoundException {
+        UserModel leader = UserBuilder.createUser();
+        
+        ResponseEntity<StoryResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryResponse newStory = newStoryResponse.getBody();
+        
         storyClient.getEntries(leader.getCoToken(), new ObjectId().toString(), newStory.getCurrEntryCount());
     }
     
-    @Test
-    public void oneEntryRightAfterNewStory(){
-        
+    @Test(expected = CannotGetEntriesException.class)
+    public void nonMemberWhenNotPublished() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, CannotGetEntriesException, StoryNotFoundException {
+        UserModel leader = UserBuilder.createUser();
+        UserModel nonMember = UserBuilder.createUser();
+
+        ResponseEntity<StoryResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryResponse newStory = newStoryResponse.getBody();
+
+        storyClient.getEntries(nonMember.getCoToken(), newStory.getStoryId(), 0);
     }
 }

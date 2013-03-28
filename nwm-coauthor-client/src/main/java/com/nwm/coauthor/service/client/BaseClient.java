@@ -21,7 +21,7 @@ import com.nwm.coauthor.exception.WebApplicationException;
 import com.nwm.coauthor.exception.mapping.ExceptionMapperWrapper;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
-public class BaseClient {
+public abstract class BaseClient {
 	protected static final String HOST = "http://localhost:8081";
 	protected static final String SERVICE = "/nwm-coauthor-webapp";
 	protected static final String STORY = "/story";

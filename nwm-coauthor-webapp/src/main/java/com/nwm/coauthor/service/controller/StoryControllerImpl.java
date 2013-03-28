@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
-import com.nwm.coauthor.exception.ConsecutiveNewEntryException;
-import com.nwm.coauthor.exception.NonMemberOrLeaderException;
+import com.nwm.coauthor.exception.ConsecutiveEntryBySameMemberException;
+import com.nwm.coauthor.exception.NonMemberException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.VersioningException;
@@ -69,7 +69,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 
     @Override
     @RequestMapping(value = "/{storyId}/entries", method = RequestMethod.GET)
-    public ResponseEntity<EntriesResponse> getEntries(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestParam Integer beginIndex) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException{
+    public ResponseEntity<EntriesResponse> getEntries(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestParam Integer beginIndex) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException, StoryNotFoundException{
     	validateGetEntries(beginIndex);
     	
     	String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
@@ -80,7 +80,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     
     @Override
     @RequestMapping(value = "/{storyId}/entry", method = RequestMethod.PUT)
-    public void newEntry(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestBody NewEntryRequest newEntryRequest) throws BadRequestException, AuthenticationUnauthorizedException, VersioningException, StoryNotFoundException, NonMemberOrLeaderException, ConsecutiveNewEntryException{
+    public void newEntry(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestBody NewEntryRequest newEntryRequest) throws BadRequestException, AuthenticationUnauthorizedException, VersioningException, StoryNotFoundException, NonMemberException, ConsecutiveEntryBySameMemberException{
         validateNewEntry(newEntryRequest);
         
         String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
@@ -103,6 +103,9 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
         }else if(newEntryRequest.getEntry().length() < minCharsPerEntry){
             batchErrors.put("entry", String.format("The entry must be at least %s characters long.", minCharsPerEntry));
             isError = true;         
+        }else if(newEntryRequest.getEntry().length() < minCharsPerEntry){
+            batchErrors.put("entry", String.format("The entry must be at most %s characters long.", maxCharsPerEntry));
+            isError = true;
         }
         
         if (isError) {

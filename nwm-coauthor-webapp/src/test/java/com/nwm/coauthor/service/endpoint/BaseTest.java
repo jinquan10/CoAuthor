@@ -3,7 +3,7 @@ package com.nwm.coauthor.service.endpoint;
 import com.nwm.coauthor.service.client.StoryClient;
 
 public class BaseTest {
-    protected static StoryClient storyClient = new StoryClient();
+    protected StoryClient storyClient = StoryClient.instance();
 
     // private static void authenticateForCoToken() throws
     // SomethingWentWrongException, AuthenticationUnauthorizedException{

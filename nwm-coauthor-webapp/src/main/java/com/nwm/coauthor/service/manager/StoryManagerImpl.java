@@ -1,20 +1,15 @@
 package com.nwm.coauthor.service.manager;
 
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import com.mongodb.WriteResult;
-import com.nwm.coauthor.exception.AlreadyPublishedException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
-import com.nwm.coauthor.exception.ConsecutiveNewEntryException;
-import com.nwm.coauthor.exception.NonMemberOrLeaderException;
+import com.nwm.coauthor.exception.ConsecutiveEntryBySameMemberException;
+import com.nwm.coauthor.exception.NonMemberException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.VersioningException;
 import com.nwm.coauthor.service.dao.CommentDAOImpl;
@@ -99,14 +94,14 @@ public class StoryManagerImpl {
         return response;
     }
 
-    public void addEntry(String fbId, String storyId, String entry, Integer charCountForVersioning) throws VersioningException, StoryNotFoundException, NonMemberOrLeaderException, ConsecutiveNewEntryException {
+    public void addEntry(String fbId, String storyId, String entry, Integer charCountForVersioning) throws VersioningException, StoryNotFoundException, NonMemberException, ConsecutiveEntryBySameMemberException {
         WriteResult result = storyDAO.updateStoryForAddingEntry(fbId, storyId, entry, charCountForVersioning);
         parseAddEntryExceptions(fbId, storyId, charCountForVersioning, result);
         entryDAO.addEntry(EntryModel.newEntryModel(storyId, fbId, entry, charCountForVersioning));
     }
 
-    private void parseAddEntryExceptions(String fbId, String storyId, Integer charCountForVersioning, WriteResult result) throws StoryNotFoundException, NonMemberOrLeaderException,
-            VersioningException, ConsecutiveNewEntryException {
+    private void parseAddEntryExceptions(String fbId, String storyId, Integer charCountForVersioning, WriteResult result) throws StoryNotFoundException, NonMemberException,
+            VersioningException, ConsecutiveEntryBySameMemberException {
         if(result.getN() == 0){
             StoryModel storyModel = storyDAO.getStory(storyId);
 
@@ -115,7 +110,7 @@ public class StoryManagerImpl {
             }
             
             if(!storyModel.getLeaderFbId().equals(fbId) && !storyModel.getFbFriends().contains(fbId)){
-                throw new NonMemberOrLeaderException();
+                throw new NonMemberException();
             }
             
             if(storyModel.getCurrEntryCharCount() != charCountForVersioning){
@@ -123,7 +118,7 @@ public class StoryManagerImpl {
             }
             
             if(storyModel.getLastFriendWithEntry().equals(fbId)){
-                throw new ConsecutiveNewEntryException();
+                throw new ConsecutiveEntryBySameMemberException();
             }
         }
     }

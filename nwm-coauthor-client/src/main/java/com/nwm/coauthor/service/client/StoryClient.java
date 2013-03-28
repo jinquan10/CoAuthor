@@ -2,14 +2,13 @@ package com.nwm.coauthor.service.client;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpStatusCodeException;
 
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
-import com.nwm.coauthor.exception.ConsecutiveNewEntryException;
+import com.nwm.coauthor.exception.ConsecutiveEntryBySameMemberException;
 import com.nwm.coauthor.exception.HttpException;
-import com.nwm.coauthor.exception.NonMemberOrLeaderException;
+import com.nwm.coauthor.exception.NonMemberException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.VersioningException;
@@ -31,10 +30,14 @@ public class StoryClient extends BaseClient implements StoryController {
     private static final String CHANGE_TITLE_ENDPOINT = "/title";
     private static final String COMMENT_ENDPOINT = "/comment";
 
-    public StoryClient() {
+    private StoryClient() {}
 
+    private static final StoryClient STORY_CLIENT = new StoryClient();
+    
+    public static StoryClient instance(){
+        return STORY_CLIENT;
     }
-
+    
     @Override
     public ResponseEntity<StoryResponse> createStory(String coToken, NewStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
         try {
@@ -76,7 +79,7 @@ public class StoryClient extends BaseClient implements StoryController {
 
     @Override
     public void newEntry(String coToken, String storyId, NewEntryRequest newEntryRequest) throws BadRequestException, AuthenticationUnauthorizedException, VersioningException, StoryNotFoundException,
-            NonMemberOrLeaderException, ConsecutiveNewEntryException {
+            NonMemberException, ConsecutiveEntryBySameMemberException {
         // TODO Auto-generated method stub
         
     }
