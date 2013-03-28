@@ -1,3 +1,4 @@
+- add env java parameter check for urlResolver
 - automatic refresh interval duration
 - entryCharCount for versioning on a newEntry
 - callback function for getEntries client to 

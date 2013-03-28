@@ -79,7 +79,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     }
     
     @Override
-    @RequestMapping(value = "/{storyId}/entry", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{storyId}/entry", method = RequestMethod.POST)
     public void newEntry(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestBody NewEntryRequest newEntryRequest) throws BadRequestException, AuthenticationUnauthorizedException, VersioningException, StoryNotFoundException, NonMemberException, ConsecutiveEntryBySameMemberException{
         validateNewEntry(newEntryRequest);
         

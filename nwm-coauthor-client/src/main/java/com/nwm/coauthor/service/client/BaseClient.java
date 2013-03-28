@@ -1,5 +1,7 @@
 package com.nwm.coauthor.service.client;
 
+import static com.nwm.coauthor.service.client.EnvProps.LOCAL_HOST;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,12 +21,8 @@ import com.nwm.coauthor.exception.BaseException;
 import com.nwm.coauthor.exception.HttpException;
 import com.nwm.coauthor.exception.WebApplicationException;
 import com.nwm.coauthor.exception.mapping.ExceptionMapperWrapper;
-import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 public abstract class BaseClient {
-	protected static final String HOST = "http://localhost:8081";
-	protected static final String SERVICE = "/nwm-coauthor-webapp";
-	protected static final String STORY = "/story";
 	protected RestTemplate restTemplate = new RestTemplate();
 	protected ObjectMapper objectMapper = new ObjectMapper();
 	
@@ -42,8 +40,8 @@ public abstract class BaseClient {
 		restTemplate.setRequestFactory(httpClient);
 	}
 	
-	protected String urlStoryResolver(String endpoint){
-		return HOST + SERVICE + STORY + endpoint;
+	protected String urlStoryResolver(String endpoint, Object[] params){
+	    return LOCAL_HOST.getHostAndServicePath() + String.format(endpoint, params);
 	}
 	
 	protected HttpEntity<Object> httpEntity(Object object, String coToken){
@@ -70,9 +68,9 @@ public abstract class BaseClient {
 		return new ExceptionMapperWrapper(baseException.getId(), baseException);
 	}
 	
-	protected <T, E> ResponseEntity<E> doExchange(String endpoint, HttpMethod httpMethod, HttpEntity<T> entity, Class<E> responseClass) throws HttpException{
+	protected <T, E> ResponseEntity<E> doExchange(String endpoint, HttpMethod httpMethod, HttpEntity<T> entity, Class<E> responseClass, Object ... params) throws HttpException{
 	    try{
-	        return restTemplate.exchange(urlStoryResolver(endpoint), httpMethod, entity, responseClass);
+	        return restTemplate.exchange(urlStoryResolver(endpoint, params), httpMethod, entity, responseClass);
 	    }catch(HttpStatusCodeException e){
 	        throw new HttpException(e);
 	    }
