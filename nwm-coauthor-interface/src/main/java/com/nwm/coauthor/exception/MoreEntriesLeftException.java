@@ -8,7 +8,7 @@ import com.nwm.coauthor.service.resource.response.EntriesResponse;
 public class MoreEntriesLeftException extends BaseException {
     public MoreEntriesLeftException(EntriesResponse r){
         this.setId(ExceptionMapper.MORE_ENTRIES_LEFT_EXCEPTION);
-        this.setHttpStatus(HttpStatus.PARTIAL_CONTENT);
+        this.setHttpStatus(HttpStatus.REQUEST_ENTITY_TOO_LARGE);
         this.setEntriesResponse(r);
     }
     

@@ -64,7 +64,7 @@ public class StoryManagerImpl {
             EntriesResponse response = getEntries(storyId, beginIndex, endIndex);
             
             if(endIndex < totalChars){
-                response.setNewBeginIndex(beginIndex + response.getEntries().size());
+                response.setNewBeginIndex(beginIndex + calculateNumCharsFromEntries(response.getEntries()));
                 throw new MoreEntriesLeftException(response); 
             }else{
                 return response;
@@ -72,6 +72,16 @@ public class StoryManagerImpl {
         } else {
             throw new CannotGetEntriesException();
         }
+    }
+
+    private Integer calculateNumCharsFromEntries(List<EntryResponse> entries) {
+        int numChars = 0;
+        
+        for(int i = 0; i < entries.size(); i++){
+            numChars += entries.get(i).getEntry().length();
+        }
+            
+        return numChars;
     }
 
     private Integer getTotalCharsForStory(String storyId, Integer currChar) throws VersioningException {

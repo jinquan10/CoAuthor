@@ -25,7 +25,7 @@ import com.nwm.coauthor.service.resource.response.StoryResponse;
 public class StoryClient extends BaseClient implements StoryController {
     private static final String CREATE_STORY_ENDPOINT = "/story";
     private static final String GET_MY_STORIES_ENDPOINT = "/story/mine";
-    private static final String GET_ENTRIES_ENDPOINT = "/story/%s/entries/%s";
+    private static final String GET_ENTRIES_ENDPOINT = "/story/%s/entries/%s/clientCharVersion/%s";
     private static final String NEW_ENTRY_ENDPOINT = "/story/%s/entry";
 
     // private static final String GET_PRIVATE_STORY_ENDPOINT = "/private";

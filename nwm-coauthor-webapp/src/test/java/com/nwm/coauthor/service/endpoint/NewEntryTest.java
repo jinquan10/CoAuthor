@@ -57,26 +57,39 @@ public class NewEntryTest extends BaseTest {
     public void multipleTripsToGetAllEntries() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, VersioningException, StoryNotFoundException, NonMemberException, ConsecutiveEntryBySameMemberException, CannotGetEntriesException{
         UserModel leader = UserBuilder.createUser();
         
-        int numCharsPerEntry = 1000;
-        int numEntries = 100;
+        int numCharsPerEntry = 794;
+        int numEntries = 1000;
         int totalEntries = numEntries + 1;
         
         StoryResponse story = insertATonOfEntries(leader, numCharsPerEntry, numEntries, totalEntries);
         
-        List<EntryResponse> entries = getATonOfEntries(leader, story);
+        List<EntryResponse> entries = getATonOfEntries(leader, story, 0);
+     
+        Integer calculatedChar = calculateNumCharsFromEntries(entries);
         
+        assertEquals(calculatedChar, story.getCurrEntryCharCount());
         assertEquals(totalEntries, entries.size());
     }
 
-    private List<EntryResponse> getATonOfEntries(UserModel leader, StoryResponse story) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException,
+    private Integer calculateNumCharsFromEntries(List<EntryResponse> entries) {
+        int numChars = 0;
+        
+        for(int i = 0; i < entries.size(); i++){
+            numChars += entries.get(i).getEntry().length();
+        }
+            
+        return numChars;
+    }
+    
+    private List<EntryResponse> getATonOfEntries(UserModel leader, StoryResponse story, Integer beginIndex) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException,
             StoryNotFoundException, VersioningException {
         
         ResponseEntity<EntriesResponse> entriesResponse = null;
         try {
-            entriesResponse = storyClient.getEntries(leader.getCoToken(), story.getStoryId(), 0, story.getCurrEntryCharCount());
+            entriesResponse = storyClient.getEntries(leader.getCoToken(), story.getStoryId(), beginIndex, story.getCurrEntryCharCount());
         } catch (MoreEntriesLeftException e) {
             List<EntryResponse> entries = e.getEntriesResponse().getEntries();
-            entries.addAll(getATonOfEntries(leader, story));
+            entries.addAll(getATonOfEntries(leader, story, e.getEntriesResponse().getNewBeginIndex()));
             
             return entries;
         }

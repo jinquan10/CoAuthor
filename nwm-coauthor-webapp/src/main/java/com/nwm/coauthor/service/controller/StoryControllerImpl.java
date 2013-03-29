@@ -69,7 +69,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     }
 
     @Override
-    @RequestMapping(value = "/{storyId}/entries/{beginIndex}/currChar/{currChar}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{storyId}/entries/{beginIndex}/clientCharVersion/{clientCharVersion}", method = RequestMethod.GET)
     public ResponseEntity<EntriesResponse> getEntries(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @PathVariable Integer beginIndex,
             @PathVariable Integer clientCharVersion) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException, StoryNotFoundException, VersioningException, MoreEntriesLeftException {
         validateGetEntries(beginIndex, clientCharVersion);
