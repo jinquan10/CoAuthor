@@ -41,7 +41,7 @@ public class StoryDAOImpl {
     }
 
     public WriteResult updateStoryForAddingEntry(UpdateStoryForNewEntryModel model) {
-        Query q = new Query(where("storyId"));
+        Query q = new Query(where("storyId").is(model.getStoryId()));
         
         Update u = new Update();
         u.set("currEntryCharCount", model.getCurrEntryCharCount());

@@ -7,14 +7,12 @@ public class EntryModel extends BaseModel {
     private Integer currCharCount;
     
     private EntryModel newEntryModel(String storyId, String fbId, String entry, Integer currCharCount){
-    	EntryModel newEntryModel = new EntryModel();
+    	setStoryId(storyId);
+    	setFbId(fbId);
+    	setEntry(entry);
+    	setCurrCharCount(currCharCount);
     	
-    	newEntryModel.setStoryId(storyId);
-    	newEntryModel.setFbId(fbId);
-    	newEntryModel.setEntry(entry);
-    	newEntryModel.setCurrCharCount(currCharCount);
-    	
-    	return newEntryModel;
+    	return this;
     }
     
     public static EntryModel newEntryModel(UpdateStoryForNewEntryModel model){

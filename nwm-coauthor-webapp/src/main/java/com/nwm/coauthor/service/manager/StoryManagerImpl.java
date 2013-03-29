@@ -36,7 +36,7 @@ public class StoryManagerImpl {
     @Autowired
     private EntryDAOImpl entryDAO;
 
-    int numCharToGet = 100000;
+    int numCharToGet = 1000;
 
     public StoryResponse createStory(String fbId, NewStoryRequest request) {
         StoryModel newStoryModel = StoryModel.createStoryModelFromRequest(fbId, request);
@@ -95,14 +95,14 @@ public class StoryManagerImpl {
         return response;
     }
 
-    public StoryResponse addEntry(String fbId, String storyId, String entry, Integer charCountForVersioning) throws VersioningException, StoryNotFoundException, NonMemberException,
+    public StoryResponse newEntry(String fbId, String storyId, String entry, Integer charCountForVersioning) throws VersioningException, StoryNotFoundException, NonMemberException,
             ConsecutiveEntryBySameMemberException {
         StoryResponse response = parseAddEntryExceptions(fbId, storyId, charCountForVersioning);
         UpdateStoryForNewEntryModel storyUpdateModel = UpdateStoryForNewEntryModel.init(storyId, entry, fbId, response.getCurrEntryCharCount() + entry.length()); 
         storyDAO.updateStoryForAddingEntry(storyUpdateModel);
         entryDAO.addEntry(EntryModel.newEntryModel(storyUpdateModel));
 
-        return response;
+        return storyUpdateModel.mergeWithStoryResponse(response);
     }
 
     private StoryResponse parseAddEntryExceptions(String fbId, String storyId, Integer charCountForVersioning) throws StoryNotFoundException, NonMemberException, VersioningException,
@@ -118,7 +118,7 @@ public class StoryManagerImpl {
             throw new NonMemberException();
         }
 
-        if (story.getCurrEntryCharCount() != charCountForVersioning) {
+        if (!story.getCurrEntryCharCount().equals(charCountForVersioning)) {
             throw new VersioningException();
         }
 

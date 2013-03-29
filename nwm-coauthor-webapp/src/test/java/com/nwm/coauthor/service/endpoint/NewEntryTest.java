@@ -21,6 +21,7 @@ import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.request.NewEntryRequest;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
+import com.nwm.coauthor.service.util.StringUtil;
 
 public class NewEntryTest extends BaseTest {
     @Test
@@ -49,8 +50,35 @@ public class NewEntryTest extends BaseTest {
     }
     
     @Test
-    public void multipleTripsToGetAllEntries(){
+    public void multipleTripsToGetAllEntries() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, VersioningException, StoryNotFoundException, NonMemberException, ConsecutiveEntryBySameMemberException, CannotGetEntriesException{
+        UserModel leader = UserBuilder.createUser();
+        UserModel friend = UserBuilder.createUser();
         
+        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
+        StoryResponse newStory = storyResponse.getBody();
+        
+        int numCharsPerEntry = 1000;
+        int numEntries = 100;
+        int totalEntries = numEntries + 1;
+        String entry = StringUtil.repeat('a', numCharsPerEntry);
+        
+        boolean isLeaderTurn = false;
+        StoryResponse newEntryResponseStory = newStory;             
+        for(int i = 0; i < numEntries; i++){
+            if(isLeaderTurn){
+                ResponseEntity<StoryResponse> newEntryResponse = storyClient.newEntry(leader.getCoToken(), newStory.getStoryId(), NewEntryRequest.newEntry(entry, newEntryResponseStory.getCurrEntryCharCount()));
+                newEntryResponseStory = newEntryResponse.getBody();
+            }else{
+                ResponseEntity<StoryResponse> newEntryResponse = storyClient.newEntry(friend.getCoToken(), newStory.getStoryId(), NewEntryRequest.newEntry(entry, newEntryResponseStory.getCurrEntryCharCount()));
+                newEntryResponseStory = newEntryResponse.getBody();
+            }
+            
+            isLeaderTurn = !isLeaderTurn;
+        }
+        
+        ResponseEntity<EntriesResponse> entriesResponse = storyClient.getEntries(leader.getCoToken(), newStory.getStoryId(), 0);
+        EntriesResponse entries = entriesResponse.getBody();
+        assertEquals(totalEntries, entries.getEntries().size());
     }
     
     @Test(expected = StoryNotFoundException.class)

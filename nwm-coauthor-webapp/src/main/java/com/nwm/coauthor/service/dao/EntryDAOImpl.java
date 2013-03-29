@@ -29,7 +29,7 @@ public class EntryDAOImpl {
 		query.addCriteria(c);
 		query.fields().exclude("storyId").exclude("currCharCount");
 		
-		return mongoTemplate.find(query, EntryResponse.class);
+		return mongoTemplate.find(query, EntryResponse.class, "entryModel");
 	}
 	
 	public void addEntry(EntryModel newEntryModel) {

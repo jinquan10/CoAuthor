@@ -35,7 +35,7 @@ import com.nwm.coauthor.service.resource.response.StoryResponse;
 @RequestMapping(value = "/story", produces = "application/json", consumes = "application/json")
 public class StoryControllerImpl extends BaseControllerImpl implements StoryController {
     int minCharsPerEntry = 3;
-    int maxCharsPerEntry = 10000;
+    int maxCharsPerEntry = 1000;
     int maxCharsTitle = 1000;
     int minFriends = 1;
 	
@@ -68,8 +68,8 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     }
 
     @Override
-    @RequestMapping(value = "/{storyId}/entries", method = RequestMethod.GET)
-    public ResponseEntity<EntriesResponse> getEntries(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestParam Integer beginIndex) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException, StoryNotFoundException{
+    @RequestMapping(value = "/{storyId}/entries/{beginIndex}", method = RequestMethod.GET)
+    public ResponseEntity<EntriesResponse> getEntries(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @PathVariable Integer beginIndex) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException, StoryNotFoundException{
     	validateGetEntries(beginIndex);
     	
     	String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
@@ -85,7 +85,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
         
         String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
 
-        StoryResponse response = storyManager.addEntry(fbId, storyId, newEntryRequest.getEntry(), newEntryRequest.getCharCountForVersioning());
+        StoryResponse response = storyManager.newEntry(fbId, storyId, newEntryRequest.getEntry(), newEntryRequest.getCharCountForVersioning());
         return new ResponseEntity<StoryResponse>(response, HttpStatus.CREATED);
     }
     
@@ -104,7 +104,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
         }else if(newEntryRequest.getEntry().length() < minCharsPerEntry){
             batchErrors.put("entry", String.format("The entry must be at least %s characters long.", minCharsPerEntry));
             isError = true;         
-        }else if(newEntryRequest.getEntry().length() < minCharsPerEntry){
+        }else if(newEntryRequest.getEntry().length() > maxCharsPerEntry){
             batchErrors.put("entry", String.format("The entry must be at most %s characters long.", maxCharsPerEntry));
             isError = true;
         }

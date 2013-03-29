@@ -23,8 +23,8 @@ import com.nwm.coauthor.service.resource.response.StoryResponse;
 public class StoryClient extends BaseClient implements StoryController {
     private static final String CREATE_STORY_ENDPOINT = "/story";
     private static final String GET_MY_STORIES_ENDPOINT = "/story/mine";
-    private static final String GET_ENTRIES_ENDPOINT = "/{storyId}/entries";
-    private static final String NEW_ENTRY_ENDPOINT = "/{storyId}/entry";
+    private static final String GET_ENTRIES_ENDPOINT = "/story/%s/entries/%s";
+    private static final String NEW_ENTRY_ENDPOINT = "/story/%s/entry";
 
     // private static final String GET_PRIVATE_STORY_ENDPOINT = "/private";
     // private static final String LIKE_ENDPOINT = "/private/like";
@@ -77,7 +77,17 @@ public class StoryClient extends BaseClient implements StoryController {
     public ResponseEntity<EntriesResponse> getEntries(String coToken, String storyId, Integer beginIndex) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException,
             StoryNotFoundException {
         try {
-            return doExchange(GET_ENTRIES_ENDPOINT, HttpMethod.GET, httpEntity(null, coToken), EntriesResponse.class, storyId);
+            
+            // - pass in the numCharVersion
+            // - if we get a version exception back, then throw it
+            // - continue getting entries until we receive a 200
+            
+            ResponseEntity<EntriesResponse> response = doExchange(GET_ENTRIES_ENDPOINT, HttpMethod.GET, httpEntity(null, coToken), EntriesResponse.class, storyId, beginIndex);
+            EntriesResponse entriesBody = response.getBody();
+            
+            entriesBody.getEntries()
+            
+            return 
         } catch (HttpException e) {
             ExceptionMapperWrapper emw = convertToExceptionMapper(e.getHttpStatusCodeException());
 
@@ -97,7 +107,7 @@ public class StoryClient extends BaseClient implements StoryController {
     public ResponseEntity<StoryResponse> newEntry(String coToken, String storyId, NewEntryRequest newEntryRequest) throws BadRequestException, AuthenticationUnauthorizedException, VersioningException, StoryNotFoundException,
             NonMemberException, ConsecutiveEntryBySameMemberException {
         try {
-            return doExchange(NEW_ENTRY_ENDPOINT, HttpMethod.POST, httpEntity(newEntryRequest, coToken), null, storyId);
+            return doExchange(NEW_ENTRY_ENDPOINT, HttpMethod.POST, httpEntity(newEntryRequest, coToken), StoryResponse.class, storyId);
         } catch (HttpException e) {
             ExceptionMapperWrapper emw = convertToExceptionMapper(e.getHttpStatusCodeException());
             
