@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.mongodb.WriteResult;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
 import com.nwm.coauthor.exception.ConsecutiveEntryBySameMemberException;
+import com.nwm.coauthor.exception.MoreEntriesLeftException;
 import com.nwm.coauthor.exception.NonMemberException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.exception.VersioningException;
@@ -55,14 +56,31 @@ public class StoryManagerImpl {
         return StoriesResponse.wrapStoryCovers(storyDAO.getMyStories(fbId));
     }
 
-    public EntriesResponse getEntries(String fbId, String storyId, Integer beginIndex) throws CannotGetEntriesException, StoryNotFoundException {
+    public EntriesResponse getEntries(String fbId, String storyId, Integer beginIndex, Integer currChar) throws CannotGetEntriesException, StoryNotFoundException, MoreEntriesLeftException, VersioningException {
         if (canGetEntries(fbId, storyId)) {
+            Integer totalChars = getTotalCharsForStory(storyId, currChar);
+            
             int endIndex = beginIndex + numCharToGet;
-
-            return getEntries(storyId, beginIndex, endIndex);
+            EntriesResponse response = getEntries(storyId, beginIndex, endIndex);
+            
+            if(endIndex < totalChars){
+                response.setNewBeginIndex(beginIndex + response.getEntries().size());
+                throw new MoreEntriesLeftException(response); 
+            }else{
+                return response;
+            }
         } else {
             throw new CannotGetEntriesException();
         }
+    }
+
+    private Integer getTotalCharsForStory(String storyId, Integer currChar) throws VersioningException {
+        Integer totalChars = storyDAO.getTotalChars(storyId);
+        
+        if(!totalChars.equals(currChar)){
+            throw new VersioningException();
+        }
+        return totalChars;
     }
 
     private boolean canGetEntries(String fbId, String storyId) throws StoryNotFoundException {

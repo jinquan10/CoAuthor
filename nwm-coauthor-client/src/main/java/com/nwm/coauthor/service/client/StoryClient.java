@@ -1,5 +1,6 @@
 package com.nwm.coauthor.service.client;
 
+import org.apache.http.HttpStatus;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
@@ -8,6 +9,7 @@ import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
 import com.nwm.coauthor.exception.ConsecutiveEntryBySameMemberException;
 import com.nwm.coauthor.exception.HttpException;
+import com.nwm.coauthor.exception.MoreEntriesLeftException;
 import com.nwm.coauthor.exception.NonMemberException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
@@ -74,20 +76,9 @@ public class StoryClient extends BaseClient implements StoryController {
     }
 
     @Override
-    public ResponseEntity<EntriesResponse> getEntries(String coToken, String storyId, Integer beginIndex) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException,
-            StoryNotFoundException {
+    public ResponseEntity<EntriesResponse> getEntries(String coToken, String storyId, Integer beginIndex, Integer clientCharVersion) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException, StoryNotFoundException, VersioningException, MoreEntriesLeftException{
         try {
-            
-            // - pass in the numCharVersion
-            // - if we get a version exception back, then throw it
-            // - continue getting entries until we receive a 200
-            
-            ResponseEntity<EntriesResponse> response = doExchange(GET_ENTRIES_ENDPOINT, HttpMethod.GET, httpEntity(null, coToken), EntriesResponse.class, storyId, beginIndex);
-            EntriesResponse entriesBody = response.getBody();
-            
-            entriesBody.getEntries()
-            
-            return 
+            return doExchange(GET_ENTRIES_ENDPOINT, HttpMethod.GET, httpEntity(null, coToken), EntriesResponse.class, storyId, beginIndex, clientCharVersion);
         } catch (HttpException e) {
             ExceptionMapperWrapper emw = convertToExceptionMapper(e.getHttpStatusCodeException());
 
@@ -97,20 +88,24 @@ public class StoryClient extends BaseClient implements StoryController {
                 throw new AuthenticationUnauthorizedException();
             } else if (emw.getClazz() == CannotGetEntriesException.class) {
                 throw new CannotGetEntriesException();
-            } else {// if(emw.getClazz() == StoryNotFoundException.class){
+            } else if (emw.getClazz() == MoreEntriesLeftException.class) {
+                throw new MoreEntriesLeftException(emw.getBaseException());
+            } else if (emw.getClazz() == VersioningException.class) {
+                throw new VersioningException();
+            } {// if(emw.getClazz() == StoryNotFoundException.class){
                 throw new StoryNotFoundException();
             }
         }
     }
 
     @Override
-    public ResponseEntity<StoryResponse> newEntry(String coToken, String storyId, NewEntryRequest newEntryRequest) throws BadRequestException, AuthenticationUnauthorizedException, VersioningException, StoryNotFoundException,
-            NonMemberException, ConsecutiveEntryBySameMemberException {
+    public ResponseEntity<StoryResponse> newEntry(String coToken, String storyId, NewEntryRequest newEntryRequest) throws BadRequestException, AuthenticationUnauthorizedException,
+            VersioningException, StoryNotFoundException, NonMemberException, ConsecutiveEntryBySameMemberException {
         try {
             return doExchange(NEW_ENTRY_ENDPOINT, HttpMethod.POST, httpEntity(newEntryRequest, coToken), StoryResponse.class, storyId);
         } catch (HttpException e) {
             ExceptionMapperWrapper emw = convertToExceptionMapper(e.getHttpStatusCodeException());
-            
+
             if (emw.getClazz() == BadRequestException.class) {
                 throw new BadRequestException(emw.getBaseException());
             } else if (emw.getClazz() == AuthenticationUnauthorizedException.class) {
@@ -123,7 +118,7 @@ public class StoryClient extends BaseClient implements StoryController {
                 throw new ConsecutiveEntryBySameMemberException();
             } else {// if(emw.getClazz() == StoryNotFoundException.class){
                 throw new StoryNotFoundException();
-            }            
+            }
         }
     }
 

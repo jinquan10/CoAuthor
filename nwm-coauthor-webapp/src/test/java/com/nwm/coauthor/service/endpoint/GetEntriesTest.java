@@ -11,6 +11,7 @@ import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
+import com.nwm.coauthor.exception.VersioningException;
 import com.nwm.coauthor.service.builder.NewStoryBuilder;
 import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
@@ -80,5 +81,15 @@ public class GetEntriesTest extends BaseTest {
         StoryResponse newStory = newStoryResponse.getBody();
 
         storyClient.getEntries(nonMember.getCoToken(), newStory.getStoryId(), 0);
+    }
+    
+    @Test(expected = VersioningException.class)
+    public void incorrectChars() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, CannotGetEntriesException, StoryNotFoundException{
+        UserModel leader = UserBuilder.createUser();
+        
+        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryResponse story = storyResponse.getBody();
+        
+        storyClient.getEntries(leader.getCoToken(), story.getStoryId(), 0);
     }
 }

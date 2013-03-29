@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.mongodb.WriteResult;
 import com.nwm.coauthor.service.model.StoryModel;
+import com.nwm.coauthor.service.model.TotalCharsModel;
 import com.nwm.coauthor.service.model.UpdateStoryForNewEntryModel;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
@@ -27,6 +28,16 @@ public class StoryDAOImpl {
         mongoTemplate.insert(storyModel);
     }
 
+    public Integer getTotalChars(String storyId){
+        Query q = new Query(where("storyId").is(storyId));
+        
+        q.fields().include("currEntryCharCount");
+        
+        TotalCharsModel model = mongoTemplate.findOne(q, TotalCharsModel.class, "storyModel");
+        
+        return model.getCurrEntryCharCount();
+    }
+    
 	public List<StoryResponse> getMyStories(String fbId) {
 		Query q = new Query();
 		Criteria c = new Criteria();

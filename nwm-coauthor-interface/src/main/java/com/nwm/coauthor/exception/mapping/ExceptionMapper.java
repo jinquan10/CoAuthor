@@ -10,6 +10,7 @@ import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
 import com.nwm.coauthor.exception.ConsecutiveEntryBySameMemberException;
 import com.nwm.coauthor.exception.MemberOrLeaderException;
+import com.nwm.coauthor.exception.MoreEntriesLeftException;
 import com.nwm.coauthor.exception.NoTitleForPublishingException;
 import com.nwm.coauthor.exception.NonMemberException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
@@ -40,7 +41,8 @@ public enum ExceptionMapper {
 	CANNOT_GET_ENTRIES_EXCEPTION(CannotGetEntriesException.class),
 	NON_MEMBER_OR_LEADER_EXCEPTION(NonMemberException.class),
 	VERSIONING_EXCEPTION(VersioningException.class),
-	CONSECUTIVE_NEW_ENTRY_EXCEPTION(ConsecutiveEntryBySameMemberException.class);
+	CONSECUTIVE_NEW_ENTRY_EXCEPTION(ConsecutiveEntryBySameMemberException.class),
+	MORE_ENTRIES_LEFT_EXCEPTION(MoreEntriesLeftException.class);
 	
 	private Class<? extends BaseException> clazz;
 	

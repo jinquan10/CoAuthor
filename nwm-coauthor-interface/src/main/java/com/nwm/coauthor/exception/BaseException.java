@@ -11,6 +11,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.springframework.http.HttpStatus;
 
 import com.nwm.coauthor.exception.mapping.ExceptionMapper;
+import com.nwm.coauthor.service.resource.response.EntriesResponse;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 @JsonSerialize(include = Inclusion.NON_NULL)
@@ -31,6 +32,9 @@ public class BaseException extends Exception{
 	
 	@JsonProperty("threadId")
 	private String threadId;
+	
+	@JsonProperty("entriesResponse")
+	private EntriesResponse entriesResponse;
 	
 	public Map<String, String> getBatchErrors() {
 		return batchErrors;
@@ -71,5 +75,13 @@ public class BaseException extends Exception{
 	public void setHttpStatus(HttpStatus httpStatus) {
 		this.httpStatus = httpStatus;
 	}
+
+    public EntriesResponse getEntriesResponse() {
+        return entriesResponse;
+    }
+
+    public void setEntriesResponse(EntriesResponse entriesResponse) {
+        this.entriesResponse = entriesResponse;
+    }
 	
 }

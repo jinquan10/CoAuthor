@@ -6,6 +6,7 @@ import com.nwm.coauthor.service.resource.BaseResource;
 
 public class EntriesResponse extends BaseResource{
 	private List<EntryResponse> entries;
+	private Integer newBeginIndex;
 	
 	public List<EntryResponse> getEntries() {
 		return entries;
@@ -14,4 +15,12 @@ public class EntriesResponse extends BaseResource{
 	public void setEntries(List<EntryResponse> entries) {
 		this.entries = entries;
 	}
+
+    public Integer getNewBeginIndex() {
+        return newBeginIndex;
+    }
+
+    public void setNewBeginIndex(Integer newBeginIndex) {
+        this.newBeginIndex = newBeginIndex;
+    }
 }
