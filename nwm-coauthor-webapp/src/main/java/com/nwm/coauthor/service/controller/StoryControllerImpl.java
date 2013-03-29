@@ -80,12 +80,13 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     
     @Override
     @RequestMapping(value = "/{storyId}/entry", method = RequestMethod.POST)
-    public void newEntry(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestBody NewEntryRequest newEntryRequest) throws BadRequestException, AuthenticationUnauthorizedException, VersioningException, StoryNotFoundException, NonMemberException, ConsecutiveEntryBySameMemberException{
+    public ResponseEntity<StoryResponse> newEntry(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestBody NewEntryRequest newEntryRequest) throws BadRequestException, AuthenticationUnauthorizedException, VersioningException, StoryNotFoundException, NonMemberException, ConsecutiveEntryBySameMemberException{
         validateNewEntry(newEntryRequest);
         
         String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
 
-        storyManager.addEntry(fbId, storyId, newEntryRequest.getEntry(), newEntryRequest.getCharCountForVersioning());
+        StoryResponse response = storyManager.addEntry(fbId, storyId, newEntryRequest.getEntry(), newEntryRequest.getCharCountForVersioning());
+        return new ResponseEntity<StoryResponse>(response, HttpStatus.CREATED);
     }
     
 	private void validateNewEntry(NewEntryRequest newEntryRequest) throws BadRequestException {

@@ -25,7 +25,7 @@ public class GetEntriesTest extends BaseTest {
         ResponseEntity<StoryResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
         StoryResponse newStory = newStoryResponse.getBody();
 
-        ResponseEntity<EntriesResponse> entriesResponse = storyClient.getEntries(leader.getCoToken(), newStory.getStoryId(), newStory.getCurrEntryCount());
+        ResponseEntity<EntriesResponse> entriesResponse = storyClient.getEntries(leader.getCoToken(), newStory.getStoryId(), newStory.getCurrEntryCharCount());
         EntriesResponse entries = entriesResponse.getBody();
 
         assertEquals(0, entries.getEntries().size());
@@ -68,7 +68,7 @@ public class GetEntriesTest extends BaseTest {
         ResponseEntity<StoryResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
         StoryResponse newStory = newStoryResponse.getBody();
         
-        storyClient.getEntries(leader.getCoToken(), new ObjectId().toString(), newStory.getCurrEntryCount());
+        storyClient.getEntries(leader.getCoToken(), new ObjectId().toString(), newStory.getCurrEntryCharCount());
     }
     
     @Test(expected = CannotGetEntriesException.class)

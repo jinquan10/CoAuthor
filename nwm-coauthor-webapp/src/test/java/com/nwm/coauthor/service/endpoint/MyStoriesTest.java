@@ -45,19 +45,17 @@ public class MyStoriesTest extends BaseTest {
         assertNotNull(responseBody.getStoryId());
         assertNotNull(responseBody.getLeaderFbId());
         assertNotNull(responseBody.getTitle());
-        assertNotNull(responseBody.getNumCharacters());
         assertNotNull(responseBody.getIsPublished());
         assertFbFriends(responseBody);
         assertNotNull(responseBody.getLikes());
         assertNotNull(responseBody.getLastFriendWithEntry());
         assertNotNull(responseBody.getLastEntry());
         assertNotNull(responseBody.getStoryLastUpdated());
-        assertNotNull(responseBody.getCurrEntryCount());
+        assertNotNull(responseBody.getCurrEntryCharCount());
     	
     	assertNotNull(responseBody.getStoryId());
     	assertEquals(leader.getFbId(), responseBody.getLeaderFbId());
     	assertTrue(StringUtils.hasText(responseBody.getTitle()));
-    	assertNotNull(responseBody.getNumCharacters());
     	assertFalse(responseBody.getIsPublished());
     	assertEquals(2, responseBody.getFbFriends().size());
     	assertEquals(new Long(0), responseBody.getLikes());

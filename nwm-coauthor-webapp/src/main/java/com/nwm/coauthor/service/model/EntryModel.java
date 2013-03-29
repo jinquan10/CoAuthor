@@ -6,7 +6,7 @@ public class EntryModel extends BaseModel {
     private String entry;
     private Integer currCharCount;
     
-    public static EntryModel newEntryModel(String storyId, String fbId, String entry, Integer currCharCount){
+    private EntryModel newEntryModel(String storyId, String fbId, String entry, Integer currCharCount){
     	EntryModel newEntryModel = new EntryModel();
     	
     	newEntryModel.setStoryId(storyId);
@@ -15,6 +15,13 @@ public class EntryModel extends BaseModel {
     	newEntryModel.setCurrCharCount(currCharCount);
     	
     	return newEntryModel;
+    }
+    
+    public static EntryModel newEntryModel(UpdateStoryForNewEntryModel model){
+        EntryModel entryModel = new EntryModel();
+        entryModel.newEntryModel(model.getStoryId(), model.getLastFriendWithEntry(), model.getLastEntry(), model.getCurrEntryCharCount());
+        
+        return entryModel;
     }
     
 	public String getFbId() {

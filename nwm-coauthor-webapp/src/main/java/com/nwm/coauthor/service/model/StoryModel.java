@@ -11,7 +11,6 @@ public class StoryModel extends BaseModel {
 	private String storyId;
 	private String leaderFbId;    	// - changeable by the leader only
     private String title;
-    private Integer numCharacters;
     private Boolean isPublished;
     private List<String> fbFriends;
     private Long likes;    		// - changeable by public
@@ -51,14 +50,6 @@ public class StoryModel extends BaseModel {
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public Integer getNumCharacters() {
-		return numCharacters;
-	}
-
-	public void setNumCharacters(Integer numCharacters) {
-		this.numCharacters = numCharacters;
 	}
 
 	public Boolean getIsPublished() {

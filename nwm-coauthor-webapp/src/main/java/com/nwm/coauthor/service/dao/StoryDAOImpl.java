@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.mongodb.WriteResult;
 import com.nwm.coauthor.service.model.StoryModel;
+import com.nwm.coauthor.service.model.UpdateStoryForNewEntryModel;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 @Component
@@ -35,22 +36,18 @@ public class StoryDAOImpl {
 		return mongoTemplate.find(q, StoryResponse.class, "storyModel");
 	}
 
-    public StoryModel getStory(String storyId) {
-        return mongoTemplate.findOne(new Query(where("storyId").is(storyId)), StoryModel.class);
+    public StoryResponse getStory(String storyId) {
+        return mongoTemplate.findOne(new Query(where("storyId").is(storyId)), StoryResponse.class, "storyModel");
     }
 
-    public WriteResult updateStoryForAddingEntry(String fbId, String storyId, String entry, Integer charCountForVersioning) {
-        Query q = new Query();
-        
-        Criteria a = new Criteria();
-        a.orOperator(where("leaderFbId").is(fbId), where("fbFriends").is(fbId));
-
-        Criteria b = new Criteria();
-        b.andOperator(where("storyId"), where("currEntryCharCount").is(charCountForVersioning), where("lastFriendWithEntry").ne(fbId));
+    public WriteResult updateStoryForAddingEntry(UpdateStoryForNewEntryModel model) {
+        Query q = new Query(where("storyId"));
         
         Update u = new Update();
-        u.inc("currEntryCharCount", entry.length());
-        u.set("lastEntry", entry);
+        u.set("currEntryCharCount", model.getCurrEntryCharCount());
+        u.set("lastEntry", model.getLastEntry());
+        u.set("storyLastUpdated", model.getStoryLastUpdated());
+        u.set("lastFriendWithEntry", model.getLastFriendWithEntry());
         
         return mongoTemplate.updateFirst(q, u, StoryModel.class);
     }

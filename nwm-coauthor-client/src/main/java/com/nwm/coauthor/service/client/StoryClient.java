@@ -94,10 +94,10 @@ public class StoryClient extends BaseClient implements StoryController {
     }
 
     @Override
-    public void newEntry(String coToken, String storyId, NewEntryRequest newEntryRequest) throws BadRequestException, AuthenticationUnauthorizedException, VersioningException, StoryNotFoundException,
+    public ResponseEntity<StoryResponse> newEntry(String coToken, String storyId, NewEntryRequest newEntryRequest) throws BadRequestException, AuthenticationUnauthorizedException, VersioningException, StoryNotFoundException,
             NonMemberException, ConsecutiveEntryBySameMemberException {
         try {
-            doExchange(NEW_ENTRY_ENDPOINT, HttpMethod.POST, httpEntity(newEntryRequest, coToken), null, storyId);
+            return doExchange(NEW_ENTRY_ENDPOINT, HttpMethod.POST, httpEntity(newEntryRequest, coToken), null, storyId);
         } catch (HttpException e) {
             ExceptionMapperWrapper emw = convertToExceptionMapper(e.getHttpStatusCodeException());
             

@@ -9,6 +9,7 @@ import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 public class NewStoryBuilder {
 
     private NewStoryRequest request;
+    private List<String> fbFriends;
 
     public NewStoryRequest getRequest() {
         return request;
@@ -50,9 +51,10 @@ public class NewStoryBuilder {
         return this;
     }
 
+    
     public NewStoryRequest build() {
         request.setEntry(request.getEntry() == null ? "12345" : request.getEntry());
-        request.setFbFriends(request.getFbFriends() == null ? UserBuilder.getDefaultFBFriends() : request.getFbFriends());
+        request.setFbFriends(request.getFbFriends() == null ? (setFbFriends(UserBuilder.getDefaultFBFriends())) : request.getFbFriends());
         request.setTitle(request.getTitle() == null ? null : request.getTitle());
 
         return request;
@@ -69,6 +71,15 @@ public class NewStoryBuilder {
             fbFriends.add(user.getFbId());
         }
 
+        return fbFriends;
+    }
+
+    public List<String> getFbFriends() {
+        return fbFriends;
+    }
+
+    public List<String> setFbFriends(List<String> fbFriends) {
+        this.fbFriends = fbFriends;
         return fbFriends;
     }
 }
