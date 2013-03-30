@@ -1,7 +1,5 @@
-- add versioning exception check to getStories
 - add env java parameter check for urlResolver
 - automatic refresh interval duration
-- entryCharCount for versioning on a newEntry
 - callback function for getEntries client to 
 - create a service to keep validation properties
 
