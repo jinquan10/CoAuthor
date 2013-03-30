@@ -110,7 +110,7 @@ public class StoryDAOImpl {
 //
 
 //
-    public WriteResult publishStory(String fbId, String storyId) {
+    public void publishStory(String fbId, String storyId) {
         Criteria criteria = new Criteria();
         criteria.andOperator(where("leaderFbId").is(fbId), where("storyId").is(storyId), where("title").ne(null), where("title").ne(""));
         
@@ -119,16 +119,16 @@ public class StoryDAOImpl {
         Update update = new Update();
         update.set("isPublished", true);
         
-        return mongoTemplate.updateFirst(query, update, StoryModel.class);
+        mongoTemplate.updateFirst(query, update, StoryModel.class);
     }
-//
-//    public WriteResult changeStoryTitle(String fbId, ObjectId storyId, String title) {
-//        Criteria criteria = new Criteria();
-//        criteria.andOperator(where("_id").is(storyId), where("leaderFbId").is(fbId), where("isPublished").is(false));
-//        
-//        Update update = new Update();
-//        update.set("title", title);
-//        
-//        return mongoTemplate.updateFirst(new Query(criteria), update, StoryModel.class);
-//    }
+
+    public void changeStoryTitle(String fbId, String storyId, String title) {
+        Criteria criteria = new Criteria();
+        criteria.andOperator(where("storyId").is(storyId), where("leaderFbId").is(fbId), where("isPublished").is(false));
+        
+        Update update = new Update();
+        update.set("title", title);
+        
+        mongoTemplate.updateFirst(new Query(criteria), update, StoryModel.class);
+    }
 }

@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 
 import com.mongodb.WriteResult;
 import com.nwm.coauthor.exception.AlreadyLikedException;
+import com.nwm.coauthor.exception.AlreadyPublishedException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
 import com.nwm.coauthor.exception.ConsecutiveEntryBySameMemberException;
 import com.nwm.coauthor.exception.MoreEntriesLeftException;
@@ -249,46 +250,45 @@ public class StoryManagerImpl {
         }
     }
 
-    public void publishStory(String fbId, String storyId) throws StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException {
-        WriteResult result = storyDAO.publishStory(fbId, storyId);
+    public StoryResponse publishStory(String fbId, String storyId) throws StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException {
+        StoryResponse story = storyDAO.getStory(storyId);
 
-        if (result.getN() == 0) {
-            StoryResponse privateStory = storyDAO.getStory(storyId);
-
-            if (privateStory == null) {
-                throw new StoryNotFoundException();
-            }
-
-            if (!privateStory.getLeaderFbId().equals(fbId)) {
-                throw new UserIsNotLeaderException();
-            }
-
-            if (!StringUtils.hasText(privateStory.getTitle())) {
-                throw new NoTitleForPublishingException();
-            }
+        if (story == null) {
+            throw new StoryNotFoundException();
         }
+
+        if (!story.getLeaderFbId().equals(fbId)) {
+            throw new UserIsNotLeaderException();
+        }
+
+        if (!StringUtils.hasText(story.getTitle())) {
+            throw new NoTitleForPublishingException();
+        }
+        
+        storyDAO.publishStory(fbId, storyId);
+        story.setIsPublished(true);
+        
+        return story;
     }
-    //
-    // public void changeStoryTitle(String fbId, ObjectId storyId, String title)
-    // throws StoryNotFoundException, UserIsNotLeaderException,
-    // AlreadyPublishedException {
-    // WriteResult result = storyDAO.changeStoryTitle(fbId, storyId, title);
-    //
-    // if(result.getN() == 0){
-    // PrivateStoryResponse privateStory = storyDAO.getPrivateStory(storyId);
-    //
-    // if(privateStory == null){
-    // throw new StoryNotFoundException();
-    // }
-    //
-    // if(!privateStory.getLeaderFbId().equals(fbId)){
-    // throw new UserIsNotLeaderException();
-    // }
-    //
-    // if(privateStory.getIsPublished() != null &&
-    // privateStory.getIsPublished()){
-    // throw new AlreadyPublishedException();
-    // }
-    // }
-    // }
+
+    public StoryResponse changeTitle(String fbId, String storyId, String title) throws StoryNotFoundException, UserIsNotLeaderException, AlreadyPublishedException {
+        StoryResponse story = storyDAO.getStory(storyId);
+        
+        if (story == null) {
+            throw new StoryNotFoundException();
+        }
+        
+        if (!story.getLeaderFbId().equals(fbId)) {
+            throw new UserIsNotLeaderException();
+        }
+        
+        if (story.getIsPublished() != null && story.getIsPublished()) {
+            throw new AlreadyPublishedException();
+        }
+
+        storyDAO.changeStoryTitle(fbId, storyId, title);
+        story.setTitle(title);
+        
+        return story;
+    }
 }

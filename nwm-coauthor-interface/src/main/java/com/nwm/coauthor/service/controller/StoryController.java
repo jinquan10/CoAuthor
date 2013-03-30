@@ -3,6 +3,7 @@ package com.nwm.coauthor.service.controller;
 import org.springframework.http.ResponseEntity;
 
 import com.nwm.coauthor.exception.AlreadyLikedException;
+import com.nwm.coauthor.exception.AlreadyPublishedException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
@@ -16,6 +17,7 @@ import com.nwm.coauthor.exception.UnpublishedStoryLikedException;
 import com.nwm.coauthor.exception.UserIsNotLeaderException;
 import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.exception.VersioningException;
+import com.nwm.coauthor.service.resource.request.ChangeTitleRequest;
 import com.nwm.coauthor.service.resource.request.NewEntryRequest;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
@@ -29,7 +31,7 @@ public interface StoryController {
 	public ResponseEntity<StoryResponse> newEntry(String coToken, String storyId, NewEntryRequest newEntryRequest) throws BadRequestException, AuthenticationUnauthorizedException, VersioningException, StoryNotFoundException, NonMemberException, ConsecutiveEntryBySameMemberException, SomethingWentWrongException;
 	public ResponseEntity<StoryResponse> getMyStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, SomethingWentWrongException, NonMemberException;
 	public void likeStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException, SomethingWentWrongException, UserLikingOwnStoryException, UnpublishedStoryLikedException;
-	public void publishStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException, SomethingWentWrongException;
-//    public void changeStoryTitle(String coToken, String storyId, ChangeTitleRequest request) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, UserIsNotLeaderException, StoryNotFoundException, AlreadyPublishedException, AlreadyLikedException;
+	public ResponseEntity<StoryResponse> publishStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException, SomethingWentWrongException;
+    public ResponseEntity<StoryResponse> changeTitle(String coToken, String storyId, ChangeTitleRequest request) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, UserIsNotLeaderException, StoryNotFoundException, AlreadyPublishedException, AlreadyLikedException;
 //	public void comment(String coToken, String storyId, CommentRequest request);
 }

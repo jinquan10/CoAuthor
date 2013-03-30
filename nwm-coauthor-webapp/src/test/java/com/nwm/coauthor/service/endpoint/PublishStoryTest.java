@@ -78,11 +78,13 @@ public class PublishStoryTest extends BaseTest {
         NewStoryRequest storyRequest = NewStoryBuilder.init().title("The one").build();
         ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
         
+        ResponseEntity<StoryResponse> publishResponse = null;
         try{
-            storyClient.publishStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
+            publishResponse = storyClient.publishStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
         }finally{
+            assertEquals(true, publishResponse.getBody().getIsPublished());
             ResponseEntity<StoryResponse> storyForEditResponse = storyClient.getMyStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
-            assertEquals(true, storyForEditResponse.getBody().getIsPublished());            
+            assertEquals(true, storyForEditResponse.getBody().getIsPublished());
         }
     }
     

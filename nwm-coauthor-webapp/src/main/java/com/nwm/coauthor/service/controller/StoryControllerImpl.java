@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.nwm.coauthor.exception.AlreadyLikedException;
+import com.nwm.coauthor.exception.AlreadyPublishedException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
@@ -31,6 +32,7 @@ import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.exception.VersioningException;
 import com.nwm.coauthor.service.manager.AuthenticationManagerImpl;
 import com.nwm.coauthor.service.manager.StoryManagerImpl;
+import com.nwm.coauthor.service.resource.request.ChangeTitleRequest;
 import com.nwm.coauthor.service.resource.request.NewEntryRequest;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
@@ -42,6 +44,7 @@ import com.nwm.coauthor.service.resource.response.StoryResponse;
 public class StoryControllerImpl extends BaseControllerImpl implements StoryController {
     int minCharsPerEntry = 3;
     int maxCharsPerEntry = 1000;
+    int minCharsTitle = 3;
     int maxCharsTitle = 1000;
     int minFriends = 1;
 
@@ -182,47 +185,52 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 
     @Override
     @RequestMapping(value = "/{storyId}/publish", method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void publishStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException,
+    public ResponseEntity<StoryResponse> publishStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException,
             UserIsNotLeaderException, NoTitleForPublishingException {
         validateRequestStoryId(storyId);
 
         String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
 
-        storyManager.publishStory(fbId, storyId);
+        return new ResponseEntity<StoryResponse>(storyManager.publishStory(fbId, storyId), HttpStatus.OK);
     }
 
-    //
-    // @Override
-    // @RequestMapping(value = "/{storyId}/title", method = RequestMethod.PUT)
-    // @ResponseStatus(HttpStatus.NO_CONTENT)
-    // public void changeStoryTitle(@RequestHeader("Authorization") String
-    // coToken, @PathVariable String storyId, @RequestBody ChangeTitleRequest
-    // request) throws SomethingWentWrongException,
-    // AuthenticationUnauthorizedException, BadRequestException,
-    // UserIsNotLeaderException, StoryNotFoundException,
-    // AlreadyPublishedException {
-    //
-    // validateChangeStoryRequest(request);
-    // String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
-    // storyManager.changeStoryTitle(fbId, convertStoryIdToObjectId(storyId),
-    // request.getTitle());
-    // }
-    //
-    // private void validateChangeStoryRequest(ChangeTitleRequest request)
-    // throws BadRequestException {
-    // boolean isError = false;
-    // Map<String, String> batchErrors = new HashMap<String, String>();
-    //
-    // if (!StringUtils.hasText(request.getTitle())) {
-    // batchErrors.put("title", "The title must not be null or empty.");
-    // isError = true;
-    // }
-    //
-    // if (isError) {
-    // throw new BadRequestException(batchErrors);
-    // }
-    // }
+    @Override
+    @RequestMapping(value = "/{storyId}/title", method = RequestMethod.PUT)
+    public ResponseEntity<StoryResponse> changeTitle(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestBody ChangeTitleRequest request) throws SomethingWentWrongException,
+            AuthenticationUnauthorizedException, BadRequestException, UserIsNotLeaderException, StoryNotFoundException, AlreadyPublishedException {
+
+        validateChangeTitleRequest(request);
+        String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
+        
+        return new ResponseEntity<StoryResponse>(storyManager.changeTitle(fbId, storyId, request.getTitle()), HttpStatus.OK);
+    }
+
+    private void validateChangeTitleRequest(ChangeTitleRequest request) throws BadRequestException {
+        boolean isError = false;
+        Map<String, String> batchErrors = new HashMap<String, String>();
+
+        if (!StringUtils.hasText(request.getTitle())) {
+            batchErrors.put("title", "The title must not be null or empty.");
+            isError = true;
+        }
+
+        if (StringUtils.hasText(request.getTitle())) {
+            if (request.getTitle().length() > maxCharsTitle) {
+                batchErrors.put("title", "The length of your title must not exceed " + maxCharsTitle);
+                isError = true;
+            }
+            
+            if (request.getTitle().length() < minCharsTitle) {
+                batchErrors.put("title", "The length of your title must be at least " + minCharsTitle);
+                isError = true;
+            }
+        }
+        
+        if (isError) {
+            throw new BadRequestException(batchErrors);
+        }
+    }
+
     //
     //
     // protected ObjectId convertStoryIdToObjectId(String storyId) throws
@@ -292,6 +300,11 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
         if (StringUtils.hasText(createStoryRequest.getTitle())) {
             if (createStoryRequest.getTitle().length() > maxCharsTitle) {
                 batchErrors.put("title", "The length of your title must not exceed " + maxCharsTitle);
+                isError = true;
+            }
+            
+            if (createStoryRequest.getTitle().length() < minCharsTitle) {
+                batchErrors.put("title", "The length of your title must be at least " + minCharsTitle);
                 isError = true;
             }
         }
