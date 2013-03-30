@@ -3,16 +3,20 @@ package com.nwm.coauthor.service.client;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
+import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
 import com.nwm.coauthor.exception.ConsecutiveEntryBySameMemberException;
 import com.nwm.coauthor.exception.HttpException;
 import com.nwm.coauthor.exception.MoreEntriesLeftException;
+import com.nwm.coauthor.exception.NoTitleForPublishingException;
 import com.nwm.coauthor.exception.NonMemberException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
-import com.nwm.coauthor.exception.UnauthorizedException;
+import com.nwm.coauthor.exception.UnpublishedStoryLikedException;
+import com.nwm.coauthor.exception.UserIsNotLeaderException;
+import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.exception.VersioningException;
 import com.nwm.coauthor.exception.mapping.ExceptionMapperWrapper;
 import com.nwm.coauthor.service.controller.StoryController;
@@ -28,9 +32,9 @@ public class StoryClient extends BaseClient implements StoryController {
     private static final String GET_ENTRIES_ENDPOINT = "/story/%s/entries/%s/clientCharVersion/%s";
     private static final String NEW_ENTRY_ENDPOINT = "/story/%s/entry";
     private static final String GET_MY_STORY_ENDPOINT = "/story/%s/mine";
+    private static final String LIKE_ENDPOINT = "/story/%s/like";
+    private static final String PUBLISH_ENDPOINT = "/story/%s/publish";
 
-    // private static final String LIKE_ENDPOINT = "/private/like";
-    // private static final String PUBLISH_ENDPOINT = "/publish";
     // private static final String CHANGE_TITLE_ENDPOINT = "/title";
     // private static final String COMMENT_ENDPOINT = "/comment";
 
@@ -93,9 +97,9 @@ public class StoryClient extends BaseClient implements StoryController {
                 throw new MoreEntriesLeftException(emw.getBaseException());
             } else if (emw.getClazz() == VersioningException.class) {
                 throw new VersioningException();
-            } else if(emw.getClazz() == StoryNotFoundException.class){
+            } else if (emw.getClazz() == StoryNotFoundException.class) {
                 throw new StoryNotFoundException();
-            } else{
+            } else {
                 throw new SomethingWentWrongException();
             }
         }
@@ -119,16 +123,17 @@ public class StoryClient extends BaseClient implements StoryController {
                 throw new NonMemberException();
             } else if (emw.getClazz() == ConsecutiveEntryBySameMemberException.class) {
                 throw new ConsecutiveEntryBySameMemberException();
-            } else if(emw.getClazz() == StoryNotFoundException.class){
+            } else if (emw.getClazz() == StoryNotFoundException.class) {
                 throw new StoryNotFoundException();
-            }else{
+            } else {
                 throw new SomethingWentWrongException();
             }
         }
     }
 
     @Override
-    public ResponseEntity<StoryResponse> getMyStory(String coToken, String storyId) throws AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, SomethingWentWrongException, NonMemberException {
+    public ResponseEntity<StoryResponse> getMyStory(String coToken, String storyId) throws AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException,
+            SomethingWentWrongException, NonMemberException {
         try {
             return doExchange(GET_MY_STORY_ENDPOINT, HttpMethod.GET, httpEntity(null, coToken), StoryResponse.class, storyId);
         } catch (HttpException e) {
@@ -147,7 +152,7 @@ public class StoryClient extends BaseClient implements StoryController {
             }
         }
     }
-    
+
     //
     // @Override
     // public ResponseEntity<AddEntryResponse> addEntry(String coToken,
@@ -177,62 +182,55 @@ public class StoryClient extends BaseClient implements StoryController {
     // }
     //
     //
-    // @Override
-    // public void likeStory(String coToken, String storyId) throws
-    // BadRequestException, AuthenticationUnauthorizedException,
-    // AlreadyLikedException, StoryNotFoundException,
-    // SomethingWentWrongException, UserLikingOwnStoryException,
-    // UnpublishedStoryLikedException{
-    // try{
-    // restTemplate.exchange(urlStoryResolver("/" + storyId + LIKE_ENDPOINT),
-    // HttpMethod.POST, httpEntity(null, coToken), String.class);
-    // }catch(HttpStatusCodeException e){
-    // ExceptionMapperWrapper emw = convertToExceptionMapper(e);
-    //
-    // if(emw.getClazz() == AuthenticationUnauthorizedException.class){
-    // throw new AuthenticationUnauthorizedException();
-    // } else if(emw.getClazz() == BadRequestException.class){
-    // throw new BadRequestException(emw.getBaseException());
-    // } else if(emw.getClazz() == UserLikingOwnStoryException.class){
-    // throw new UserLikingOwnStoryException();
-    // } else if(emw.getClazz() == AlreadyLikedException.class){
-    // throw new AlreadyLikedException();
-    // } else if(emw.getClazz() == StoryNotFoundException.class){
-    // throw new StoryNotFoundException();
-    // } else if(emw.getClazz() == UnpublishedStoryLikedException.class){
-    // throw new UnpublishedStoryLikedException();
-    // } else{
-    // throw new SomethingWentWrongException();
-    // }
-    // }
-    // }
-    //
-    // @Override
-    // public void publishStory(String coToken, String storyId) throws
-    // BadRequestException, AuthenticationUnauthorizedException,
-    // StoryNotFoundException, UserIsNotLeaderException,
-    // NoTitleForPublishingException, SomethingWentWrongException{
-    // try{
-    // restTemplate.exchange(urlStoryResolver("/" + storyId + PUBLISH_ENDPOINT),
-    // HttpMethod.POST, httpEntity(null, coToken), String.class);
-    // }catch(HttpStatusCodeException e){
-    // ExceptionMapperWrapper emw = convertToExceptionMapper(e);
-    //
-    // if(emw.getClazz() == AuthenticationUnauthorizedException.class){
-    // throw new AuthenticationUnauthorizedException();
-    // } else if(emw.getClazz() == BadRequestException.class){
-    // throw new BadRequestException(emw.getBaseException());
-    // } else if(emw.getClazz() == UserIsNotLeaderException.class){
-    // throw new UserIsNotLeaderException();
-    // } else if(emw.getClazz() == NoTitleForPublishingException.class){
-    // throw new NoTitleForPublishingException();
-    // } else if(emw.getClazz() == StoryNotFoundException.class){
-    // throw new StoryNotFoundException();
-    // } else{
-    // throw new SomethingWentWrongException();
-    // }
-    // }
-    // }
+    @Override
+    public void likeStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException, SomethingWentWrongException,
+            UserLikingOwnStoryException, UnpublishedStoryLikedException {
+        try {
+            doExchange(LIKE_ENDPOINT, HttpMethod.POST, httpEntity(null, coToken), null, storyId);
+        } catch (HttpException e) {
+            ExceptionMapperWrapper emw = convertToExceptionMapper(e.getHttpStatusCodeException());
+
+            if (emw.getClazz() == AuthenticationUnauthorizedException.class) {
+                throw new AuthenticationUnauthorizedException();
+            } else if (emw.getClazz() == BadRequestException.class) {
+                throw new BadRequestException(emw.getBaseException());
+            } else if (emw.getClazz() == UserLikingOwnStoryException.class) {
+                throw new UserLikingOwnStoryException();
+            } else if (emw.getClazz() == AlreadyLikedException.class) {
+                throw new AlreadyLikedException();
+            } else if (emw.getClazz() == StoryNotFoundException.class) {
+                throw new StoryNotFoundException();
+            } else if (emw.getClazz() == UnpublishedStoryLikedException.class) {
+                throw new UnpublishedStoryLikedException();
+            } else {
+                throw new SomethingWentWrongException();
+            }
+        }
+    }
+
+    @Override
+    public void publishStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, UserIsNotLeaderException,
+            NoTitleForPublishingException, SomethingWentWrongException {
+        try {
+            doExchange(PUBLISH_ENDPOINT, HttpMethod.POST, httpEntity(null, coToken), null, storyId);
+        } catch (HttpException e) {
+            ExceptionMapperWrapper emw = convertToExceptionMapper(e.getHttpStatusCodeException());
+
+            if (emw.getClazz() == AuthenticationUnauthorizedException.class) {
+                throw new AuthenticationUnauthorizedException();
+            } else if (emw.getClazz() == BadRequestException.class) {
+                throw new BadRequestException(emw.getBaseException());
+            } else if (emw.getClazz() == UserIsNotLeaderException.class) {
+                throw new UserIsNotLeaderException();
+            } else if (emw.getClazz() == NoTitleForPublishingException.class) {
+                throw new NoTitleForPublishingException();
+            } else if (emw.getClazz() == StoryNotFoundException.class) {
+                throw new StoryNotFoundException();
+            } else {
+                throw new SomethingWentWrongException();
+            }
+        }
+    }
     //
     // @Override
     // public void changeStoryTitle(String coToken, String storyId,

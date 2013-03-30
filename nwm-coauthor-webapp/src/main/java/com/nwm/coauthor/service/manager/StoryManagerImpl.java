@@ -5,14 +5,19 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.mongodb.WriteResult;
+import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
 import com.nwm.coauthor.exception.ConsecutiveEntryBySameMemberException;
 import com.nwm.coauthor.exception.MoreEntriesLeftException;
+import com.nwm.coauthor.exception.NoTitleForPublishingException;
 import com.nwm.coauthor.exception.NonMemberException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
-import com.nwm.coauthor.exception.UnauthorizedException;
+import com.nwm.coauthor.exception.UnpublishedStoryLikedException;
+import com.nwm.coauthor.exception.UserIsNotLeaderException;
+import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.exception.VersioningException;
 import com.nwm.coauthor.service.dao.CommentDAOImpl;
 import com.nwm.coauthor.service.dao.EntryDAOImpl;
@@ -91,8 +96,8 @@ public class StoryManagerImpl {
         }
 
         return myStory;
-    }    
-    
+    }
+
     private Integer calculateNumCharsFromEntries(List<EntryResponse> entries) {
         int numChars = 0;
 
@@ -205,72 +210,64 @@ public class StoryManagerImpl {
     // return request.getEntry().getEntryId();
     // }
     //
-    // public void likeStory(String fbId, ObjectId storyId) throws
-    // AlreadyLikedException, StoryNotFoundException,
-    // UserLikingOwnStoryException, UnpublishedStoryLikedException {
-    // checkLikeStoryRequirements(fbId, storyId);
-    // checkLikeUserRequirements(fbId, storyId);
-    // persistLikeStory(fbId, storyId);
-    // }
-    //
-    // private void persistLikeStory(String fbId, ObjectId storyId) {
-    // userDAO.likeStory(fbId, storyId);
-    // storyDAO.likeStory(storyId);
-    // }
-    //
-    // private void checkLikeUserRequirements(String fbId, ObjectId storyId)
-    // throws AlreadyLikedException {
-    // boolean isStoryLiked = userDAO.isStoryLiked(fbId, storyId);
-    //
-    // if (isStoryLiked) {
-    // throw new AlreadyLikedException();
-    // }
-    // }
-    //
-    // private void checkLikeStoryRequirements(String fbId, ObjectId storyId)
-    // throws StoryNotFoundException, UserLikingOwnStoryException,
-    // UnpublishedStoryLikedException {
-    // PrivateStoryResponse privateStory = storyDAO.getPrivateStory(storyId);
-    //
-    // if (privateStory == null) {
-    // throw new StoryNotFoundException();
-    // }
-    //
-    // if (privateStory.getLeaderFbId().equals(fbId)) {
-    // throw new UserLikingOwnStoryException();
-    // }
-    //
-    // if (privateStory.getFbFriends().contains(fbId)) {
-    // throw new UserLikingOwnStoryException();
-    // }
-    //
-    // if (privateStory.getIsPublished() == null ||
-    // !privateStory.getIsPublished()){
-    // throw new UnpublishedStoryLikedException();
-    // }
-    // }
-    //
-    // public void publishStory(String fbId, ObjectId storyId) throws
-    // StoryNotFoundException, UserIsNotLeaderException,
-    // NoTitleForPublishingException {
-    // WriteResult result = storyDAO.publishStory(fbId, storyId);
-    //
-    // if(result.getN() == 0){
-    // PrivateStoryResponse privateStory = storyDAO.getPrivateStory(storyId);
-    //
-    // if(privateStory == null){
-    // throw new StoryNotFoundException();
-    // }
-    //
-    // if(!privateStory.getLeaderFbId().equals(fbId)){
-    // throw new UserIsNotLeaderException();
-    // }
-    //
-    // if(!StringUtils.hasText(privateStory.getTitle())){
-    // throw new NoTitleForPublishingException();
-    // }
-    // }
-    // }
+    public void likeStory(String fbId, String storyId) throws AlreadyLikedException, StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException {
+        checkLikeStoryRequirements(fbId, storyId);
+        checkLikeUserRequirements(fbId, storyId);
+        persistLikeStory(fbId, storyId);
+    }
+
+    private void persistLikeStory(String fbId, String storyId) {
+        userDAO.likeStory(fbId, storyId);
+        storyDAO.likeStory(storyId);
+    }
+
+    private void checkLikeUserRequirements(String fbId, String storyId) throws AlreadyLikedException {
+        boolean isStoryLiked = userDAO.isStoryLiked(fbId, storyId);
+
+        if (isStoryLiked) {
+            throw new AlreadyLikedException();
+        }
+    }
+
+    private void checkLikeStoryRequirements(String fbId, String storyId) throws StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException {
+        StoryResponse privateStory = storyDAO.getStory(storyId);
+
+        if (privateStory == null) {
+            throw new StoryNotFoundException();
+        }
+
+        if (privateStory.getLeaderFbId().equals(fbId)) {
+            throw new UserLikingOwnStoryException();
+        }
+
+        if (privateStory.getFbFriends().contains(fbId)) {
+            throw new UserLikingOwnStoryException();
+        }
+
+        if (privateStory.getIsPublished() == null || !privateStory.getIsPublished()) {
+            throw new UnpublishedStoryLikedException();
+        }
+    }
+
+    public void publishStory(String fbId, String storyId) throws StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException {
+        WriteResult result = storyDAO.publishStory(fbId, storyId);
+
+        if (result.getN() == 0) {
+            StoryResponse privateStory = storyDAO.getStory(storyId);
+
+            if (privateStory == null) {
+                throw new StoryNotFoundException();
+            }
+
+            if (!privateStory.getLeaderFbId().equals(fbId)) {
+                throw new UserIsNotLeaderException();
+            }
+
+            if (!StringUtils.hasText(privateStory.getTitle())) {
+                throw new NoTitleForPublishingException();
+            }
+        }
+    }
     //
     // public void changeStoryTitle(String fbId, ObjectId storyId, String title)
     // throws StoryNotFoundException, UserIsNotLeaderException,

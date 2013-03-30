@@ -62,7 +62,17 @@ public class StoryDAOImpl {
         
         return mongoTemplate.updateFirst(q, u, StoryModel.class);
     }
-	
+
+    public void likeStory(String storyId) {
+        Query query = new Query();
+        query.addCriteria(where("storyId").is(storyId));
+
+        Update update = new Update();
+        update.inc("likes", 1);
+
+        mongoTemplate.updateFirst(query, update, StoryModel.class);
+    }
+    
 //    public List<PrivateStoryResponse> getStoriesByFbId(String fbId) {
 //        Criteria c = new Criteria();
 //        c.orOperator(where("leaderFbId").is(fbId), where("fbFriends").is(fbId));
@@ -98,27 +108,19 @@ public class StoryDAOImpl {
 //        return mongoTemplate.findOne(q, PrivateStoryResponse.class, "storyModel");
 //    }
 //
-//    public void likeStory(ObjectId storyId) {
-//        Query query = new Query();
-//        query.addCriteria(where("_id").is(storyId));
+
 //
-//        Update update = new Update();
-//        update.inc("likes", 1);
-//
-//        mongoTemplate.updateFirst(query, update, StoryModel.class);
-//    }
-//
-//    public WriteResult publishStory(String fbId, ObjectId storyId) {
-//        Criteria criteria = new Criteria();
-//        criteria.andOperator(where("leaderFbId").is(fbId), where("_id").is(storyId), where("title").ne(null), where("title").ne(""));
-//        
-//        Query query = new Query(criteria);
-//        
-//        Update update = new Update();
-//        update.set("isPublished", true);
-//        
-//        return mongoTemplate.updateFirst(query, update, StoryModel.class);
-//    }
+    public WriteResult publishStory(String fbId, String storyId) {
+        Criteria criteria = new Criteria();
+        criteria.andOperator(where("leaderFbId").is(fbId), where("storyId").is(storyId), where("title").ne(null), where("title").ne(""));
+        
+        Query query = new Query(criteria);
+        
+        Update update = new Update();
+        update.set("isPublished", true);
+        
+        return mongoTemplate.updateFirst(query, update, StoryModel.class);
+    }
 //
 //    public WriteResult changeStoryTitle(String fbId, ObjectId storyId, String title) {
 //        Criteria criteria = new Criteria();

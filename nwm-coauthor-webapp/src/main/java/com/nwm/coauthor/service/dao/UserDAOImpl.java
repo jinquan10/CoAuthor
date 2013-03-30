@@ -21,7 +21,7 @@ public class UserDAOImpl {
     @Qualifier("mongoTemplate")
     private MongoTemplate mongoTemplate;
 
-    public boolean isStoryLiked(String fbId, ObjectId storyId) {
+    public boolean isStoryLiked(String fbId, String storyId) {
         Criteria c = new Criteria();
         c.andOperator(where("storyLikes").is(storyId), where("fbId").is(fbId));
 
@@ -33,7 +33,7 @@ public class UserDAOImpl {
         return likeCount > 0 ? true : false;
     }
 
-    public void likeStory(String fbId, ObjectId storyId) {
+    public void likeStory(String fbId, String storyId) {
         Query q = new Query();
         q.addCriteria(where("fbId").is(fbId));
 

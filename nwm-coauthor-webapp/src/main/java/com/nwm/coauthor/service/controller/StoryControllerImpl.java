@@ -13,17 +13,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
 import com.nwm.coauthor.exception.ConsecutiveEntryBySameMemberException;
 import com.nwm.coauthor.exception.MoreEntriesLeftException;
+import com.nwm.coauthor.exception.NoTitleForPublishingException;
 import com.nwm.coauthor.exception.NonMemberException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
-import com.nwm.coauthor.exception.UnauthorizedException;
+import com.nwm.coauthor.exception.UnpublishedStoryLikedException;
+import com.nwm.coauthor.exception.UserIsNotLeaderException;
+import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.exception.VersioningException;
 import com.nwm.coauthor.service.manager.AuthenticationManagerImpl;
 import com.nwm.coauthor.service.manager.StoryManagerImpl;
@@ -96,7 +100,8 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 
     @Override
     @RequestMapping(value = "/{storyId}/mine", method = RequestMethod.GET)
-    public ResponseEntity<StoryResponse> getMyStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, NonMemberException{
+    public ResponseEntity<StoryResponse> getMyStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException,
+            StoryNotFoundException, NonMemberException {
         validateRequestStoryId(storyId);
 
         String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
@@ -162,56 +167,31 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
             throw new BadRequestException(batchErrors);
         }
     }
-    
-    // @Override
-    // @RequestMapping(value = "/entry", method = RequestMethod.POST)
-    // public ResponseEntity<AddEntryResponse>
-    // addEntry(@RequestHeader("Authorization") String coToken, @RequestBody
-    // EntryRequest entry) throws SomethingWentWrongException,
-    // AuthenticationUnauthorizedException, BadRequestException,
-    // AddEntryException, StoryNotFoundException, AddEntryVersionException {
-    // validateAddEntryRequest(entry);
-    //
-    // String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
-    // String entryId = storyManager.addEntry(fbId, new AddEntryModel(entry,
-    // fbId, convertStoryIdToObjectId(entry.getStoryId())));
-    //
-    // return new ResponseEntity<AddEntryResponse>(new
-    // AddEntryResponse(entryId), HttpStatus.CREATED);
-    // }
-    //
 
-    //
-    // @Override
-    // @RequestMapping(value = "/{storyId}/private/like", method =
-    // RequestMethod.POST)
-    // @ResponseStatus(HttpStatus.NO_CONTENT)
-    // public void likeStory(@RequestHeader("Authorization") String coToken,
-    // @PathVariable String storyId) throws BadRequestException,
-    // AuthenticationUnauthorizedException, AlreadyLikedException,
-    // StoryNotFoundException, UserLikingOwnStoryException,
-    // UnpublishedStoryLikedException {
-    // validateRequestStoryId(storyId);
-    //
-    // String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
-    //
-    // storyManager.likeStory(fbId, convertStoryIdToObjectId(storyId));
-    // }
-    //
-    // @Override
-    // @RequestMapping(value = "/{storyId}/publish", method =
-    // RequestMethod.POST)
-    // @ResponseStatus(HttpStatus.NO_CONTENT)
-    // public void publishStory(@RequestHeader("Authorization") String coToken,
-    // @PathVariable String storyId) throws BadRequestException,
-    // AuthenticationUnauthorizedException, StoryNotFoundException,
-    // UserIsNotLeaderException, NoTitleForPublishingException {
-    // validateRequestStoryId(storyId);
-    //
-    // String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
-    //
-    // storyManager.publishStory(fbId, convertStoryIdToObjectId(storyId));
-    // }
+    @Override
+    @RequestMapping(value = "/{storyId}/like", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void likeStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException,
+            StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException {
+        validateRequestStoryId(storyId);
+
+        String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
+
+        storyManager.likeStory(fbId, storyId);
+    }
+
+    @Override
+    @RequestMapping(value = "/{storyId}/publish", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void publishStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException,
+            UserIsNotLeaderException, NoTitleForPublishingException {
+        validateRequestStoryId(storyId);
+
+        String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
+
+        storyManager.publishStory(fbId, storyId);
+    }
+
     //
     // @Override
     // @RequestMapping(value = "/{storyId}/title", method = RequestMethod.PUT)
