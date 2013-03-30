@@ -27,7 +27,7 @@ public class EntryDAOImpl {
 		c.andOperator(where("storyId").is(storyId), where("currCharCount").lte(endIndex), where("currCharCount").gt(beginIndex));
 
 		query.addCriteria(c);
-		query.fields().exclude("storyId").exclude("currCharCount");
+		query.fields().exclude("storyId");
 		
 		return mongoTemplate.find(query, EntryResponse.class, "entryModel");
 	}

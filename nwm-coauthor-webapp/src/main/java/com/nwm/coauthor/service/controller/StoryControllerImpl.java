@@ -23,6 +23,7 @@ import com.nwm.coauthor.exception.MoreEntriesLeftException;
 import com.nwm.coauthor.exception.NonMemberException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
+import com.nwm.coauthor.exception.UnauthorizedException;
 import com.nwm.coauthor.exception.VersioningException;
 import com.nwm.coauthor.service.manager.AuthenticationManagerImpl;
 import com.nwm.coauthor.service.manager.StoryManagerImpl;
@@ -71,7 +72,8 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     @Override
     @RequestMapping(value = "/{storyId}/entries/{beginIndex}/clientCharVersion/{clientCharVersion}", method = RequestMethod.GET)
     public ResponseEntity<EntriesResponse> getEntries(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @PathVariable Integer beginIndex,
-            @PathVariable Integer clientCharVersion) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException, StoryNotFoundException, VersioningException, MoreEntriesLeftException {
+            @PathVariable Integer clientCharVersion) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException, StoryNotFoundException, VersioningException,
+            MoreEntriesLeftException {
         validateGetEntries(beginIndex, clientCharVersion);
 
         String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
@@ -90,6 +92,17 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 
         StoryResponse response = storyManager.newEntry(fbId, storyId, newEntryRequest.getEntry(), newEntryRequest.getCharCountForVersioning());
         return new ResponseEntity<StoryResponse>(response, HttpStatus.CREATED);
+    }
+
+    @Override
+    @RequestMapping(value = "/{storyId}/mine", method = RequestMethod.GET)
+    public ResponseEntity<StoryResponse> getMyStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, NonMemberException{
+        validateRequestStoryId(storyId);
+
+        String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
+        StoryResponse response = storyManager.getMyStory(fbId, storyId);
+
+        return new ResponseEntity<StoryResponse>(response, HttpStatus.OK);
     }
 
     private void validateNewEntry(NewEntryRequest newEntryRequest) throws BadRequestException {
@@ -136,6 +149,20 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
         }
     }
 
+    protected void validateRequestStoryId(String storyId) throws BadRequestException {
+        boolean isError = false;
+        Map<String, String> batchErrors = new HashMap<String, String>();
+
+        if (!StringUtils.hasText(storyId)) {
+            batchErrors.put("storyId", "The storyId must not be null or empty.");
+            isError = true;
+        }
+
+        if (isError) {
+            throw new BadRequestException(batchErrors);
+        }
+    }
+    
     // @Override
     // @RequestMapping(value = "/entry", method = RequestMethod.POST)
     // public ResponseEntity<AddEntryResponse>
@@ -153,22 +180,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     // AddEntryResponse(entryId), HttpStatus.CREATED);
     // }
     //
-    // @Override
-    // @RequestMapping(value = "/{storyId}/private", method = RequestMethod.GET)
-    // public ResponseEntity<PrivateStoryResponse>
-    // getStoryForEdit(@RequestHeader("Authorization") String coToken,
-    // @PathVariable String storyId) throws SomethingWentWrongException,
-    // BadRequestException,
-    // AuthenticationUnauthorizedException, StoryNotFoundException,
-    // UnauthorizedException {
-    // validateRequestStoryId(storyId);
-    //
-    // String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
-    // PrivateStoryResponse response = storyManager.getStoryForEdit(fbId,
-    // convertStoryIdToObjectId(storyId));
-    //
-    // return new ResponseEntity<PrivateStoryResponse>(response, HttpStatus.OK);
-    // }
+
     //
     // @Override
     // @RequestMapping(value = "/{storyId}/private/like", method =
@@ -232,20 +244,6 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     // }
     // }
     //
-    // protected void validateRequestStoryId(String storyId) throws
-    // BadRequestException {
-    // boolean isError = false;
-    // Map<String, String> batchErrors = new HashMap<String, String>();
-    //
-    // if (!StringUtils.hasText(storyId)) {
-    // batchErrors.put("storyId", "The storyId must not be null or empty.");
-    // isError = true;
-    // }
-    //
-    // if (isError) {
-    // throw new BadRequestException(batchErrors);
-    // }
-    // }
     //
     // protected ObjectId convertStoryIdToObjectId(String storyId) throws
     // BadRequestException {

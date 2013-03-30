@@ -12,6 +12,7 @@ import com.nwm.coauthor.exception.ConsecutiveEntryBySameMemberException;
 import com.nwm.coauthor.exception.MoreEntriesLeftException;
 import com.nwm.coauthor.exception.NonMemberException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
+import com.nwm.coauthor.exception.UnauthorizedException;
 import com.nwm.coauthor.exception.VersioningException;
 import com.nwm.coauthor.service.dao.CommentDAOImpl;
 import com.nwm.coauthor.service.dao.EntryDAOImpl;
@@ -41,7 +42,8 @@ public class StoryManagerImpl {
 
     public StoryResponse createStory(String fbId, NewStoryRequest request) {
         StoryModel newStoryModel = StoryModel.createStoryModelFromRequest(fbId, request);
-        EntryModel newEntryModel = EntryModel.newEntryModel(UpdateStoryForNewEntryModel.init(newStoryModel.getStoryId(), newStoryModel.getLastEntry(), newStoryModel.getLastFriendWithEntry(), newStoryModel.getCurrEntryCharCount()));
+        EntryModel newEntryModel = EntryModel.newEntryModel(UpdateStoryForNewEntryModel.init(newStoryModel.getStoryId(), newStoryModel.getLastEntry(), newStoryModel.getLastFriendWithEntry(),
+                newStoryModel.getCurrEntryCharCount()));
 
         storyDAO.createStory(newStoryModel);
         entryDAO.addEntry(newEntryModel);
@@ -56,17 +58,18 @@ public class StoryManagerImpl {
         return StoriesResponse.wrapStoryCovers(storyDAO.getMyStories(fbId));
     }
 
-    public EntriesResponse getEntries(String fbId, String storyId, Integer beginIndex, Integer currChar) throws CannotGetEntriesException, StoryNotFoundException, MoreEntriesLeftException, VersioningException {
+    public EntriesResponse getEntries(String fbId, String storyId, Integer beginIndex, Integer currChar) throws CannotGetEntriesException, StoryNotFoundException, MoreEntriesLeftException,
+            VersioningException {
         if (canGetEntries(fbId, storyId)) {
             Integer totalChars = getTotalCharsForStory(storyId, currChar);
-            
+
             int endIndex = beginIndex + numCharToGet;
             EntriesResponse response = getEntries(storyId, beginIndex, endIndex);
-            
-            if(endIndex < totalChars){
+
+            if (endIndex < totalChars) {
                 response.setNewBeginIndex(beginIndex + calculateNumCharsFromEntries(response.getEntries()));
-                throw new MoreEntriesLeftException(response); 
-            }else{
+                throw new MoreEntriesLeftException(response);
+            } else {
                 return response;
             }
         } else {
@@ -74,20 +77,36 @@ public class StoryManagerImpl {
         }
     }
 
+    public StoryResponse getMyStory(String fbId, String storyId) throws StoryNotFoundException, NonMemberException {
+        StoryResponse myStory = storyDAO.getStory(storyId);
+
+        if (myStory == null) {
+            throw new StoryNotFoundException();
+        }
+
+        if (!myStory.getLeaderFbId().equals(fbId)) {
+            if (!myStory.getFbFriends().contains(fbId)) {
+                throw new NonMemberException();
+            }
+        }
+
+        return myStory;
+    }    
+    
     private Integer calculateNumCharsFromEntries(List<EntryResponse> entries) {
         int numChars = 0;
-        
-        for(int i = 0; i < entries.size(); i++){
+
+        for (int i = 0; i < entries.size(); i++) {
             numChars += entries.get(i).getEntry().length();
         }
-            
+
         return numChars;
     }
 
     private Integer getTotalCharsForStory(String storyId, Integer currChar) throws VersioningException {
         Integer totalChars = storyDAO.getTotalChars(storyId);
-        
-        if(!totalChars.equals(currChar)){
+
+        if (!totalChars.equals(currChar)) {
             throw new VersioningException();
         }
         return totalChars;
@@ -126,7 +145,7 @@ public class StoryManagerImpl {
     public StoryResponse newEntry(String fbId, String storyId, String entry, Integer charCountForVersioning) throws VersioningException, StoryNotFoundException, NonMemberException,
             ConsecutiveEntryBySameMemberException {
         StoryResponse response = parseAddEntryExceptions(fbId, storyId, charCountForVersioning);
-        UpdateStoryForNewEntryModel storyUpdateModel = UpdateStoryForNewEntryModel.init(storyId, entry, fbId, response.getCurrEntryCharCount() + entry.length()); 
+        UpdateStoryForNewEntryModel storyUpdateModel = UpdateStoryForNewEntryModel.init(storyId, entry, fbId, response.getCurrEntryCharCount() + entry.length());
         storyDAO.updateStoryForAddingEntry(storyUpdateModel);
         entryDAO.addEntry(EntryModel.newEntryModel(storyUpdateModel));
 
@@ -184,23 +203,6 @@ public class StoryManagerImpl {
     // }
     //
     // return request.getEntry().getEntryId();
-    // }
-
-    // public PrivateStoryResponse getStoryForEdit(String fbId, ObjectId
-    // storyId) throws StoryNotFoundException, UnauthorizedException {
-    // PrivateStoryResponse privateStory = storyDAO.getPrivateStory(storyId);
-    //
-    // if (privateStory == null) {
-    // throw new StoryNotFoundException();
-    // }
-    //
-    // if (!privateStory.getLeaderFbId().equals(fbId)) {
-    // if (!privateStory.getFbFriends().contains(fbId)) {
-    // throw new UnauthorizedException();
-    // }
-    // }
-    //
-    // return privateStory;
     // }
     //
     // public void likeStory(String fbId, ObjectId storyId) throws

@@ -1,7 +1,6 @@
 package com.nwm.coauthor.service.endpoint;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
@@ -72,6 +71,38 @@ public class NewEntryTest extends BaseTest {
 
         assertEquals(calculatedChar, story.getCurrEntryCharCount());
         assertEquals(totalEntries, entries.size());
+    }
+
+    @Test
+    public void newEntriesReturnedInTheRightOrder() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, VersioningException, StoryNotFoundException,
+            NonMemberException, ConsecutiveEntryBySameMemberException, CannotGetEntriesException {
+        UserModel leader = UserBuilder.createUser();
+
+        int numCharsPerEntry = 194;
+        int numEntries = 124;
+        int totalEntries = numEntries + 1;
+
+        StoryResponse story = insertATonOfEntries(leader, numCharsPerEntry, numEntries, totalEntries);
+
+        List<EntryResponse> entries = getATonOfEntries(leader, story, 0);
+
+        assertInTheRightOrder(entries);
+        Integer calculatedChar = calculateNumCharsFromEntries(entries);
+
+        assertEquals(calculatedChar, story.getCurrEntryCharCount());
+        assertEquals(totalEntries, entries.size());
+    }    
+    
+    private void assertInTheRightOrder(List<EntryResponse> entries) {
+        int charCount = 0;
+        
+        for(EntryResponse entry : entries){
+            if(entry.getCurrCharCount() < charCount){
+                fail();
+            }else{
+                charCount = entry.getCurrCharCount();
+            }
+        }
     }
 
     @Test(expected = MoreEntriesLeftException.class)
@@ -234,7 +265,7 @@ public class NewEntryTest extends BaseTest {
     }
 
     private List<EntryResponse> getATonOfEntries(UserModel leader, StoryResponse story, Integer beginIndex) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException,
-            StoryNotFoundException, VersioningException {
+            StoryNotFoundException, VersioningException, SomethingWentWrongException {
 
         ResponseEntity<EntriesResponse> entriesResponse = null;
         try {
