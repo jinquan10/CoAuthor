@@ -36,6 +36,7 @@ import com.nwm.coauthor.service.resource.request.ChangeTitleRequest;
 import com.nwm.coauthor.service.resource.request.NewEntryRequest;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
+import com.nwm.coauthor.service.resource.response.LikeResponse;
 import com.nwm.coauthor.service.resource.response.StoriesResponse;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
@@ -174,19 +175,19 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     @Override
     @RequestMapping(value = "/{storyId}/like", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void likeStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException,
-            StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException {
+    public ResponseEntity<LikeResponse> likeStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException,
+            StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException, SomethingWentWrongException {
         validateRequestStoryId(storyId);
 
         String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
 
-        storyManager.likeStory(fbId, storyId);
+        return new ResponseEntity<LikeResponse>(storyManager.likeStory(fbId, storyId), HttpStatus.OK);
     }
 
     @Override
     @RequestMapping(value = "/{storyId}/publish", method = RequestMethod.POST)
     public ResponseEntity<StoryResponse> publishStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException,
-            UserIsNotLeaderException, NoTitleForPublishingException {
+            UserIsNotLeaderException, NoTitleForPublishingException, SomethingWentWrongException {
         validateRequestStoryId(storyId);
 
         String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);

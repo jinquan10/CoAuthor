@@ -10,6 +10,7 @@
 	<properties>
 		<jacksonJson>1.9.11</jacksonJson>
 		<testParallelMode>methods</testParallelMode>
+		<testThreadCount>3</testThreadCount>
 	</properties>
 
 	<dependencies>
@@ -59,8 +60,8 @@
 					<version>2.13</version>
 					<configuration>
 						<parallel>${testParallelMode}</parallel>
-						<threadCount>3</threadCount>
-
+						<threadCount>${testThreadCount}</threadCount>
+						<perCoreThreadCount>false</perCoreThreadCount>
 					</configuration>
 				</plugin>
 			</plugins>

@@ -60,7 +60,7 @@ public class NewEntryTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
 
         int numCharsPerEntry = 794;
-        int numEntries = 324;
+        int numEntries = 124;
         int totalEntries = numEntries + 1;
 
         StoryResponse story = insertATonOfEntries(leader, numCharsPerEntry, numEntries, totalEntries);
@@ -111,7 +111,7 @@ public class NewEntryTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
 
         int numCharsPerEntry = 1000;
-        int numEntries = 543;
+        int numEntries = 143;
         int totalEntries = numEntries + 1;
 
         StoryResponse story = insertATonOfEntries(leader, numCharsPerEntry, numEntries, totalEntries);

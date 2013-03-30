@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
+import com.mongodb.WriteResult;
 import com.nwm.coauthor.service.model.UserModel;
 
 @Component
@@ -33,13 +34,13 @@ public class UserDAOImpl {
         return likeCount > 0 ? true : false;
     }
 
-    public void likeStory(String fbId, String storyId) {
+    public WriteResult likeStory(String fbId, String storyId) {
         Query q = new Query();
         q.addCriteria(where("fbId").is(fbId));
 
         Update update = new Update();
         update.push("storyLikes", storyId);
 
-        mongoTemplate.findAndModify(q, update, UserModel.class);
+        return mongoTemplate.updateFirst(q, update, UserModel.class);
     }
 }

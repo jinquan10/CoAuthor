@@ -20,6 +20,7 @@ import com.nwm.coauthor.service.builder.NewStoryBuilder;
 import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
+import com.nwm.coauthor.service.resource.response.LikeResponse;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 public class LikeTest extends BaseTest {
@@ -33,9 +34,53 @@ public class LikeTest extends BaseTest {
         ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
 
         storyClient.publishStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
-        storyClient.likeStory(nonMember.getCoToken(), storyResponse.getBody().getStoryId());
+        ResponseEntity<LikeResponse> likeResponse = storyClient.likeStory(nonMember.getCoToken(), storyResponse.getBody().getStoryId());
+        
+        LikeResponse liked = likeResponse.getBody();
+        assertEquals(new Long(1), liked.getLikes());
     }
 
+    @Test
+    public void nonMemberIncrementsLikes() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException,
+            AlreadyLikedException, UserLikingOwnStoryException, UnpublishedStoryLikedException, UserIsNotLeaderException, NoTitleForPublishingException, NonMemberException {
+        UserModel leader = UserBuilder.createUser();
+        UserModel nonMember = UserBuilder.createUser();
+
+        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().title("title").build());
+
+        StoryResponse story = storyResponse.getBody();
+
+        storyClient.publishStory(leader.getCoToken(), story.getStoryId());
+        ResponseEntity<LikeResponse> likeResponse = storyClient.likeStory(nonMember.getCoToken(), story.getStoryId());
+
+        LikeResponse liked = likeResponse.getBody();
+        assertEquals(new Long(1), liked.getLikes());
+        
+        ResponseEntity<StoryResponse> myStoryResponse = storyClient.getMyStory(leader.getCoToken(), story.getStoryId());
+        assertEquals(new Long(1), myStoryResponse.getBody().getLikes());
+    }
+
+    @Test
+    public void memberOfAnotherStoryLikingThisOne() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException,
+            AlreadyLikedException, UserLikingOwnStoryException, UnpublishedStoryLikedException, UserIsNotLeaderException, NoTitleForPublishingException, NonMemberException {
+        UserModel leader = UserBuilder.createUser();
+        UserModel nonMember = UserBuilder.createUser();
+
+        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().title("title").build());
+
+        StoryResponse story = storyResponse.getBody();
+
+        storyClient.publishStory(leader.getCoToken(), story.getStoryId());
+        storyClient.createStory(nonMember.getCoToken(), NewStoryBuilder.init().title("title").build());
+        ResponseEntity<LikeResponse> likeResponse = storyClient.likeStory(nonMember.getCoToken(), story.getStoryId());
+
+        LikeResponse liked = likeResponse.getBody();
+        assertEquals(new Long(1), liked.getLikes());        
+        
+        ResponseEntity<StoryResponse> myStoryResponse = storyClient.getMyStory(leader.getCoToken(), story.getStoryId());
+        assertEquals(new Long(1), myStoryResponse.getBody().getLikes());
+    }
+    
     @Test(expected = UnpublishedStoryLikedException.class)
     public void likeAnUnpublishedStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, AlreadyLikedException, StoryNotFoundException,
             UserLikingOwnStoryException, UnpublishedStoryLikedException {
@@ -69,40 +114,6 @@ public class LikeTest extends BaseTest {
         storyClient.likeStory(member.getCoToken(), createdStory.getBody().getStoryId());
     }
 
-    @Test
-    public void nonMemberIncrementsLikes() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException,
-            AlreadyLikedException, UserLikingOwnStoryException, UnpublishedStoryLikedException, UserIsNotLeaderException, NoTitleForPublishingException, NonMemberException {
-        UserModel leader = UserBuilder.createUser();
-        UserModel nonMember = UserBuilder.createUser();
-
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().title("title").build());
-
-        StoryResponse story = storyResponse.getBody();
-
-        storyClient.publishStory(leader.getCoToken(), story.getStoryId());
-        storyClient.likeStory(nonMember.getCoToken(), story.getStoryId());
-
-        ResponseEntity<StoryResponse> myStoryResponse = storyClient.getMyStory(leader.getCoToken(), story.getStoryId());
-        assertEquals(new Long(1), myStoryResponse.getBody().getLikes());
-    }
-
-    @Test
-    public void memberOfAnotherStoryLikingThisOne() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException,
-            AlreadyLikedException, UserLikingOwnStoryException, UnpublishedStoryLikedException, UserIsNotLeaderException, NoTitleForPublishingException, NonMemberException {
-        UserModel leader = UserBuilder.createUser();
-        UserModel nonMember = UserBuilder.createUser();
-
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().title("title").build());
-
-        StoryResponse story = storyResponse.getBody();
-
-        storyClient.publishStory(leader.getCoToken(), story.getStoryId());
-        storyClient.createStory(nonMember.getCoToken(), NewStoryBuilder.init().title("title").build());
-        storyClient.likeStory(nonMember.getCoToken(), story.getStoryId());
-
-        ResponseEntity<StoryResponse> myStoryResponse = storyClient.getMyStory(leader.getCoToken(), story.getStoryId());
-        assertEquals(new Long(1), myStoryResponse.getBody().getLikes());
-    }
 
     @Test(expected = StoryNotFoundException.class)
     public void nonExistantStory() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException,

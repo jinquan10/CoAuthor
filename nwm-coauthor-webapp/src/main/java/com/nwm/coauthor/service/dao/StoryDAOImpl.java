@@ -16,6 +16,7 @@ import com.mongodb.WriteResult;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.model.TotalCharsModel;
 import com.nwm.coauthor.service.model.UpdateStoryForNewEntryModel;
+import com.nwm.coauthor.service.resource.response.LikeResponse;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 @Component
@@ -63,14 +64,14 @@ public class StoryDAOImpl {
         return mongoTemplate.updateFirst(q, u, StoryModel.class);
     }
 
-    public void likeStory(String storyId) {
+    public LikeResponse likeStory(String storyId) {
         Query query = new Query();
         query.addCriteria(where("storyId").is(storyId));
 
         Update update = new Update();
         update.inc("likes", 1);
 
-        mongoTemplate.updateFirst(query, update, StoryModel.class);
+        return mongoTemplate.findAndModify(query, update, LikeResponse.class, "storyModel");
     }
     
 //    public List<PrivateStoryResponse> getStoriesByFbId(String fbId) {

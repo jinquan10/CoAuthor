@@ -12,4 +12,10 @@ public class SomethingWentWrongException extends BaseException{
 		setDescription("Sorry, something didn't go right.  We are on it!");
 		setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+	public SomethingWentWrongException(String message){
+        setId(ExceptionMapper.SOMETHING_WENT_WRONG_EXCEPTION);
+        setDescription(message);
+        setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

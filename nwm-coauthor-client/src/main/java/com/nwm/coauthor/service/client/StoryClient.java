@@ -25,6 +25,7 @@ import com.nwm.coauthor.service.resource.request.ChangeTitleRequest;
 import com.nwm.coauthor.service.resource.request.NewEntryRequest;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
+import com.nwm.coauthor.service.resource.response.LikeResponse;
 import com.nwm.coauthor.service.resource.response.StoriesResponse;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
@@ -156,10 +157,10 @@ public class StoryClient extends BaseClient implements StoryController {
     }
 
     @Override
-    public void likeStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException, SomethingWentWrongException,
+    public ResponseEntity<LikeResponse> likeStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException, SomethingWentWrongException,
             UserLikingOwnStoryException, UnpublishedStoryLikedException {
         try {
-            doExchange(LIKE_ENDPOINT, HttpMethod.POST, httpEntity(null, coToken), null, storyId);
+            return doExchange(LIKE_ENDPOINT, HttpMethod.POST, httpEntity(null, coToken), LikeResponse.class, storyId);
         } catch (HttpException e) {
             ExceptionMapperWrapper emw = convertToExceptionMapper(e.getHttpStatusCodeException());
 
