@@ -103,7 +103,13 @@ public class ChangeTitleTest extends BaseTest {
         NewStoryRequest storyRequest = NewStoryBuilder.init().title("The one").build();
 
         ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
-        storyClient.changeTitle(leader.getCoToken(), storyResponse.getBody().getStoryId(), ChangeTitleRequest.initWithTitle("title"));
+        StoryResponse createdStory = storyResponse.getBody();
+        
+        ResponseEntity<StoryResponse> titleResponse = storyClient.changeTitle(leader.getCoToken(), storyResponse.getBody().getStoryId(), ChangeTitleRequest.initWithTitle("title"));
+        
+        StoryResponse title = titleResponse.getBody();
+        
+        assertNotEquals(createdStory.getStoryLastUpdated(), title.getStoryLastUpdated());
     }
     
     @Test

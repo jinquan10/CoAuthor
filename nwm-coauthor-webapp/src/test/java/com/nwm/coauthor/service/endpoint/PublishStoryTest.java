@@ -1,6 +1,6 @@
 package com.nwm.coauthor.service.endpoint;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.bson.types.ObjectId;
 import org.junit.Test;
@@ -77,11 +77,14 @@ public class PublishStoryTest extends BaseTest {
 
         NewStoryRequest storyRequest = NewStoryBuilder.init().title("The one").build();
         ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
+        StoryResponse createdStory = storyResponse.getBody();
         
         ResponseEntity<StoryResponse> publishResponse = null;
         try{
             publishResponse = storyClient.publishStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
         }finally{
+            assertNotEquals(createdStory.getStoryLastUpdated(), publishResponse.getBody().getStoryLastUpdated());
+            
             assertEquals(true, publishResponse.getBody().getIsPublished());
             ResponseEntity<StoryResponse> storyForEditResponse = storyClient.getMyStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
             assertEquals(true, storyForEditResponse.getBody().getIsPublished());
