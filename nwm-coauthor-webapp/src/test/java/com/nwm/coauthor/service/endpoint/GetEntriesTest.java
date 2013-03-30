@@ -91,6 +91,6 @@ public class GetEntriesTest extends BaseTest {
         ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
         StoryResponse newStory = storyResponse.getBody();
         
-        storyClient.getEntries(leader.getCoToken(), newStory.getStoryId(), 0, newStory.getCurrEntryCharCount());
+        storyClient.getEntries(leader.getCoToken(), newStory.getStoryId(), 0, 0);
     }
 }

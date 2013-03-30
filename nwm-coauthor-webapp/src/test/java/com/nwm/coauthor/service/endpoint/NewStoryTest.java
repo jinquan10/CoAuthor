@@ -1,5 +1,6 @@
 package com.nwm.coauthor.service.endpoint;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -37,7 +38,7 @@ public class NewStoryTest extends BaseTest {
         assertNotNull(responseBody);
         assertNotNull(responseBody.getStoryId());
         assertNotNull(responseBody.getLeaderFbId());
-        assertNotNull(responseBody.getTitle());
+        assertNull(responseBody.getTitle());
         assertNotNull(responseBody.getIsPublished());
         assertFbFriends(responseBody);
         assertNotNull(responseBody.getLikes());
@@ -47,7 +48,7 @@ public class NewStoryTest extends BaseTest {
         assertNotNull(responseBody.getCurrEntryCharCount());
         
         assertEquals(leader.getFbId(), responseBody.getLeaderFbId());
-        assertTrue(StringUtils.hasText(responseBody.getTitle()));
+        assertFalse(StringUtils.hasText(responseBody.getTitle()));
         assertFalse(responseBody.getIsPublished());
         assertEquals(2, responseBody.getFbFriends().size());
         assertEquals(new Long(0), responseBody.getLikes());
