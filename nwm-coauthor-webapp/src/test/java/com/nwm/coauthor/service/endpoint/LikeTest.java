@@ -83,7 +83,7 @@ public class LikeTest extends BaseTest {
         storyClient.likeStory(nonMember.getCoToken(), story.getStoryId());
 
         ResponseEntity<StoryResponse> myStoryResponse = storyClient.getMyStory(leader.getCoToken(), story.getStoryId());
-        assertEquals(new Integer(1), myStoryResponse.getBody().getLikes());
+        assertEquals(new Long(1), myStoryResponse.getBody().getLikes());
     }
 
     @Test
@@ -101,7 +101,7 @@ public class LikeTest extends BaseTest {
         storyClient.likeStory(nonMember.getCoToken(), story.getStoryId());
 
         ResponseEntity<StoryResponse> myStoryResponse = storyClient.getMyStory(leader.getCoToken(), story.getStoryId());
-        assertEquals(new Integer(1), myStoryResponse.getBody().getLikes());
+        assertEquals(new Long(1), myStoryResponse.getBody().getLikes());
     }
 
     @Test(expected = StoryNotFoundException.class)
