@@ -37,6 +37,11 @@ public interface StoryController {
     // public newFriend();
     // public changeLeader();
     
-        
+    // get 1 public story
+    // get public stories by latest
+    // get public stories by title
+    // get public stories by # of likes
+    // get public stories by # of comments
+    // get public stories by longest
     //	public void comment(String coToken, String storyId, CommentRequest request);
 }
