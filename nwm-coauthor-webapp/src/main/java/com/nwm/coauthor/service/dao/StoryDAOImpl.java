@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -68,10 +69,12 @@ public class StoryDAOImpl {
         Query query = new Query();
         query.addCriteria(where("storyId").is(storyId));
 
+        query.fields().include("likes");
+        
         Update update = new Update();
         update.inc("likes", 1);
 
-        return mongoTemplate.findAndModify(query, update, LikeResponse.class, "storyModel");
+        return mongoTemplate.findAndModify(query, update, FindAndModifyOptions.options().returnNew(true), LikeResponse.class, "storyModel");
     }
     
 //    public List<PrivateStoryResponse> getStoriesByFbId(String fbId) {
