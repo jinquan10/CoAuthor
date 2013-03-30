@@ -10,8 +10,10 @@ import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BadRequestException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
 import com.nwm.coauthor.exception.MoreEntriesLeftException;
+import com.nwm.coauthor.exception.NoTitleForPublishingException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
+import com.nwm.coauthor.exception.UserIsNotLeaderException;
 import com.nwm.coauthor.exception.VersioningException;
 import com.nwm.coauthor.service.builder.NewStoryBuilder;
 import com.nwm.coauthor.service.builder.UserBuilder;
@@ -47,14 +49,14 @@ public class GetEntriesTest extends BaseTest {
     }
 
     @Test
-    public void nonMemberWhenPublished() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, CannotGetEntriesException, StoryNotFoundException, VersioningException, MoreEntriesLeftException {
+    public void nonMemberWhenPublished() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, CannotGetEntriesException, StoryNotFoundException, VersioningException, MoreEntriesLeftException, UserIsNotLeaderException, NoTitleForPublishingException {
         UserModel leader = UserBuilder.createUser();
         UserModel nonMember = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        ResponseEntity<StoryResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().title("title").build());
         StoryResponse newStory = newStoryResponse.getBody();
 
-        // - publish story here
+        storyClient.publishStory(leader.getCoToken(), newStory.getStoryId());
         
         ResponseEntity<EntriesResponse> entriesResponse = storyClient.getEntries(nonMember.getCoToken(), newStory.getStoryId(), 0, newStory.getCurrEntryCharCount());
         EntriesResponse entries = entriesResponse.getBody();
