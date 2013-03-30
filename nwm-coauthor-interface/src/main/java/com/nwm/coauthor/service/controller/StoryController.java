@@ -37,5 +37,6 @@ public interface StoryController {
     // public newFriend();
     // public changeLeader();
     
+        
     //	public void comment(String coToken, String storyId, CommentRequest request);
 }
