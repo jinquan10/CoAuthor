@@ -233,9 +233,9 @@ public class StoryClient extends BaseClient implements StoryController {
     }
 
     @Override
-    public ResponseEntity<NewFriendsResponse> newFriends(String coToken, String storyId, NewFriendsRequest request) throws SomethingWentWrongException, BadRequestException {
+    public ResponseEntity<StoryResponse> newFriends(String coToken, String storyId, NewFriendsRequest request) throws SomethingWentWrongException, BadRequestException {
         try {
-            return doExchange(NEW_FRIENDS_ENDPOINT, HttpMethod.POST, httpEntity(request, coToken), NewFriendsResponse.class, storyId);
+            return doExchange(NEW_FRIENDS_ENDPOINT, HttpMethod.POST, httpEntity(request, coToken), StoryResponse.class, storyId);
         } catch (HttpException e) {
             ExceptionMapperWrapper emw = convertToExceptionMapper(e.getHttpStatusCodeException());
             

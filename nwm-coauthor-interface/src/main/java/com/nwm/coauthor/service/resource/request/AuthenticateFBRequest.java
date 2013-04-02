@@ -5,8 +5,15 @@ import com.nwm.coauthor.service.resource.BaseResource;
 public class AuthenticateFBRequest extends BaseResource {
 	private String fbToken;
 
-	public AuthenticateFBRequest() {
-
+	private AuthenticateFBRequest() {}
+	
+	public AuthenticateFBRequest init(){
+	    return new AuthenticateFBRequest();
+	}
+	
+	public AuthenticateFBRequest fbToken(String fbToken){
+	    this.fbToken = fbToken;
+	    return this;
 	}
 
 	public AuthenticateFBRequest(String fbToken) {

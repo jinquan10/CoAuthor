@@ -35,7 +35,12 @@ public class UserBuilder {
         return loginModel;
     }
 
-    
+    public static UserModel createUser(String fbId) {
+        UserModel loginModel = new UserModel(fbId, String.valueOf(Math.random()));
+        MongoInstance.getInstance().insert(loginModel);
+        
+        return loginModel;
+    }
     
     public static List<String> getFBFriends(Integer numFriends) {
         List<String> fbFriends = new ArrayList<String>();
