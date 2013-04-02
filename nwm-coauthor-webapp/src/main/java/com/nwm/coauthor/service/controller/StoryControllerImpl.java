@@ -152,8 +152,8 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     }    
 
     @Override
-    @RequestMapping(value = "/friends", method = RequestMethod.POST)
-    public ResponseEntity<StoryResponse> newFriends(String coToken, String storyId, NewFriendsRequest request) throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, AlreadyAMemberException, NonMemberException {
+    @RequestMapping(value = "/{storyId}/friends", method = RequestMethod.POST)
+    public ResponseEntity<StoryResponse> newFriends(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestBody NewFriendsRequest request) throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, AlreadyAMemberException, NonMemberException {
         validateNewFriends(request, storyId);
         
         String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);

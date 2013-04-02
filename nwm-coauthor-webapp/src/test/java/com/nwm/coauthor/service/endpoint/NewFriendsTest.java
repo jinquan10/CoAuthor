@@ -25,7 +25,7 @@ import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 public class NewFriendsTest extends BaseTest {
     @Test
-    public void newFriend() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
+    public void newFriend() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyAMemberException, NonMemberException {
         UserModel leader = UserBuilder.createUser();
 
         ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
@@ -40,7 +40,7 @@ public class NewFriendsTest extends BaseTest {
     }
 
     @Test
-    public void newFriends() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
+    public void newFriends() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyAMemberException, NonMemberException {
         UserModel leader = UserBuilder.createUser();
 
         ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
@@ -57,7 +57,7 @@ public class NewFriendsTest extends BaseTest {
     }
     
     @Test
-    public void newFriends_ThenNewFriendGetsStories() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
+    public void newFriends_ThenNewFriendGetsStories() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyAMemberException, NonMemberException {
         UserModel leader = UserBuilder.createUser();
 
         ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
@@ -85,7 +85,7 @@ public class NewFriendsTest extends BaseTest {
     }
 
     @Test(expected = StoryNotFoundException.class)
-    public void storyNotFound() throws SomethingWentWrongException, BadRequestException {
+    public void storyNotFound() throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, AlreadyAMemberException, NonMemberException {
         UserModel leader = UserBuilder.createUser();
 
         String newFriendFbId = String.valueOf(Math.random());
@@ -94,7 +94,7 @@ public class NewFriendsTest extends BaseTest {
     }
 
     @Test(expected = NonMemberException.class)
-    public void nonMember() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
+    public void nonMember() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyAMemberException, NonMemberException {
         UserModel leader = UserBuilder.createUser();
         UserModel nonMember = UserBuilder.createUser();
         
@@ -106,7 +106,7 @@ public class NewFriendsTest extends BaseTest {
     }
     
     @Test(expected = SomethingWentWrongException.class)
-    public void nullRequest() throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException{
+    public void nullRequest() throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, AlreadyAMemberException, NonMemberException{
         UserModel leader = UserBuilder.createUser();
         
         ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
@@ -116,7 +116,7 @@ public class NewFriendsTest extends BaseTest {
     }
     
     @Test(expected = BadRequestException.class)
-    public void zeroLengthRequest() throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException{
+    public void zeroLengthRequest() throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, AlreadyAMemberException, NonMemberException{
         UserModel leader = UserBuilder.createUser();
         
         ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
@@ -131,7 +131,7 @@ public class NewFriendsTest extends BaseTest {
     }
 
     @Test(expected = BadRequestException.class)
-    public void nullListRequest() throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException{
+    public void nullListRequest() throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, AlreadyAMemberException, NonMemberException{
         UserModel leader = UserBuilder.createUser();
         
         ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
@@ -149,7 +149,7 @@ public class NewFriendsTest extends BaseTest {
     }
     
     @Test(expected = AlreadyAMemberException.class)
-    public void alreadyAMemberALeader() throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException{
+    public void alreadyAMemberALeader() throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, AlreadyAMemberException, NonMemberException{
         UserModel leader = UserBuilder.createUser();
         
         ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
@@ -159,7 +159,7 @@ public class NewFriendsTest extends BaseTest {
     }
     
     @Test(expected = AlreadyAMemberException.class)
-    public void alreadyAMemberAMember() throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException{
+    public void alreadyAMemberAMember() throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, AlreadyAMemberException, NonMemberException{
         UserModel leader = UserBuilder.createUser();
         UserModel member = UserBuilder.createUser();
         
@@ -170,7 +170,7 @@ public class NewFriendsTest extends BaseTest {
     }
     
     @Test(expected = AlreadyAMemberException.class)
-    public void alreadyAMemberAMembers() throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException{
+    public void alreadyAMemberAMembers() throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, AlreadyAMemberException, NonMemberException{
         UserModel leader = UserBuilder.createUser();
         UserModel member = UserBuilder.createUser();
         UserModel member2 = UserBuilder.createUser();
@@ -180,4 +180,20 @@ public class NewFriendsTest extends BaseTest {
 
         storyClient.newFriends(leader.getCoToken(), story.getStoryId(), NewFriendsRequest.init().addNewFriend(member.getFbId()));
     }    
+    
+    @Test(expected = AlreadyAMemberException.class)
+    public void alreadyAMemberMixed() throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, AlreadyAMemberException, NonMemberException{
+        UserModel leader = UserBuilder.createUser();
+        UserModel member = UserBuilder.createUser();
+        UserModel member2 = UserBuilder.createUser();
+        
+        UserModel nonMember = UserBuilder.createUser();
+        
+        ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).fbFriendsFromUserModel(member2).build());
+        StoryResponse story = createStoryResponse.getBody();
+
+        storyClient.newFriends(leader.getCoToken(), story.getStoryId(), NewFriendsRequest.init()
+                .addNewFriend(member.getFbId())
+                .addNewFriend(nonMember.getFbId()));
+    }        
 }

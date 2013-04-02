@@ -3,6 +3,7 @@ package com.nwm.coauthor.service.client;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
+import com.nwm.coauthor.exception.AlreadyAMemberException;
 import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.AlreadyPublishedException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
@@ -39,7 +40,8 @@ public class StoryClient extends BaseClient implements StoryController {
     private static final String LIKE_ENDPOINT = "/story/%s/like";
     private static final String PUBLISH_ENDPOINT = "/story/%s/publish";
     private static final String CHANGE_TITLE_ENDPOINT = "/story/%s/title";
-    private static final String NEW_FRIENDS_ENDPOINT = "/story/friends";
+    private static final String NEW_FRIENDS_ENDPOINT = "/story/%s/friends";
+
     // private static final String COMMENT_ENDPOINT = "/comment";
 
     private StoryClient() {
@@ -158,8 +160,8 @@ public class StoryClient extends BaseClient implements StoryController {
     }
 
     @Override
-    public ResponseEntity<LikeResponse> likeStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException, SomethingWentWrongException,
-            UserLikingOwnStoryException, UnpublishedStoryLikedException {
+    public ResponseEntity<LikeResponse> likeStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException,
+            SomethingWentWrongException, UserLikingOwnStoryException, UnpublishedStoryLikedException {
         try {
             return doExchange(LIKE_ENDPOINT, HttpMethod.POST, httpEntity(null, coToken), LikeResponse.class, storyId);
         } catch (HttpException e) {
@@ -184,8 +186,8 @@ public class StoryClient extends BaseClient implements StoryController {
     }
 
     @Override
-    public ResponseEntity<StoryResponse> publishStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, UserIsNotLeaderException,
-            NoTitleForPublishingException, SomethingWentWrongException {
+    public ResponseEntity<StoryResponse> publishStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException,
+            UserIsNotLeaderException, NoTitleForPublishingException, SomethingWentWrongException {
         try {
             return doExchange(PUBLISH_ENDPOINT, HttpMethod.POST, httpEntity(null, coToken), StoryResponse.class, storyId);
         } catch (HttpException e) {
@@ -208,8 +210,8 @@ public class StoryClient extends BaseClient implements StoryController {
     }
 
     @Override
-    public ResponseEntity<StoryResponse> changeTitle(String coToken, String storyId, ChangeTitleRequest request) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException,
-            UserIsNotLeaderException, StoryNotFoundException, AlreadyPublishedException {
+    public ResponseEntity<StoryResponse> changeTitle(String coToken, String storyId, ChangeTitleRequest request) throws SomethingWentWrongException, AuthenticationUnauthorizedException,
+            BadRequestException, UserIsNotLeaderException, StoryNotFoundException, AlreadyPublishedException {
         try {
             return doExchange(CHANGE_TITLE_ENDPOINT, HttpMethod.PUT, httpEntity(request, coToken), StoryResponse.class, storyId);
         } catch (HttpException e) {
@@ -232,20 +234,29 @@ public class StoryClient extends BaseClient implements StoryController {
     }
 
     @Override
-    public ResponseEntity<StoryResponse> newFriends(String coToken, String storyId, NewFriendsRequest request) throws SomethingWentWrongException, BadRequestException {
+    public ResponseEntity<StoryResponse> newFriends(String coToken, String storyId, NewFriendsRequest request) throws SomethingWentWrongException, BadRequestException,
+            AuthenticationUnauthorizedException, StoryNotFoundException, AlreadyAMemberException, NonMemberException {
         try {
             return doExchange(NEW_FRIENDS_ENDPOINT, HttpMethod.POST, httpEntity(request, coToken), StoryResponse.class, storyId);
         } catch (HttpException e) {
             ExceptionMapperWrapper emw = convertToExceptionMapper(e.getHttpStatusCodeException());
-            
-            if(emw.getClazz() == BadRequestException.class){
+
+            if (emw.getClazz() == BadRequestException.class) {
                 throw new BadRequestException(emw.getBaseException());
-            }else{
+            } else if (emw.getClazz() == AuthenticationUnauthorizedException.class) {
+                throw new AuthenticationUnauthorizedException();
+            } else if (emw.getClazz() == StoryNotFoundException.class) {
+                throw new StoryNotFoundException();
+            } else if (emw.getClazz() == AlreadyAMemberException.class) {
+                throw new AlreadyAMemberException();
+            } else if (emw.getClazz() == NonMemberException.class) {
+                throw new NonMemberException();
+            } else {
                 throw new SomethingWentWrongException();
             }
         }
     }
-    
+
     //
     // @Override
     // public void comment(String coToken, String storyId, CommentRequest

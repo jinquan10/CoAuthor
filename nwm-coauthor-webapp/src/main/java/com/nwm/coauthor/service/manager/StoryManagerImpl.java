@@ -85,7 +85,7 @@ public class StoryManagerImpl {
                 throw new NoTitleForPublishingException();
             }
             
-            throw new SomethingWentWrongException(writeResult.getError());
+            throw new SomethingWentWrongException(String.format("fbId: %s | storyId: %s", fbId, storyId));
         }
 
         return storyDAO.getStory(storyId);
@@ -112,7 +112,7 @@ public class StoryManagerImpl {
                 throw new AlreadyPublishedException();
             }
             
-            throw new SomethingWentWrongException(writeResult.getError());            
+            throw new SomethingWentWrongException(String.format("fbId: %s | storyId: %s | title: %s", fbId, storyId, title));            
         }
 
         return storyDAO.getStory(storyId);
@@ -280,7 +280,7 @@ public class StoryManagerImpl {
         WriteResult userLikeResult = userDAO.likeStory(fbId, storyId);
         
         if(userLikeResult.getN() == 0){
-            throw new SomethingWentWrongException(userLikeResult.getError());
+            throw new SomethingWentWrongException(String.format("fbId: %s | storyId: %s", fbId, storyId));
         }
         
         return storyDAO.likeStory(storyId);
@@ -328,17 +328,17 @@ public class StoryManagerImpl {
                 throw new AlreadyAMemberException();
             }
             
-            if(hasNoPermissionToAddFriend(newFriendsResponse, fbId)){
+            if(!hasPermissionToAddFriend(newFriendsResponse, fbId)){
                 throw new NonMemberException();
             }
             
-            throw new SomethingWentWrongException();
+            throw new SomethingWentWrongException(String.format("fbId: %s | storyId: %s | request: %s", fbId, storyId, request.getNewFriends().toString()));
         }
         
         return newFriendsResponse;
     }
 
-    private boolean hasNoPermissionToAddFriend(StoryResponse newFriendsResponse, String fbId) {
+    private boolean hasPermissionToAddFriend(StoryResponse newFriendsResponse, String fbId) {
         List<String> members = newFriendsResponse.getFbFriends();
         String leader = newFriendsResponse.getLeaderFbId();
         

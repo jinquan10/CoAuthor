@@ -146,15 +146,14 @@ public class StoryDAOImpl {
         a.orOperator(where("leaderFbId").is(fbId), where("fbFriends").is(fbId));
         
         Criteria b = new Criteria();
-        b.andOperator(where("storyId").is(storyId), where("fbFriends").nin(newFriends));
+        b.andOperator(where("storyId").is(storyId), where("fbFriends").nin(newFriends), where("leaderFbId").nin(newFriends), a);
         
-        q.addCriteria(a)
-        .addCriteria(b);
+        q.addCriteria(b);
         
         Update update = new Update();
         update.set("storyLastUpdated", new Date().getTime());
         update.pushAll("fbFriends", newFriends.toArray());
         
-        return mongoTemplate.findAndModify(q, update, FindAndModifyOptions.options().returnNew(true), StoryResponse.class);
+        return mongoTemplate.findAndModify(q, update, FindAndModifyOptions.options().returnNew(true), StoryResponse.class, "storyModel");
     }
 }
