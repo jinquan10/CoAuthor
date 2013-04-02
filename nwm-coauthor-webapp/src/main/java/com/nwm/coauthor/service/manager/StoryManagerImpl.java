@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.mongodb.WriteResult;
+import com.nwm.coauthor.exception.AlreadyAMemberException;
 import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.AlreadyPublishedException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
@@ -29,6 +30,7 @@ import com.nwm.coauthor.service.dao.UserDAOImpl;
 import com.nwm.coauthor.service.model.EntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.model.UpdateStoryForNewEntryModel;
+import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.EntryResponse;
@@ -310,5 +312,53 @@ public class StoryManagerImpl {
         if (privateStory.getIsPublished() == null || !privateStory.getIsPublished()) {
             throw new UnpublishedStoryLikedException();
         }
+    }
+
+    public StoryResponse newFriends(String fbId, String storyId, NewFriendsRequest request) throws StoryNotFoundException, AlreadyAMemberException, NonMemberException, SomethingWentWrongException {
+        StoryResponse newFriendsResponse = storyDAO.newFriends(fbId, storyId, request.getNewFriends());
+        
+        if(newFriendsResponse == null){
+            newFriendsResponse = storyDAO.getStory(storyId);
+            
+            if(newFriendsResponse == null){
+                throw new StoryNotFoundException();
+            }
+            
+            if(isAlreadyAMember(request, newFriendsResponse)){
+                throw new AlreadyAMemberException();
+            }
+            
+            if(hasNoPermissionToAddFriend(newFriendsResponse, fbId)){
+                throw new NonMemberException();
+            }
+            
+            throw new SomethingWentWrongException();
+        }
+        
+        return newFriendsResponse;
+    }
+
+    private boolean hasNoPermissionToAddFriend(StoryResponse newFriendsResponse, String fbId) {
+        List<String> members = newFriendsResponse.getFbFriends();
+        String leader = newFriendsResponse.getLeaderFbId();
+        
+        return members.contains(fbId) || leader.equals(fbId);
+    }
+
+    private boolean isAlreadyAMember(NewFriendsRequest request, StoryResponse newFriendsResponse) {
+        List<String> fbFriends = newFriendsResponse.getFbFriends();
+        List<String> newFriends = request.getNewFriends();
+        
+        if(newFriends.contains(newFriendsResponse.getLeaderFbId())){
+            return true;
+        }
+        
+        for(int i = 0; i < fbFriends.size(); i++){
+            if(newFriends.contains(fbFriends.get(i))){
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

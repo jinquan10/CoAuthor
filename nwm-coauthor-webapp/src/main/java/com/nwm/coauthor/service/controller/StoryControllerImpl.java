@@ -1,6 +1,7 @@
 package com.nwm.coauthor.service.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.nwm.coauthor.exception.AlreadyAMemberException;
 import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.AlreadyPublishedException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
@@ -38,7 +40,6 @@ import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.LikeResponse;
-import com.nwm.coauthor.service.resource.response.NewFriendsResponse;
 import com.nwm.coauthor.service.resource.response.StoriesResponse;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
@@ -151,9 +152,38 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     }    
 
     @Override
-    public ResponseEntity<NewFriendsResponse> newFriends(String coToken, String storyId, NewFriendsRequest request) throws SomethingWentWrongException, BadRequestException {
-        return null;
+    @RequestMapping(value = "/friends", method = RequestMethod.POST)
+    public ResponseEntity<StoryResponse> newFriends(String coToken, String storyId, NewFriendsRequest request) throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, AlreadyAMemberException, NonMemberException {
+        validateNewFriends(request, storyId);
+        
+        String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
+        
+        return new ResponseEntity<StoryResponse>(storyManager.newFriends(fbId, storyId, request), HttpStatus.OK);
     }    
+    
+    private void validateNewFriends(NewFriendsRequest request, String storyId) throws BadRequestException {
+        boolean isError = false;
+        Map<String, String> batchErrors = new HashMap<String, String>();
+
+        List<String> friends = request.getNewFriends();
+
+        if (friends == null) {
+            batchErrors.put("newFriends", "The friends list can't be null or empty.");
+            isError = true;
+        } else if (friends.size() == 0) {
+            batchErrors.put("newFriends", "The friends list can't be null or empty.");
+            isError = true;
+        }
+        
+        if (!StringUtils.hasText(storyId)) {
+            batchErrors.put("storyId", "The storyId must not be null or empty.");
+            isError = true;
+        }
+        
+        if (isError) {
+            throw new BadRequestException(batchErrors);
+        }
+    }
     
     private void validateNewEntry(NewEntryRequest newEntryRequest) throws BadRequestException {
         boolean isError = false;

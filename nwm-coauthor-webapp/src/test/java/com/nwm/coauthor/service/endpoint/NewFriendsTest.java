@@ -25,7 +25,7 @@ import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 public class NewFriendsTest extends BaseTest {
     @Test
-    public void newFriends() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
+    public void newFriend() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
         UserModel leader = UserBuilder.createUser();
 
         ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
@@ -39,6 +39,23 @@ public class NewFriendsTest extends BaseTest {
         assertTrue(newFriendsStory.getFbFriends().contains(newFriendFbId));
     }
 
+    @Test
+    public void newFriends() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
+        UserModel leader = UserBuilder.createUser();
+
+        ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryResponse story = createStoryResponse.getBody();
+
+        String newFriendFbId = String.valueOf(Math.random());
+        String newFriendFbId2 = String.valueOf(Math.random());
+
+        ResponseEntity<StoryResponse> newFriendsResponse = storyClient.newFriends(leader.getCoToken(), story.getStoryId(), NewFriendsRequest.init().addNewFriend(newFriendFbId).addNewFriend(newFriendFbId2));
+        StoryResponse newFriendsStory = newFriendsResponse.getBody();
+
+        assertTrue(newFriendsStory.getFbFriends().contains(newFriendFbId));
+        assertTrue(newFriendsStory.getFbFriends().contains(newFriendFbId2));
+    }
+    
     @Test
     public void newFriends_ThenNewFriendGetsStories() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
         UserModel leader = UserBuilder.createUser();
@@ -112,6 +129,24 @@ public class NewFriendsTest extends BaseTest {
             throw e;
         }
     }
+
+    @Test(expected = BadRequestException.class)
+    public void nullListRequest() throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException{
+        UserModel leader = UserBuilder.createUser();
+        
+        ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryResponse story = createStoryResponse.getBody();
+
+        NewFriendsRequest request = NewFriendsRequest.init();
+        request.setNewFriends(null);
+        
+        try{
+            storyClient.newFriends(leader.getCoToken(), story.getStoryId(), request);
+        }catch(BadRequestException e){
+            assertTrue(e.getBatchErrors().containsKey("newFriends"));
+            throw e;
+        }
+    }
     
     @Test(expected = AlreadyAMemberException.class)
     public void alreadyAMemberALeader() throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException{
@@ -129,6 +164,18 @@ public class NewFriendsTest extends BaseTest {
         UserModel member = UserBuilder.createUser();
         
         ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).build());
+        StoryResponse story = createStoryResponse.getBody();
+
+        storyClient.newFriends(leader.getCoToken(), story.getStoryId(), NewFriendsRequest.init().addNewFriend(member.getFbId()));
+    }
+    
+    @Test(expected = AlreadyAMemberException.class)
+    public void alreadyAMemberAMembers() throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException{
+        UserModel leader = UserBuilder.createUser();
+        UserModel member = UserBuilder.createUser();
+        UserModel member2 = UserBuilder.createUser();
+        
+        ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).fbFriendsFromUserModel(member2).build());
         StoryResponse story = createStoryResponse.getBody();
 
         storyClient.newFriends(leader.getCoToken(), story.getStoryId(), NewFriendsRequest.init().addNewFriend(member.getFbId()));

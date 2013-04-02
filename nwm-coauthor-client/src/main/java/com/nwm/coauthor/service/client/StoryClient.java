@@ -27,7 +27,6 @@ import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.LikeResponse;
-import com.nwm.coauthor.service.resource.response.NewFriendsResponse;
 import com.nwm.coauthor.service.resource.response.StoriesResponse;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 

@@ -1,7 +1,8 @@
 package com.nwm.coauthor.service.dao;
 
-import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Criteria.*;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,5 +137,24 @@ public class StoryDAOImpl {
         update.set("storyLastUpdated", now);
         
         return mongoTemplate.updateFirst(new Query(criteria), update, StoryModel.class);
+    }
+
+    public StoryResponse newFriends(String fbId, String storyId, List<String> newFriends) {
+        Query q = new Query();
+        
+        Criteria a = new Criteria();
+        a.orOperator(where("leaderFbId").is(fbId), where("fbFriends").is(fbId));
+        
+        Criteria b = new Criteria();
+        b.andOperator(where("storyId").is(storyId), where("fbFriends").nin(newFriends));
+        
+        q.addCriteria(a)
+        .addCriteria(b);
+        
+        Update update = new Update();
+        update.set("storyLastUpdated", new Date().getTime());
+        update.pushAll("fbFriends", newFriends.toArray());
+        
+        return mongoTemplate.findAndModify(q, update, FindAndModifyOptions.options().returnNew(true), StoryResponse.class);
     }
 }
