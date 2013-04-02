@@ -34,9 +34,11 @@ import com.nwm.coauthor.service.manager.AuthenticationManagerImpl;
 import com.nwm.coauthor.service.manager.StoryManagerImpl;
 import com.nwm.coauthor.service.resource.request.ChangeTitleRequest;
 import com.nwm.coauthor.service.resource.request.NewEntryRequest;
+import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.LikeResponse;
+import com.nwm.coauthor.service.resource.response.NewFriendsResponse;
 import com.nwm.coauthor.service.resource.response.StoriesResponse;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
@@ -114,6 +116,45 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
         return new ResponseEntity<StoryResponse>(response, HttpStatus.OK);
     }
 
+    @Override
+    @RequestMapping(value = "/{storyId}/like", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<LikeResponse> likeStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException,
+            StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException, SomethingWentWrongException {
+        validateRequestStoryId(storyId);
+
+        String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
+
+        return new ResponseEntity<LikeResponse>(storyManager.likeStory(fbId, storyId), HttpStatus.OK);
+    }
+
+    @Override
+    @RequestMapping(value = "/{storyId}/publish", method = RequestMethod.POST)
+    public ResponseEntity<StoryResponse> publishStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException,
+            UserIsNotLeaderException, NoTitleForPublishingException, SomethingWentWrongException {
+        validateRequestStoryId(storyId);
+
+        String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
+
+        return new ResponseEntity<StoryResponse>(storyManager.publishStory(fbId, storyId), HttpStatus.OK);
+    }
+
+    @Override
+    @RequestMapping(value = "/{storyId}/title", method = RequestMethod.PUT)
+    public ResponseEntity<StoryResponse> changeTitle(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestBody ChangeTitleRequest request) throws SomethingWentWrongException,
+            AuthenticationUnauthorizedException, BadRequestException, UserIsNotLeaderException, StoryNotFoundException, AlreadyPublishedException {
+
+        validateChangeTitleRequest(request);
+        String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
+        
+        return new ResponseEntity<StoryResponse>(storyManager.changeTitle(fbId, storyId, request.getTitle()), HttpStatus.OK);
+    }    
+
+    @Override
+    public ResponseEntity<NewFriendsResponse> newFriends(String coToken, String storyId, NewFriendsRequest request) throws SomethingWentWrongException, BadRequestException {
+        return null;
+    }    
+    
     private void validateNewEntry(NewEntryRequest newEntryRequest) throws BadRequestException {
         boolean isError = false;
         Map<String, String> batchErrors = new HashMap<String, String>();
@@ -172,40 +213,6 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
         }
     }
 
-    @Override
-    @RequestMapping(value = "/{storyId}/like", method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<LikeResponse> likeStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException,
-            StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException, SomethingWentWrongException {
-        validateRequestStoryId(storyId);
-
-        String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
-
-        return new ResponseEntity<LikeResponse>(storyManager.likeStory(fbId, storyId), HttpStatus.OK);
-    }
-
-    @Override
-    @RequestMapping(value = "/{storyId}/publish", method = RequestMethod.POST)
-    public ResponseEntity<StoryResponse> publishStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException,
-            UserIsNotLeaderException, NoTitleForPublishingException, SomethingWentWrongException {
-        validateRequestStoryId(storyId);
-
-        String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
-
-        return new ResponseEntity<StoryResponse>(storyManager.publishStory(fbId, storyId), HttpStatus.OK);
-    }
-
-    @Override
-    @RequestMapping(value = "/{storyId}/title", method = RequestMethod.PUT)
-    public ResponseEntity<StoryResponse> changeTitle(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestBody ChangeTitleRequest request) throws SomethingWentWrongException,
-            AuthenticationUnauthorizedException, BadRequestException, UserIsNotLeaderException, StoryNotFoundException, AlreadyPublishedException {
-
-        validateChangeTitleRequest(request);
-        String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
-        
-        return new ResponseEntity<StoryResponse>(storyManager.changeTitle(fbId, storyId, request.getTitle()), HttpStatus.OK);
-    }
-
     private void validateChangeTitleRequest(ChangeTitleRequest request) throws BadRequestException {
         boolean isError = false;
         Map<String, String> batchErrors = new HashMap<String, String>();
@@ -232,52 +239,6 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
         }
     }
 
-    //
-    //
-    // protected ObjectId convertStoryIdToObjectId(String storyId) throws
-    // BadRequestException {
-    // try {
-    // return new ObjectId(storyId);
-    // } catch (IllegalArgumentException e) {
-    // Map<String, String> batchErrors = new HashMap<String, String>();
-    // batchErrors.put("storyId", "The storyId is not a valid storyId.");
-    //
-    // throw new BadRequestException(batchErrors);
-    // }
-    // }
-    //
-    // protected void validateAddEntryRequest(EntryRequest entry) throws
-    // BadRequestException {
-    // boolean isError = false;
-    // Map<String, String> batchErrors = new HashMap<String, String>();
-    //
-    // if (!StringUtils.hasText(entry.getEntry())) {
-    // batchErrors.put("entry", "The entry must not be empty.");
-    // isError = true;
-    // }
-    //
-    // if (!StringUtils.hasText(entry.getStoryId())) {
-    // batchErrors.put("storyId", "The storyId must not be empty.");
-    // isError = true;
-    // }
-    //
-    // if (entry.getVersion() == null) {
-    // batchErrors.put("version", "The version must not be empty.");
-    // isError = true;
-    // }
-    //
-    // if (isError) {
-    // throw new BadRequestException(batchErrors);
-    // }
-    // }
-    //
-    // protected StoryModel createStoryModelFromRequest() {
-    // StoryModel model = new StoryModel();
-    // model.set_id(new ObjectId());
-    //
-    // return model;
-    // }
-    //
     protected void validateCreateStoryRequest(NewStoryRequest createStoryRequest) throws BadRequestException {
         boolean isError = false;
         Map<String, String> batchErrors = new HashMap<String, String>();

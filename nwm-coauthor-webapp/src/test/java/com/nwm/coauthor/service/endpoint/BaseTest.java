@@ -1,9 +1,11 @@
 package com.nwm.coauthor.service.endpoint;
 
+import com.nwm.coauthor.service.client.AuthenticationClient;
 import com.nwm.coauthor.service.client.StoryClient;
 
 public class BaseTest {
     protected StoryClient storyClient = StoryClient.instance();
+    protected AuthenticationClient authenticationClient = AuthenticationClient.instance();
 
     // private static void authenticateForCoToken() throws
     // SomethingWentWrongException, AuthenticationUnauthorizedException{

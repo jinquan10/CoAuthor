@@ -23,9 +23,11 @@ import com.nwm.coauthor.exception.mapping.ExceptionMapperWrapper;
 import com.nwm.coauthor.service.controller.StoryController;
 import com.nwm.coauthor.service.resource.request.ChangeTitleRequest;
 import com.nwm.coauthor.service.resource.request.NewEntryRequest;
+import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.LikeResponse;
+import com.nwm.coauthor.service.resource.response.NewFriendsResponse;
 import com.nwm.coauthor.service.resource.response.StoriesResponse;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
@@ -38,7 +40,7 @@ public class StoryClient extends BaseClient implements StoryController {
     private static final String LIKE_ENDPOINT = "/story/%s/like";
     private static final String PUBLISH_ENDPOINT = "/story/%s/publish";
     private static final String CHANGE_TITLE_ENDPOINT = "/story/%s/title";
-
+    private static final String NEW_FRIENDS_ENDPOINT = "/story/friends";
     // private static final String COMMENT_ENDPOINT = "/comment";
 
     private StoryClient() {
@@ -229,6 +231,22 @@ public class StoryClient extends BaseClient implements StoryController {
             }
         }
     }
+
+    @Override
+    public ResponseEntity<NewFriendsResponse> newFriends(String coToken, String storyId, NewFriendsRequest request) throws SomethingWentWrongException, BadRequestException {
+        try {
+            return doExchange(NEW_FRIENDS_ENDPOINT, HttpMethod.POST, httpEntity(request, coToken), NewFriendsResponse.class, storyId);
+        } catch (HttpException e) {
+            ExceptionMapperWrapper emw = convertToExceptionMapper(e.getHttpStatusCodeException());
+            
+            if(emw.getClazz() == BadRequestException.class){
+                throw new BadRequestException(emw.getBaseException());
+            }else{
+                throw new SomethingWentWrongException();
+            }
+        }
+    }
+    
     //
     // @Override
     // public void comment(String coToken, String storyId, CommentRequest
@@ -236,4 +254,5 @@ public class StoryClient extends BaseClient implements StoryController {
     // restTemplate.exchange(urlStoryResolver("/" + storyId + COMMENT_ENDPOINT),
     // HttpMethod.POST, httpEntity(request, coToken), String.class);
     // }
+
 }

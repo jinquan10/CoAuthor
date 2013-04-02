@@ -14,6 +14,14 @@ import com.nwm.coauthor.service.resource.response.AuthenticationResponse;
 public class AuthenticationClient extends BaseClient implements AuthenticationController{
 	private static final String AUTHENTICATE_ENDPOINT = "/authenticate";
 	
+	private static final AuthenticationClient authenticationClient = new AuthenticationClient();
+	
+	private AuthenticationClient(){}
+	
+	public static AuthenticationClient instance(){
+	    return authenticationClient;
+	}
+	
 	@Override
 	public ResponseEntity<AuthenticationResponse> authenticateFB(AuthenticateFBRequest authResource) throws SomethingWentWrongException, AuthenticationUnauthorizedException {
 		try{

@@ -35,6 +35,8 @@ public class UserBuilder {
         return loginModel;
     }
 
+    
+    
     public static List<String> getFBFriends(Integer numFriends) {
         List<String> fbFriends = new ArrayList<String>();
 
