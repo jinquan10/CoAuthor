@@ -42,7 +42,9 @@ public interface StoryController {
     public ResponseEntity<StoryResponse> newFriends(String coToken, String storyId, NewFriendsRequest request) throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, AlreadyAMemberException, NonMemberException;
 
     public ResponseEntity<StoryResponse> rateStory(String coToken, String storyId, Integer rating) throws SomethingWentWrongException, NonMemberException;
-    
+
+    // public newFavoriteStory();
+    // public getFavoriteStories();
     // public getFavoriteStories();
     // public newFavoriteStory();
     // public changeLeader();
