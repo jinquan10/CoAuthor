@@ -66,16 +66,14 @@ public class StoryDAOImpl {
         return mongoTemplate.updateFirst(q, u, StoryModel.class);
     }
 
-    public LikeResponse likeStory(String storyId) {
+    public StoryResponse likeStory(String storyId) {
         Query query = new Query();
         query.addCriteria(where("storyId").is(storyId));
 
-        query.fields().include("likes");
-        
         Update update = new Update();
         update.inc("likes", 1);
 
-        return mongoTemplate.findAndModify(query, update, FindAndModifyOptions.options().returnNew(true), LikeResponse.class, "storyModel");
+        return mongoTemplate.findAndModify(query, update, FindAndModifyOptions.options().returnNew(true), StoryResponse.class, "storyModel");
     }
     
 //    public List<PrivateStoryResponse> getStoriesByFbId(String fbId) {

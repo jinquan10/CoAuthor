@@ -5,6 +5,7 @@ import com.nwm.coauthor.exception.AddEntryVersionException;
 import com.nwm.coauthor.exception.AlreadyAMemberException;
 import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.AlreadyPublishedException;
+import com.nwm.coauthor.exception.AlreadyRatedException;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.BaseException;
 import com.nwm.coauthor.exception.BadRequestException;
@@ -44,7 +45,8 @@ public enum ExceptionMapper {
 	VERSIONING_EXCEPTION(VersioningException.class),
 	CONSECUTIVE_NEW_ENTRY_EXCEPTION(ConsecutiveEntryBySameMemberException.class),
 	MORE_ENTRIES_LEFT_EXCEPTION(MoreEntriesLeftException.class),
-	ALREADY_A_MEMBER_EXCEPTION(AlreadyAMemberException.class);
+	ALREADY_A_MEMBER_EXCEPTION(AlreadyAMemberException.class),
+	ALREADY_RATED_EXCEPTION(AlreadyRatedException.class);
 	
 	private Class<? extends BaseException> clazz;
 	

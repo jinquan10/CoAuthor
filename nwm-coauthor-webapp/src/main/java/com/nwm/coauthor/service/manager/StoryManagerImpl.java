@@ -270,13 +270,13 @@ public class StoryManagerImpl {
     // return request.getEntry().getEntryId();
     // }
     //
-    public LikeResponse likeStory(String fbId, String storyId) throws AlreadyLikedException, StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException, SomethingWentWrongException {
+    public StoryResponse likeStory(String fbId, String storyId) throws AlreadyLikedException, StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException, SomethingWentWrongException {
         checkLikeStoryRequirements(fbId, storyId);
         checkLikeUserRequirements(fbId, storyId);
         return persistLikeStory(fbId, storyId);
     }
 
-    private LikeResponse persistLikeStory(String fbId, String storyId) throws SomethingWentWrongException {
+    private StoryResponse persistLikeStory(String fbId, String storyId) throws SomethingWentWrongException {
         WriteResult userLikeResult = userDAO.likeStory(fbId, storyId);
         
         if(userLikeResult.getN() == 0){

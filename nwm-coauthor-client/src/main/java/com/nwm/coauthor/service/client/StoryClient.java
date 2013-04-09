@@ -41,6 +41,7 @@ public class StoryClient extends BaseClient implements StoryController {
     private static final String PUBLISH_ENDPOINT = "/story/%s/publish";
     private static final String CHANGE_TITLE_ENDPOINT = "/story/%s/title";
     private static final String NEW_FRIENDS_ENDPOINT = "/story/%s/friends";
+    private static final String RATE_STORY_ENDPOINT = "/story/%s/rate/%s";
 
     // private static final String COMMENT_ENDPOINT = "/comment";
 
@@ -160,10 +161,10 @@ public class StoryClient extends BaseClient implements StoryController {
     }
 
     @Override
-    public ResponseEntity<LikeResponse> likeStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException,
+    public ResponseEntity<StoryResponse> likeStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException,
             SomethingWentWrongException, UserLikingOwnStoryException, UnpublishedStoryLikedException {
         try {
-            return doExchange(LIKE_ENDPOINT, HttpMethod.POST, httpEntity(null, coToken), LikeResponse.class, storyId);
+            return doExchange(LIKE_ENDPOINT, HttpMethod.POST, httpEntity(null, coToken), StoryResponse.class, storyId);
         } catch (HttpException e) {
             ExceptionMapperWrapper emw = convertToExceptionMapper(e.getHttpStatusCodeException());
 
@@ -257,6 +258,21 @@ public class StoryClient extends BaseClient implements StoryController {
         }
     }
 
+    @Override
+    public ResponseEntity<StoryResponse> rateStory(String coToken, String storyId, Integer rating) throws SomethingWentWrongException, NonMemberException{
+        try {
+            return doExchange(RATE_STORY_ENDPOINT, HttpMethod.POST, httpEntity(null, coToken), StoryResponse.class, storyId, rating);
+        } catch (HttpException e) {
+            ExceptionMapperWrapper emw = convertToExceptionMapper(e.getHttpStatusCodeException());
+
+            if (emw.getClazz() == NonMemberException.class) {
+                throw new NonMemberException();
+            } else {
+                throw new SomethingWentWrongException();
+            }
+        }
+    }    
+    
     //
     // @Override
     // public void comment(String coToken, String storyId, CommentRequest

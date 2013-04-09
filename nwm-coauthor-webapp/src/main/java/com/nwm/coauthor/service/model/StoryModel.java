@@ -18,6 +18,7 @@ public class StoryModel extends BaseModel {
     private String lastEntry; 
     private Long storyLastUpdated;  // - changed when anything above is updated
     private Integer currEntryCharCount;
+    private Integer rating;
     
 	public static StoryModel createStoryModelFromRequest(String fbId, NewStoryRequest request){
     	StoryModel storyModel = new StoryModel();
@@ -114,5 +115,13 @@ public class StoryModel extends BaseModel {
 
     public void setCurrEntryCharCount(Integer currEntryCharCount) {
         this.currEntryCharCount = currEntryCharCount;
+    }
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
     }
 }

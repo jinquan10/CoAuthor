@@ -15,6 +15,7 @@ public class StoryResponse extends BaseResource{
     private String lastEntry; 
     private Long storyLastUpdated;  // - changed when anything above is updated
     private Integer currEntryCharCount;    	// - changed when entry is added
+    private Double rating;
     
 	public String getStoryId() {
 		return storyId;
@@ -76,4 +77,10 @@ public class StoryResponse extends BaseResource{
 	public void setCurrEntryCharCount(Integer currEntryCharCount) {
 		this.currEntryCharCount = currEntryCharCount;
 	}
+    public Double getRating() {
+        return rating;
+    }
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
 }

@@ -120,13 +120,13 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     @Override
     @RequestMapping(value = "/{storyId}/like", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<LikeResponse> likeStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException,
+    public ResponseEntity<StoryResponse> likeStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException,
             StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException, SomethingWentWrongException {
         validateRequestStoryId(storyId);
 
         String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
 
-        return new ResponseEntity<LikeResponse>(storyManager.likeStory(fbId, storyId), HttpStatus.OK);
+        return new ResponseEntity<StoryResponse>(storyManager.likeStory(fbId, storyId), HttpStatus.OK);
     }
 
     @Override
