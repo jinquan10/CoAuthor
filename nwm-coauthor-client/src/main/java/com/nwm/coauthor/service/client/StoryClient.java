@@ -27,7 +27,6 @@ import com.nwm.coauthor.service.resource.request.NewEntryRequest;
 import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
-import com.nwm.coauthor.service.resource.response.LikeResponse;
 import com.nwm.coauthor.service.resource.response.StoriesResponse;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
@@ -259,14 +258,14 @@ public class StoryClient extends BaseClient implements StoryController {
     }
 
     @Override
-    public ResponseEntity<StoryResponse> rateStory(String coToken, String storyId, Integer rating) throws SomethingWentWrongException, NonMemberException{
+    public ResponseEntity<StoryResponse> rateStory(String coToken, String storyId, Integer rating) throws SomethingWentWrongException, BadRequestException{
         try {
             return doExchange(RATE_STORY_ENDPOINT, HttpMethod.POST, httpEntity(null, coToken), StoryResponse.class, storyId, rating);
         } catch (HttpException e) {
             ExceptionMapperWrapper emw = convertToExceptionMapper(e.getHttpStatusCodeException());
 
-            if (emw.getClazz() == NonMemberException.class) {
-                throw new NonMemberException();
+            if (emw.getClazz() == BadRequestException.class) {
+                throw new BadRequestException(emw.getBaseException());
             } else {
                 throw new SomethingWentWrongException();
             }
