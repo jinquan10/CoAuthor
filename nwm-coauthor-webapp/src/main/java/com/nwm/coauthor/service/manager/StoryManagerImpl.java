@@ -23,6 +23,7 @@ import com.nwm.coauthor.exception.UnpublishedStoryLikedException;
 import com.nwm.coauthor.exception.UserIsNotLeaderException;
 import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.exception.VersioningException;
+import com.nwm.coauthor.service.aspect.AspectAnnotation;
 import com.nwm.coauthor.service.dao.CommentDAOImpl;
 import com.nwm.coauthor.service.dao.EntryDAOImpl;
 import com.nwm.coauthor.service.dao.StoryDAOImpl;
@@ -34,7 +35,6 @@ import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.EntryResponse;
-import com.nwm.coauthor.service.resource.response.LikeResponse;
 import com.nwm.coauthor.service.resource.response.StoriesResponse;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
@@ -270,6 +270,7 @@ public class StoryManagerImpl {
     // return request.getEntry().getEntryId();
     // }
     //
+    @AspectAnnotation
     public StoryResponse likeStory(String fbId, String storyId) throws AlreadyLikedException, StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException, SomethingWentWrongException {
         checkLikeStoryRequirements(fbId, storyId);
         checkLikeUserRequirements(fbId, storyId);
