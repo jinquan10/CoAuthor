@@ -1,6 +1,6 @@
 package com.nwm.coauthor.service.dao;
 
-import static org.springframework.data.mongodb.core.query.Criteria.*;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 import java.util.Date;
 import java.util.List;
@@ -18,7 +18,6 @@ import com.mongodb.WriteResult;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.model.TotalCharsModel;
 import com.nwm.coauthor.service.model.UpdateStoryForNewEntryModel;
-import com.nwm.coauthor.service.resource.response.LikeResponse;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 @Component
