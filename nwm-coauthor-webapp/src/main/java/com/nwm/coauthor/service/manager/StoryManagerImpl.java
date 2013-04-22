@@ -23,7 +23,6 @@ import com.nwm.coauthor.exception.UnpublishedStoryLikedException;
 import com.nwm.coauthor.exception.UserIsNotLeaderException;
 import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.exception.VersioningException;
-import com.nwm.coauthor.service.aspect.AspectAnnotation;
 import com.nwm.coauthor.service.dao.CommentDAOImpl;
 import com.nwm.coauthor.service.dao.EntryDAOImpl;
 import com.nwm.coauthor.service.dao.StoryDAOImpl;
@@ -270,7 +269,6 @@ public class StoryManagerImpl {
     // return request.getEntry().getEntryId();
     // }
     //
-    @AspectAnnotation
     public StoryResponse likeStory(String fbId, String storyId) throws AlreadyLikedException, StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException, SomethingWentWrongException {
         checkLikeStoryRequirements(fbId, storyId);
         checkLikeUserRequirements(fbId, storyId);

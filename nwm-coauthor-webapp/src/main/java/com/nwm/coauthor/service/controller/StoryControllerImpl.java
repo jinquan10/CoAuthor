@@ -306,7 +306,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     }
 
     @Override
-    public ResponseEntity<StoryResponse> rateStory(String coToken, String storyId, Integer rating) throws SomethingWentWrongException, NonMemberException {
+    public ResponseEntity<StoryResponse> rateStory(String coToken, String storyId, Integer rating) throws SomethingWentWrongException {
         // TODO Auto-generated method stub
         return null;
     }

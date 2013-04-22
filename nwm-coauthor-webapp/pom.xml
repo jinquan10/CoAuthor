@@ -26,12 +26,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aspects</artifactId>
-			<version>3.2.0.RELEASE</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${sl4j}</version>
@@ -83,16 +77,21 @@
 		</dependency>
 
 		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>persistence-api</artifactId>
-			<version>1.0</version>
-			<scope>provided</scope>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>1.6.11</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjrt</artifactId>
-			<version>1.7.2</version>
+			<groupId>fm.void.jetm</groupId>
+			<artifactId>jetm</artifactId>
+			<version>1.2.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>fm.void.jetm</groupId>
+			<artifactId>jetm-optional</artifactId>
+			<version>1.2.5</version>
 		</dependency>
 	</dependencies>
 
@@ -103,38 +102,21 @@
 				<artifactId>aspectj-maven-plugin</artifactId>
 				<version>1.4</version>
 				<configuration>
-					<complianceLevel>1.7</complianceLevel>
-					<source>1.7</source>
-					<target>1.7</target>
-					<aspectLibraries>
-						<aspectLibrary>
-							<groupId>org.springframework</groupId>
-							<artifactId>spring-aspects</artifactId>
-						</aspectLibrary>
-					</aspectLibraries>
+					<verbose>true</verbose>
+					<showWeaveInfo>true</showWeaveInfo>
+					<complianceLevel>1.6</complianceLevel>
+					<source>1.6</source>
+					<target>1.6</target>
 				</configuration>
 				<executions>
 					<execution>
+						<id>compile-after-test</id>
+						<phase>test</phase>
 						<goals>
 							<goal>compile</goal>
 						</goals>
 					</execution>
 				</executions>
-
-				<dependencies>
-					<dependency>
-						<groupId>org.aspectj</groupId>
-						<artifactId>aspectjrt</artifactId>
-						<version>1.7.2</version>
-						<scope>runtime</scope>
-					</dependency>
-
-					<dependency>
-						<groupId>org.aspectj</groupId>
-						<artifactId>aspectjtools</artifactId>
-						<version>1.7.2</version>
-					</dependency>
-				</dependencies>
 			</plugin>
 		</plugins>
 

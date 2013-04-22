@@ -3,7 +3,6 @@ package com.nwm.coauthor.service.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.mongodb.core.MongoTemplate;

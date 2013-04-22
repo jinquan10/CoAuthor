@@ -37,6 +37,7 @@
 					<version>2.1</version>
 					
 					<configuration>
+					    <fork>true</fork>
 						<port>8081</port>
 					</configuration>
 				</plugin>

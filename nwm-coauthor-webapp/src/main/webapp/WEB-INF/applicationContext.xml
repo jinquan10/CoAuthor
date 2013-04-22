@@ -4,6 +4,7 @@
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:jetm="http://jetm.void.fm/schema/jetm_spring_config_1_2"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:util="http://www.springframework.org/schema/util"
@@ -11,7 +12,20 @@
 	    http://www.springframework.org/schema/beans 	http://www.springframework.org/schema/beans/spring-beans.xsd
 	    http://www.springframework.org/schema/util 		http://www.springframework.org/schema/util/spring-util.xsd
 		http://www.springframework.org/schema/context	http://www.springframework.org/schema/context/spring-context.xsd
-        http://www.springframework.org/schema/mvc 		http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+        http://www.springframework.org/schema/mvc 		http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://jetm.void.fm/schema/jetm_spring_config_1_2 http://jetm.void.fm/schema/jetm_spring_config_1_2.xsd">
 
 	<mvc:resources mapping="/**" location="/public-resources/"/>
+	
+	<jetm:runtime type="nested" timer="jdk15">
+        <jetm:aggregator-chain>
+            <jetm:chain-element class="com.disney.ics.id.profile.util.CustomETMLogger">
+                <jetm:property name="logName">etm.log</jetm:property>
+            </jetm:chain-element>
+
+            <jetm:chain-root class="etm.core.aggregation.RootWithMaxResetAggregator">
+                <jetm:property name="resetMaxAndMinInterval">300000</jetm:property>
+            </jetm:chain-root>
+        </jetm:aggregator-chain>
+    </jetm:runtime>
 </beans>
