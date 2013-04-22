@@ -1,0 +1,69 @@
+-------------------------------------------------------------------------------
+Test set: com.nwm.coauthor.service.endpoint.NewEntryTest
+-------------------------------------------------------------------------------
+Tests run: 13, Failures: 0, Errors: 13, Skipped: 0, Time elapsed: 0.001 sec <<< FAILURE!
+newEntriesReturnedInTheRightOrder(com.nwm.coauthor.service.endpoint.NewEntryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.NewEntryTest.<init>(NewEntryTest.java:30)
+
+emptyEntry(com.nwm.coauthor.service.endpoint.NewEntryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.NewEntryTest.<init>(NewEntryTest.java:30)
+
+moreThanMaxCharEntry(com.nwm.coauthor.service.endpoint.NewEntryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.NewEntryTest.<init>(NewEntryTest.java:30)
+
+consecutiveEntryBySameMember(com.nwm.coauthor.service.endpoint.NewEntryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.NewEntryTest.<init>(NewEntryTest.java:30)
+
+invalidVersion(com.nwm.coauthor.service.endpoint.NewEntryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.NewEntryTest.<init>(NewEntryTest.java:30)
+
+lessThanMinCharEntry(com.nwm.coauthor.service.endpoint.NewEntryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.NewEntryTest.<init>(NewEntryTest.java:30)
+
+moreEntriesToFetch(com.nwm.coauthor.service.endpoint.NewEntryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.NewEntryTest.<init>(NewEntryTest.java:30)
+
+nonMember(com.nwm.coauthor.service.endpoint.NewEntryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.NewEntryTest.<init>(NewEntryTest.java:30)
+
+nullEntry(com.nwm.coauthor.service.endpoint.NewEntryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.NewEntryTest.<init>(NewEntryTest.java:30)
+
+multipleTripsToGetAllEntries(com.nwm.coauthor.service.endpoint.NewEntryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.NewEntryTest.<init>(NewEntryTest.java:30)
+
+storyNotFound(com.nwm.coauthor.service.endpoint.NewEntryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.NewEntryTest.<init>(NewEntryTest.java:30)
+
+nullVersion(com.nwm.coauthor.service.endpoint.NewEntryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.NewEntryTest.<init>(NewEntryTest.java:30)
+
+newEntry(com.nwm.coauthor.service.endpoint.NewEntryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.NewEntryTest.<init>(NewEntryTest.java:30)
+

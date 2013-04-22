@@ -1,0 +1,24 @@
+-------------------------------------------------------------------------------
+Test set: com.nwm.coauthor.service.endpoint.GetMyStoryTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 4, Skipped: 0, Time elapsed: 0.004 sec <<< FAILURE!
+withEmptyStoryId(com.nwm.coauthor.service.endpoint.GetMyStoryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.GetMyStoryTest.<init>(GetMyStoryTest.java:23)
+
+withNonExistantStoryId(com.nwm.coauthor.service.endpoint.GetMyStoryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.GetMyStoryTest.<init>(GetMyStoryTest.java:23)
+
+nonMember(com.nwm.coauthor.service.endpoint.GetMyStoryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.GetMyStoryTest.<init>(GetMyStoryTest.java:23)
+
+getMyStory(com.nwm.coauthor.service.endpoint.GetMyStoryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.GetMyStoryTest.<init>(GetMyStoryTest.java:23)
+

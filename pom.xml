@@ -35,9 +35,9 @@
 					<groupId>org.apache.tomcat.maven</groupId>
 					<artifactId>tomcat7-maven-plugin</artifactId>
 					<version>2.1</version>
-					
+
 					<configuration>
-					    <fork>true</fork>
+						<fork>false</fork>
 						<port>8081</port>
 					</configuration>
 				</plugin>
@@ -72,6 +72,7 @@
 		<module>nwm-coauthor-interface</module>
 		<module>nwm-coauthor-client</module>
 		<module>nwm-coauthor-webapp</module>
-		<module>nwm-coauthor-android</module>
+<!-- 		<module>nwm-coauthor-android</module> -->
+		<module>nwm-coauthor-test</module>
 	</modules>
 </project>

@@ -20,7 +20,6 @@ import javax.servlet.ServletException;
  * 
  * The whole idea here is to be able to enable/disable the Jetm Monitors using the properties files
  */
-@Component
 public class BeanPostProcessor implements BeanFactoryPostProcessor, ApplicationContextAware {
     private static final Logger LOG = LoggerFactory.getLogger(BeanPostProcessor.class);
     

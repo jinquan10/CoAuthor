@@ -1,0 +1,59 @@
+-------------------------------------------------------------------------------
+Test set: com.nwm.coauthor.service.endpoint.LikeTest
+-------------------------------------------------------------------------------
+Tests run: 11, Failures: 0, Errors: 11, Skipped: 0, Time elapsed: 0.001 sec <<< FAILURE!
+nonMemberIncrementsLikes(com.nwm.coauthor.service.endpoint.LikeTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.LikeTest.<init>(LikeTest.java:26)
+
+likeWithNonExistantCoToken(com.nwm.coauthor.service.endpoint.LikeTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.LikeTest.<init>(LikeTest.java:26)
+
+likeAStory(com.nwm.coauthor.service.endpoint.LikeTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.LikeTest.<init>(LikeTest.java:26)
+
+memberLikeOwnStory(com.nwm.coauthor.service.endpoint.LikeTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.LikeTest.<init>(LikeTest.java:26)
+
+nonExistantStory(com.nwm.coauthor.service.endpoint.LikeTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.LikeTest.<init>(LikeTest.java:26)
+
+leaderLikeOwnStory(com.nwm.coauthor.service.endpoint.LikeTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.LikeTest.<init>(LikeTest.java:26)
+
+likeWithEmptyCoToken(com.nwm.coauthor.service.endpoint.LikeTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.LikeTest.<init>(LikeTest.java:26)
+
+likeAnUnpublishedStory(com.nwm.coauthor.service.endpoint.LikeTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.LikeTest.<init>(LikeTest.java:26)
+
+userLikesAStoryTwice(com.nwm.coauthor.service.endpoint.LikeTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.LikeTest.<init>(LikeTest.java:26)
+
+memberOfAnotherStoryLikingThisOne(com.nwm.coauthor.service.endpoint.LikeTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.LikeTest.<init>(LikeTest.java:26)
+
+likeWithNullCoToken(com.nwm.coauthor.service.endpoint.LikeTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.LikeTest.<init>(LikeTest.java:26)
+

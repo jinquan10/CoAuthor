@@ -1,0 +1,34 @@
+-------------------------------------------------------------------------------
+Test set: com.nwm.coauthor.service.endpoint.PublishStoryTest
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 0, Errors: 6, Skipped: 0, Time elapsed: 0.002 sec <<< FAILURE!
+nonExistantStory(com.nwm.coauthor.service.endpoint.PublishStoryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.PublishStoryTest.<init>(PublishStoryTest.java:23)
+
+hasNullTitle(com.nwm.coauthor.service.endpoint.PublishStoryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.PublishStoryTest.<init>(PublishStoryTest.java:23)
+
+userIsNotLeader(com.nwm.coauthor.service.endpoint.PublishStoryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.PublishStoryTest.<init>(PublishStoryTest.java:23)
+
+hasEmptyTitle(com.nwm.coauthor.service.endpoint.PublishStoryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.PublishStoryTest.<init>(PublishStoryTest.java:23)
+
+publishesStory(com.nwm.coauthor.service.endpoint.PublishStoryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.PublishStoryTest.<init>(PublishStoryTest.java:23)
+
+userIsANonMember(com.nwm.coauthor.service.endpoint.PublishStoryTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.PublishStoryTest.<init>(PublishStoryTest.java:23)
+

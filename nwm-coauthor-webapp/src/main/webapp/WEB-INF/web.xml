@@ -10,7 +10,8 @@
 
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>com.nwm.coauthor.service.config</param-value>
+<!-- 		<param-value>com.nwm.coauthor.service.config</param-value> -->
+		<param-value>classpath:applicationContext.xml</param-value>
 	</context-param>
 
 	<filter>

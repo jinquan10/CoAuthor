@@ -1,0 +1,39 @@
+-------------------------------------------------------------------------------
+Test set: com.nwm.coauthor.service.endpoint.CommentTest
+-------------------------------------------------------------------------------
+Tests run: 7, Failures: 0, Errors: 7, Skipped: 0, Time elapsed: 0.003 sec <<< FAILURE!
+nonExistantStory(com.nwm.coauthor.service.endpoint.CommentTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.CommentTest.<init>(CommentTest.java:10)
+
+lessThanMinCharactersComment(com.nwm.coauthor.service.endpoint.CommentTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.CommentTest.<init>(CommentTest.java:10)
+
+memberOrLeader(com.nwm.coauthor.service.endpoint.CommentTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.CommentTest.<init>(CommentTest.java:10)
+
+comment(com.nwm.coauthor.service.endpoint.CommentTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.CommentTest.<init>(CommentTest.java:10)
+
+notPublishedYet(com.nwm.coauthor.service.endpoint.CommentTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.CommentTest.<init>(CommentTest.java:10)
+
+largerThanCharactersComment(com.nwm.coauthor.service.endpoint.CommentTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.CommentTest.<init>(CommentTest.java:10)
+
+nullComment(com.nwm.coauthor.service.endpoint.CommentTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.CommentTest.<init>(CommentTest.java:10)
+

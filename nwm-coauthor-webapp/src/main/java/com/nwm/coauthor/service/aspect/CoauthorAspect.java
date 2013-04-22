@@ -3,6 +3,8 @@ package com.nwm.coauthor.service.aspect;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.nwm.coauthor.service.util.EtmMonitorHolder;
 
@@ -10,8 +12,14 @@ import etm.core.monitor.EtmPoint;
 
 @Aspect
 public class CoauthorAspect {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoauthorAspect.class);
+    
     @Around("execution(* *(..))"/* + "@annotation(com.nwm.coauthor.service.aspect.AspectAnnotation)" */)
     public Object doBasicProfiling(ProceedingJoinPoint pjp) throws Throwable {
+        if(!LOGGER.isDebugEnabled()){
+            return pjp.proceed();
+        }
+        
         EtmPoint etmPoint = null;
         Object result = null;
 

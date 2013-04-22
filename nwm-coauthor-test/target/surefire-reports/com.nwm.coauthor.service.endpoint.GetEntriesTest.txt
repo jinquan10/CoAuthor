@@ -1,0 +1,34 @@
+-------------------------------------------------------------------------------
+Test set: com.nwm.coauthor.service.endpoint.GetEntriesTest
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 0, Errors: 6, Skipped: 0, Time elapsed: 0.001 sec <<< FAILURE!
+nonMemberWhenPublished(com.nwm.coauthor.service.endpoint.GetEntriesTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.GetEntriesTest.<init>(GetEntriesTest.java:24)
+
+incorrectChars(com.nwm.coauthor.service.endpoint.GetEntriesTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.GetEntriesTest.<init>(GetEntriesTest.java:24)
+
+getOneEntryRightAfterNewStory(com.nwm.coauthor.service.endpoint.GetEntriesTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.GetEntriesTest.<init>(GetEntriesTest.java:24)
+
+nonMemberWhenNotPublished(com.nwm.coauthor.service.endpoint.GetEntriesTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.GetEntriesTest.<init>(GetEntriesTest.java:24)
+
+storyNotFound(com.nwm.coauthor.service.endpoint.GetEntriesTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.GetEntriesTest.<init>(GetEntriesTest.java:24)
+
+getZeroEntriesRightAfterNewStory(com.nwm.coauthor.service.endpoint.GetEntriesTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.GetEntriesTest.<init>(GetEntriesTest.java:24)
+

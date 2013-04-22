@@ -17,6 +17,8 @@
 
 	<mvc:resources mapping="/**" location="/public-resources/"/>
 	
+	<bean name="hi" class="com.nwm.coauthor.service.util.BeanPostProcessor"></bean>
+	
 	<jetm:runtime type="nested" timer="jdk15">
         <jetm:aggregator-chain>
             <jetm:chain-element class="com.disney.ics.id.profile.util.CustomETMLogger">

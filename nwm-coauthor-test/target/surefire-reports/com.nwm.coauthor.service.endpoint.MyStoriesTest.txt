@@ -1,0 +1,29 @@
+-------------------------------------------------------------------------------
+Test set: com.nwm.coauthor.service.endpoint.MyStoriesTest
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 5, Skipped: 0, Time elapsed: 0 sec <<< FAILURE!
+getMyStories(com.nwm.coauthor.service.endpoint.MyStoriesTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.MyStoriesTest.<init>(MyStoriesTest.java:23)
+
+getMyStoriesAsLeader(com.nwm.coauthor.service.endpoint.MyStoriesTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.MyStoriesTest.<init>(MyStoriesTest.java:23)
+
+getMyStoriesAsLeaderAndMember(com.nwm.coauthor.service.endpoint.MyStoriesTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.MyStoriesTest.<init>(MyStoriesTest.java:23)
+
+getMyStoriesAsMember(com.nwm.coauthor.service.endpoint.MyStoriesTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.MyStoriesTest.<init>(MyStoriesTest.java:23)
+
+hasNoStory(com.nwm.coauthor.service.endpoint.MyStoriesTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: Could not initialize class com.nwm.coauthor.service.client.StoryClient
+	at com.nwm.coauthor.service.endpoint.BaseTest.<init>(BaseTest.java:7)
+	at com.nwm.coauthor.service.endpoint.MyStoriesTest.<init>(MyStoriesTest.java:23)
+
