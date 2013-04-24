@@ -34,10 +34,10 @@
 				<plugin>
 					<groupId>org.apache.tomcat.maven</groupId>
 					<artifactId>tomcat7-maven-plugin</artifactId>
-					<version>2.1</version>
+					<version>2.2-SNAPSHOT</version>
 
 					<configuration>
-						<fork>false</fork>
+						<fork>true</fork>
 						<port>8081</port>
 					</configuration>
 				</plugin>

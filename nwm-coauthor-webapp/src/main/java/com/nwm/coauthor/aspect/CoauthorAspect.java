@@ -1,4 +1,4 @@
-package com.nwm.coauthor.service.aspect;
+package com.nwm.coauthor.aspect;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -6,19 +6,52 @@ import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.nwm.coauthor.service.util.EtmMonitorHolder;
+import com.nwm.coauthor.util.CustomETMLogger;
 
+import etm.core.aggregation.BufferedTimedAggregator;
+import etm.core.aggregation.RootAggregator;
+import etm.core.configuration.BasicEtmConfigurator;
+import etm.core.configuration.EtmAggregatorConfig;
+import etm.core.configuration.EtmManager;
+import etm.core.configuration.EtmMonitorConfig;
+import etm.core.configuration.EtmMonitorFactory;
+import etm.core.monitor.EtmMonitor;
 import etm.core.monitor.EtmPoint;
+import etm.core.renderer.SimpleTextRenderer;
 
 @Aspect
 public class CoauthorAspect {
     private static final Logger LOGGER = LoggerFactory.getLogger(CoauthorAspect.class);
+    private static EtmMonitor etmMonitor = null;
     
-    @Around("execution(* *(..))"/* + "@annotation(com.nwm.coauthor.service.aspect.AspectAnnotation)" */)
-    public Object doBasicProfiling(ProceedingJoinPoint pjp) throws Throwable {
-        if(!LOGGER.isDebugEnabled()){
-            return pjp.proceed();
+    static{
+//        EtmAggregatorConfig root = new EtmAggregatorConfig();
+//        root.setAggregatorClass(RootAggregator.class);
+//
+//        EtmAggregatorConfig log4j = new EtmAggregatorConfig();
+//        log4j.setAggregatorClass(CustomETMLogger.class);
+//        log4j.addProperty("logName", "etm.log");
+//        
+//        EtmMonitorConfig config = new EtmMonitorConfig();
+//        config.setAggregatorRoot(root);
+//        config.appendAggregator(log4j);
+//        config.setMonitorType("nested");
+        
+        BasicEtmConfigurator.configure();
+        
+        try {
+            etmMonitor = EtmManager.getEtmMonitor();
+            etmMonitor.start();
+        } catch (Exception e) {
+            
         }
+    }
+    
+    @Around("execution(* com.nwm.coauthor.service.controller..*.*(..))"/* + "@annotation(com.nwm.coauthor.service.aspect.AspectAnnotation)" */)
+    public Object doBasicProfiling(ProceedingJoinPoint pjp) throws Throwable {
+//        if(!LOGGER.isDebugEnabled()){
+//            return pjp.proceed();
+//        }
         
         EtmPoint etmPoint = null;
         Object result = null;
@@ -31,7 +64,7 @@ public class CoauthorAspect {
         try {
             // start timing here. We don't give the point a name because we're
             // waiting to see if it succeeds.
-            etmPoint = EtmMonitorHolder.startMonitorPoint(null);
+            etmPoint = etmMonitor.createPoint(null);
 
             // this is calling the method we're profiling.
             result = pjp.proceed();
@@ -58,7 +91,8 @@ public class CoauthorAspect {
             // finishing profiling is put in a finally block, this works whether
             // or not an exception occurs.
             if (etmPoint != null) {
-                EtmMonitorHolder.collectMonitorPoint(etmPoint);
+                etmPoint.collect();
+                etmMonitor.render(new SimpleTextRenderer());
             }
         }
 

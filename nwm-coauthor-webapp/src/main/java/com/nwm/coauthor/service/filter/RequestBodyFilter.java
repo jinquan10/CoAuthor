@@ -15,7 +15,7 @@ import org.springframework.mock.web.DelegatingServletInputStream;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.nwm.coauthor.service.util.Singletons;
+import com.nwm.coauthor.util.Singletons;
 
 @Component("requestBodyFilter")
 public class RequestBodyFilter extends OncePerRequestFilter {

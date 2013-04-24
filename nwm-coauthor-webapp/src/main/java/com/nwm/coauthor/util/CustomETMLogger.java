@@ -1,4 +1,4 @@
-package com.nwm.coauthor.service.util;
+package com.nwm.coauthor.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +17,10 @@ public class CustomETMLogger extends Log4jAggregator{
 
     @Override
     protected void logMeasurement(EtmPoint aPoint) {
+        delegate.render(new SimpleTextRenderer());
+
         if(logger.isDebugEnabled()){
-            delegate.render(new SimpleTextRenderer());
-            super.logMeasurement(aPoint);
+//            super.logMeasurement(aPoint);
         }
     }
 }

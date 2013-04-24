@@ -1,4 +1,4 @@
-package com.nwm.coauthor.service.util;
+package com.nwm.coauthor.util;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.authentication.UserCredentials;

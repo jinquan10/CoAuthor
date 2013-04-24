@@ -1,4 +1,4 @@
-package com.nwm.coauthor.service.config;
+package com.nwm.coauthor.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -9,12 +9,12 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.mongodb.Mongo;
-import com.nwm.coauthor.service.util.EnvironmentPropertyPlaceholderConfigurer;
-import com.nwm.coauthor.service.util.MongoCredentials;
+import com.nwm.coauthor.util.EnvironmentPropertyPlaceholderConfigurer;
+import com.nwm.coauthor.util.MongoCredentials;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "com.nwm.coauthor.service")
+@ComponentScan(basePackages = "com.nwm.coauthor")
 public class AppConfig {
     @Bean
     public static EnvironmentPropertyPlaceholderConfigurer environmentPropertyPlaceholderConfigurer() {

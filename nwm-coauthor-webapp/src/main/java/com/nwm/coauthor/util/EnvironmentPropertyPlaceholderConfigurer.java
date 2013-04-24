@@ -1,4 +1,4 @@
-package com.nwm.coauthor.service.util;
+package com.nwm.coauthor.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
