@@ -9,8 +9,8 @@
 			<param name="ConversionPattern" value="%-5p %c{1} - %m%n" />
 		</layout>
 	</appender>
-	<appender name="daily" class="org.apache.log4j.FileAppender">
-		<param name="File" value="target/logs/service.log" />
+	<appender name="daily" class="com.nwm.coauthor.aspect.PerformanceMonitoringAppender">
+		<param name="File" value="target/logs/coAuthorService.log" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd" />
 		<param name="Append" value="true" />
 		<layout class="org.apache.log4j.PatternLayout">

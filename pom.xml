@@ -34,7 +34,7 @@
 				<plugin>
 					<groupId>org.apache.tomcat.maven</groupId>
 					<artifactId>tomcat7-maven-plugin</artifactId>
-					<version>2.2-SNAPSHOT</version>
+					<version>2.1</version>
 
 					<configuration>
 						<fork>true</fork>
@@ -45,7 +45,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.0</version>
+					<version>2.3.2</version>
 					<configuration>
 						<compilerVersion>1.7</compilerVersion>
 						<source>1.7</source>

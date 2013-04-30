@@ -13,6 +13,7 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
+		<project.build.sourceVersion>1.6</project.build.sourceVersion>
 		<sl4j>1.7.2</sl4j>
 		<forkTomcat>true</forkTomcat>
 		<skipTomcat>false</skipTomcat>
@@ -35,7 +36,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${sl4j}</version>
-			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
@@ -97,9 +97,9 @@
 				<configuration>
 					<verbose>true</verbose>
 					<showWeaveInfo>true</showWeaveInfo>
-					<complianceLevel>1.6</complianceLevel>
-					<source>1.6</source>
-					<target>1.6</target>
+					<complianceLevel>${project.build.sourceVersion}</complianceLevel>
+					<source>${project.build.sourceVersion}</source>
+					<target>${project.build.sourceVersion}</target>
 				</configuration>
 				<executions>
 					<execution>
