@@ -16,7 +16,7 @@ public class PerformanceLoggingAspect {
     private static SimpleTextRendererLog simpleTextRendererLog = null;
     
     private int numTimes = 0;
-    private int interval = 100;
+    private int interval = 1000;
     
     static {
         getTextRenderer();

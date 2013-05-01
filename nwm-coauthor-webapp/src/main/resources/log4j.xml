@@ -10,7 +10,7 @@
 		</layout>
 	</appender>
 	<appender name="daily" class="com.nwm.coauthor.aspect.PerformanceMonitoringAppender">
-		<param name="File" value="target/logs/coAuthorService.log" />
+		<param name="File" value="/logs/coAuthorService.log" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd" />
 		<param name="Append" value="true" />
 		<layout class="org.apache.log4j.PatternLayout">
@@ -21,7 +21,7 @@
 	<root>
 		<level value="error" />
 		<appender-ref ref="console" />
-<!-- 		<appender-ref ref="daily" /> -->
+		<appender-ref ref="daily" />
 	</root>
 
 </log4j:configuration>
