@@ -47,11 +47,11 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>2.3.2</version>
 					<configuration>
-						<compilerVersion>1.7</compilerVersion>
-						<source>1.7</source>
-						<testSource>1.7</testSource>
-						<target>1.7</target>
-						<testTarget>1.7</testTarget>
+						<compilerVersion>1.6</compilerVersion>
+						<source>1.6</source>
+						<testSource>1.6</testSource>
+						<target>1.6</target>
+						<testTarget>1.6</testTarget>
 					</configuration>
 				</plugin>
 
@@ -69,7 +69,7 @@
 				<plugin>
 					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 					<artifactId>android-maven-plugin</artifactId>
-					<version>3.5.0</version>
+					<version>3.7.0</version>
 					<configuration>
 						<androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
 						<assetsDirectory>${project.basedir}/assets</assetsDirectory>
