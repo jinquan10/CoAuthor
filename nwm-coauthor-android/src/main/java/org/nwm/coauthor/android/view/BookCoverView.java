@@ -1,15 +1,14 @@
 package org.nwm.coauthor.android.view;
 
-import com.nwm.coauthor.android.util.Palette;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.nwm.coauthor.android.util.Palette;
 
 public class BookCoverView extends View{
 	private Paint paint;
