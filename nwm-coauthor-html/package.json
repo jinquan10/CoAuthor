@@ -2,7 +2,7 @@
   "name": "nwm-coauthor-html",
   "version": "0.0.0",
   "description": "html version of CoAuthor.",
-  "main": "static_server.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
