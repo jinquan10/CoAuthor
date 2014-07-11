@@ -10,11 +10,6 @@ http.createServer(
 			var uri = url.parse(request.url).pathname, 
 			filename = path.join(process.cwd() + "/public", uri);
 
-			console.log("process.cwd(): " + process.cwd());
-			console.log("url.parse(request.url).pathname: " + url.parse(request.url).pathname);
-			console.log("uri: " + uri);
-			console.log("filename: " + filename);
-			
 			path.exists(filename, function(exists) {
 				if (!exists) {
 					response.writeHead(404, {

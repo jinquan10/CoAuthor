@@ -1,19 +1,75 @@
 <div class="container">
-    <div class="row">
-        <div class="col-md-3">
-            <div>
-                My stories & alerts
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div>
-                Public stories
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div>
-                My Favorites
-            </div>
-        </div>
-    </div>
+	<nav
+		class="navbar navbar-default"
+		role="navigation">
+		<div class="container">
+			<ul class="nav navbar-nav">
+				<li><a>
+						<div class="btn-group">
+							<button class="btn btn-success" data-toggle="modal" data-target="#newStoryModal">New Story</button>
+						</div>
+				</a></li>
+
+			</ul>
+		</div>
+	</nav>
+	<div class="row">
+		<div class="col-md-3">
+			<div
+				class="panel-group"
+				id="accordion">
+				<div
+					class="panel panel-default pointer"
+					data-toggle="collapse"
+					data-parent="#accordion"
+					href="#collapseOne">
+					<div class="panel-heading">
+						<h4 class="text-center panel-title">My Stories</h4>
+					</div>
+					<div
+						id="collapseOne"
+						class="panel-collapse collapse in">
+						<div class="panel-body">sfasdf</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div>Public stories</div>
+		</div>
+		<div class="col-md-3">
+			<div>My Favorites</div>
+		</div>
+	</div>
+
+	<div id="newStoryModal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button
+						type="button"
+						class="close"
+						data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title">Modal title</h4>
+				</div>
+				<div class="modal-body">
+					<p>One fine body&hellip;</p>
+				</div>
+				<div class="modal-footer">
+					<button
+						type="button"
+						class="btn btn-default"
+						data-dismiss="modal">Close</button>
+					<button
+						type="button"
+						class="btn btn-primary">Save changes</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
 </div>
