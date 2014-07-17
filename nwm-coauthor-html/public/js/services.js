@@ -7,10 +7,8 @@ function getHost(){
 }
 
 coAuthorServices.factory('Story', [ '$resource', function($resource) {
-    
-    
 	return $resource(host + '/stories:path', {}, {
-		schemaNew : {
+		getSchemaNew : {
 			method : 'GET',
 			params: {path: '/schema/new'}
 		}
