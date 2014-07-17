@@ -17,7 +17,7 @@ import com.nwm.coauthor.exception.UserIsNotLeaderException;
 import com.nwm.coauthor.service.builder.NewStoryBuilder;
 import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
-import com.nwm.coauthor.service.resource.request.NewStoryRequest;
+import com.nwm.coauthor.service.resource.request.NewStory;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 public class PublishStoryTest extends BaseTest {
@@ -40,7 +40,7 @@ public class PublishStoryTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel nonMember = UserBuilder.createUser();
 
-        NewStoryRequest storyRequest = NewStoryBuilder.init().title("The one").build();
+        NewStory storyRequest = NewStoryBuilder.init().title("The one").build();
         ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
         try{
             storyClient.publishStory(nonMember.getCoToken(), storyResponse.getBody().getStoryId());
@@ -54,7 +54,7 @@ public class PublishStoryTest extends BaseTest {
     public void hasNullTitle() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException, UnauthorizedException, NonMemberException {
         UserModel leader = UserBuilder.createUser();
 
-        NewStoryRequest storyRequest = NewStoryBuilder.init().title(null).build();
+        NewStory storyRequest = NewStoryBuilder.init().title(null).build();
         ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
         try{
             storyClient.publishStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
@@ -75,7 +75,7 @@ public class PublishStoryTest extends BaseTest {
     public void publishesStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException, UnauthorizedException, NonMemberException {
         UserModel leader = UserBuilder.createUser();
 
-        NewStoryRequest storyRequest = NewStoryBuilder.init().title("The one").build();
+        NewStory storyRequest = NewStoryBuilder.init().title("The one").build();
         ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
         StoryResponse createdStory = storyResponse.getBody();
         
@@ -95,7 +95,7 @@ public class PublishStoryTest extends BaseTest {
     public void hasEmptyTitle() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException, UnauthorizedException, NonMemberException {
         UserModel leader = UserBuilder.createUser();
 
-        NewStoryRequest storyRequest = NewStoryBuilder.init().title("").build();
+        NewStory storyRequest = NewStoryBuilder.init().title("").build();
         ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
         
         try{

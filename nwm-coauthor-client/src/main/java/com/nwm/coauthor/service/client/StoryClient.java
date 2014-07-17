@@ -25,7 +25,7 @@ import com.nwm.coauthor.service.controller.StoryController;
 import com.nwm.coauthor.service.resource.request.ChangeTitleRequest;
 import com.nwm.coauthor.service.resource.request.NewEntryRequest;
 import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
-import com.nwm.coauthor.service.resource.request.NewStoryRequest;
+import com.nwm.coauthor.service.resource.request.NewStory;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.StoriesResponse;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
@@ -54,7 +54,7 @@ public class StoryClient extends BaseClient implements StoryController {
     }
 
     @Override
-    public ResponseEntity<StoryResponse> createStory(String coToken, NewStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
+    public ResponseEntity<StoryResponse> createStory(String coToken, NewStory createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
         try {
             return doExchange(CREATE_STORY_ENDPOINT, HttpMethod.POST, httpEntity(createStoryRequest, coToken), StoryResponse.class);
         } catch (HttpException e) {

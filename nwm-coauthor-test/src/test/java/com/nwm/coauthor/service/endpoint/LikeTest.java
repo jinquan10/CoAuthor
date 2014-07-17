@@ -19,7 +19,7 @@ import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.service.builder.NewStoryBuilder;
 import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
-import com.nwm.coauthor.service.resource.request.NewStoryRequest;
+import com.nwm.coauthor.service.resource.request.NewStory;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
@@ -30,7 +30,7 @@ public class LikeTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel nonMember = UserBuilder.createUser();
 
-        NewStoryRequest storyRequest = NewStoryBuilder.init().title("title").build();
+        NewStory storyRequest = NewStoryBuilder.init().title("title").build();
         ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
 
         storyClient.publishStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
@@ -87,7 +87,7 @@ public class LikeTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel nonMember = UserBuilder.createUser();
 
-        NewStoryRequest storyRequest = NewStoryBuilder.init().build();
+        NewStory storyRequest = NewStoryBuilder.init().build();
         ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
 
         storyClient.likeStory(nonMember.getCoToken(), storyResponse.getBody().getStoryId());

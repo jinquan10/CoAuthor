@@ -18,7 +18,7 @@ import com.nwm.coauthor.service.builder.NewStoryBuilder;
 import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.request.ChangeTitleRequest;
-import com.nwm.coauthor.service.resource.request.NewStoryRequest;
+import com.nwm.coauthor.service.resource.request.NewStory;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 
@@ -69,7 +69,7 @@ public class ChangeTitleTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel member = UserBuilder.createUser();
         
-        NewStoryRequest request = NewStoryBuilder.init().fbFriendsFromUserModel(member).build();
+        NewStory request = NewStoryBuilder.init().fbFriendsFromUserModel(member).build();
         
         ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), request);
         storyClient.changeTitle(member.getCoToken(), storyResponse.getBody().getStoryId(), ChangeTitleRequest.initWithTitle("title"));
@@ -80,7 +80,7 @@ public class ChangeTitleTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel nonMember = UserBuilder.createUser();
         
-        NewStoryRequest request = NewStoryBuilder.init().build();
+        NewStory request = NewStoryBuilder.init().build();
         
         ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), request);
         storyClient.changeTitle(nonMember.getCoToken(), storyResponse.getBody().getStoryId(), ChangeTitleRequest.initWithTitle("title"));
@@ -89,7 +89,7 @@ public class ChangeTitleTest extends BaseTest {
     @Test(expected = AlreadyPublishedException.class)
     public void alreadyPublished() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException, AlreadyPublishedException{
         UserModel leader = UserBuilder.createUser();
-        NewStoryRequest storyRequest = NewStoryBuilder.init().title("The one").build();
+        NewStory storyRequest = NewStoryBuilder.init().title("The one").build();
 
         ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
         storyClient.publishStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
@@ -100,7 +100,7 @@ public class ChangeTitleTest extends BaseTest {
     @Test
     public void changeTitle() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, UserIsNotLeaderException, StoryNotFoundException, AlreadyPublishedException {
         UserModel leader = UserBuilder.createUser();
-        NewStoryRequest storyRequest = NewStoryBuilder.init().title("The one").build();
+        NewStory storyRequest = NewStoryBuilder.init().title("The one").build();
 
         ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
         StoryResponse createdStory = storyResponse.getBody();
@@ -115,7 +115,7 @@ public class ChangeTitleTest extends BaseTest {
     @Test
     public void andPublish() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, UserIsNotLeaderException, StoryNotFoundException, AlreadyPublishedException, NoTitleForPublishingException{
         UserModel leader = UserBuilder.createUser();
-        NewStoryRequest storyRequest = NewStoryBuilder.init().build();
+        NewStory storyRequest = NewStoryBuilder.init().build();
 
         ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
         StoryResponse createdStory = storyResponse.getBody();
