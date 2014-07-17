@@ -10,28 +10,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.joda.time.DateTime;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.JsonProcessingException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fuse.service.utils.DateField;
-import com.fuse.service.utils.DisplayName;
-import com.fuse.service.utils.DisplayOrder;
-import com.fuse.service.utils.Format;
-import com.fuse.service.utils.JsonSchemaField;
-import com.fuse.service.utils.JsonSelect;
-import com.fuse.service.utils.JsonType;
-import com.fuse.service.utils.ReadOnlyField;
-import com.fuse.service.utils.RequiredField;
-import com.fuse.service.utils.SchemaIgnore;
-import com.fuse.service.utils.SelectOptions;
-import com.fuse.service.utils.StringOnUpdate;
-
-import espn.fuse.fantasy.metadata.FantasyMetadataDateDeserializer;
+import com.nwm.coauthor.util.Singletons;
 
 @Component
 public class JsonSchemaUtil {
@@ -102,35 +88,19 @@ public class JsonSchemaUtil {
             }
         }
 
-        if (targetType.equals(DateTime.class)) {
-            if (value instanceof String) {
-                return FantasyMetadataDateDeserializer.formatter.parseDateTime((String) value);
-            }
-        }
-
-        if (targetType.equals(Date.class)) {
-            if (value instanceof String) {
-                if (!StringUtils.hasText((String) value)) {
-                    return null;
-                }
-
-                return FantasyMetadataDateDeserializer.formatter.parseDateTime((String) value).toDate();
-            }
-        }
-
 //        if (targetType.equals(Boolean.class)) {
 //            return Boolean.parseBoolean((String) value);
 //        }
 
-        if (targetType.getPackage().getName().contains("espn")) {
-            try {
-                return ObjectMapperInstance.getInstance().readValue(ObjectMapperInstance.getInstance().writeValueAsString(value), targetType);
-            } catch (JsonParseException e) {
-            } catch (JsonMappingException e) {
-            } catch (JsonProcessingException e) {
-            } catch (IOException e) {
-            }
-        }
+//        if (targetType.getPackage().getName().contains("espn")) {
+//            try {
+//                return Singletons.objectMapper.readValue(Singletons.objectMapper.writeValueAsString(value), targetType);
+//            } catch (JsonParseException e) {
+//            } catch (JsonMappingException e) {
+//            } catch (JsonProcessingException e) {
+//            } catch (IOException e) {
+//            }
+//        }
 
         return value;
     }

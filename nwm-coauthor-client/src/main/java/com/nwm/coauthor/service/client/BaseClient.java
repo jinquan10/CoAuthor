@@ -1,11 +1,8 @@
 package com.nwm.coauthor.service.client;
 
-import static com.nwm.coauthor.service.client.EnvProps.LOCAL_HOST;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -17,6 +14,7 @@ import org.springframework.http.converter.json.MappingJacksonHttpMessageConverte
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nwm.coauthor.exception.BaseException;
 import com.nwm.coauthor.exception.HttpException;
 import com.nwm.coauthor.exception.WebApplicationException;

@@ -1,25 +1,9 @@
-//package com.nwm.coauthor.service.util;
-//
-//import java.util.ArrayList;
-//import java.util.LinkedList;
-//import java.util.List;
-//import java.util.Map;
-//import java.util.Map.Entry;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Component;
-//
-//import com.fuse.service.utils.JsonSelect;
-//
-//import espn.fuse.exceptions.FuseBackendException;
-//import espn.fuse.fantasy.metadata.Game;
-//import espn.fuse.fantasy.metadata.Organization;
-//import espn.fuse.fantasy.metadata.Season;
-//import espn.fuse.fantasy.metadata.Sport;
-//import espn.fuse.service.fantasy.metadata.FantasyMetadataProvider;
-//
-//@Component
-//public class SelectOptionsUtil {
+package com.nwm.coauthor.service.util;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class SelectOptionsUtil {
 //    private static final Integer UBER_GAME_SEASON_ID = 14;
 //
 //    @Autowired
@@ -101,4 +85,4 @@
 //
 //        return selections;
 //    }
-//}
+}
