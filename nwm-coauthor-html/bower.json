@@ -9,9 +9,9 @@
     "node"
   ],
   "dependencies": {
-    "angular": "1.x",
-    "angular-route": "~1.x",
-    "angular-resource": "~1.x",
+    "angular": "~1.2.x",
+    "angular-route": "~1.2.x",
+    "angular-resource": "~1.2.x",
     "bootstrap": "~3.x"
   },
   "license": "MIT",

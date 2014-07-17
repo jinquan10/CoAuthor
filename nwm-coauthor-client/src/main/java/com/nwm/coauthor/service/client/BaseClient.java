@@ -20,6 +20,8 @@ import com.nwm.coauthor.exception.HttpException;
 import com.nwm.coauthor.exception.WebApplicationException;
 import com.nwm.coauthor.exception.mapping.ExceptionMapperWrapper;
 
+import static com.nwm.coauthor.service.client.EnvProps.LOCAL_HOST;
+
 public abstract class BaseClient {
 	protected RestTemplate restTemplate = new RestTemplate();
 	protected ObjectMapper objectMapper = new ObjectMapper();

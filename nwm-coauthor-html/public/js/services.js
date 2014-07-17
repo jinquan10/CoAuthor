@@ -7,13 +7,12 @@ function getHost(){
 }
 
 coAuthorServices.factory('Story', [ '$resource', function($resource) {
-	return $resource(host + '/create', {}, {
-		query : {
+    
+    
+	return $resource(host + '/stories:path', {}, {
+		schemaNew : {
 			method : 'GET',
-			params : {
-				phoneId : 'phones'
-			},
-			isArray : true
+			params: {path: '/schema/new'}
 		}
 	});
 } ]);

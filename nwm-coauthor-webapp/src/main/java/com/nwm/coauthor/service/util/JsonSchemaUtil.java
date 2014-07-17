@@ -1,23 +1,15 @@
 package com.nwm.coauthor.service.util;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
-import com.nwm.coauthor.util.Singletons;
 
 @Component
 public class JsonSchemaUtil {
@@ -165,10 +157,6 @@ public class JsonSchemaUtil {
                 SelectOptions ann = field.getAnnotation(SelectOptions.class);
 
                 jsonField.setSelectOptions((List<JsonSelect>) SelectOptionsUtil.class.getMethod(ann.method()).invoke(selectOptionsUtil));
-            }
-
-            if(containsAnnotation(field, DateField.class)) {
-                jsonField.setDateFormat(FantasyMetadataDateDeserializer.uiFormatter);
             }
 
             if (jsonField.getReadOnly() != null && jsonField.getRequired() != null && jsonField.getReadOnly() && jsonField.getRequired()) {

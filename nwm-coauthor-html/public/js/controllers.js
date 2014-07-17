@@ -1,7 +1,9 @@
 var coAuthorControllers = angular.module('coAuthorControllers', []);
 
 coAuthorControllers.controller('mainController', [
-        '$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
-            $scope.hi = 'hi';
+        '$scope', '$routeParams', '$http', 'Story', function($scope, $routeParams, $http, Story) {
+            $scope.loadNewStorySchema = function loadNewStorySchemaFn(){
+                Story.schemaNew();
+            };
         }
 ]);
