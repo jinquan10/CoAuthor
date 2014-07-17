@@ -4,23 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.nwm.coauthor.service.model.UserModel;
-import com.nwm.coauthor.service.resource.request.NewStoryRequest;
+import com.nwm.coauthor.service.resource.request.NewStory;
 
 public class NewStoryBuilder {
 
-    private NewStoryRequest request;
+    private NewStory request;
 
-    public NewStoryRequest getRequest() {
+    public NewStory getRequest() {
         return request;
     }
 
-    public void setRequest(NewStoryRequest request) {
+    public void setRequest(NewStory request) {
         this.request = request;
     }
 
     public static NewStoryBuilder init() {
         NewStoryBuilder builder = new NewStoryBuilder();
-        builder.setRequest(new NewStoryRequest());
+        builder.setRequest(new NewStory());
         
         return builder;
     }
@@ -53,7 +53,7 @@ public class NewStoryBuilder {
     }
 
     
-    public NewStoryRequest build() {
+    public NewStory build() {
         request.setEntry(request.getEntry() == null ? "12345" : request.getEntry());
         request.setFbFriends(request.getFbFriends() == null ? (UserBuilder.getDefaultFBFriends()) : request.getFbFriends());
         request.setTitle(request.getTitle() == null ? null : request.getTitle());
@@ -61,7 +61,7 @@ public class NewStoryBuilder {
         return request;
     }
 
-    public NewStoryRequest buildBare() {
-        return new NewStoryRequest();
+    public NewStory buildBare() {
+        return new NewStory();
     }
 }

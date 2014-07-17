@@ -31,7 +31,7 @@ import com.nwm.coauthor.service.model.EntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.model.UpdateStoryForNewEntryModel;
 import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
-import com.nwm.coauthor.service.resource.request.NewStoryRequest;
+import com.nwm.coauthor.service.resource.request.NewStory;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.EntryResponse;
 import com.nwm.coauthor.service.resource.response.StoriesResponse;
@@ -50,13 +50,10 @@ public class StoryManagerImpl {
 
     int numCharToGet = 1000;
 
-    public StoryResponse createStory(String fbId, NewStoryRequest request) {
-        StoryModel newStoryModel = StoryModel.createStoryModelFromRequest(fbId, request);
-        EntryModel newEntryModel = EntryModel.newEntryModel(UpdateStoryForNewEntryModel.init(newStoryModel.getStoryId(), newStoryModel.getLastEntry(), newStoryModel.getLastFriendWithEntry(),
-                newStoryModel.getCurrEntryCharCount()));
+    public StoryResponse createStory(String coToken, NewStory request) {
+        StoryModel newStoryModel = StoryModel.createStoryModelFromRequest(coToken, request);
 
         storyDAO.createStory(newStoryModel);
-        entryDAO.addEntry(newEntryModel);
 
         StoryResponse storyResponse = new StoryResponse();
         BeanUtils.copyProperties(newStoryModel, storyResponse);

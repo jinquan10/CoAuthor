@@ -1,11 +1,12 @@
 package com.nwm.coauthor.service.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.bson.types.ObjectId;
 
-import com.nwm.coauthor.service.resource.request.NewStoryRequest;
+import com.nwm.coauthor.service.resource.request.NewStory;
 
 public class StoryModel extends BaseModel {
 	private String storyId;
@@ -20,14 +21,18 @@ public class StoryModel extends BaseModel {
     private Integer currEntryCharCount;
     private Integer rating;
     
-	public static StoryModel createStoryModelFromRequest(String fbId, NewStoryRequest request){
+    private List<String> entries;
+    
+	public static StoryModel createStoryModelFromRequest(String fbId, NewStory request){
     	StoryModel storyModel = new StoryModel();
+    	
+    	List<String> entries = new ArrayList<String>();
+    	entries.add(request.getEntry());
     	
     	storyModel.setStoryId(new ObjectId().toString());
     	storyModel.setLeaderFbId(fbId);
     	storyModel.setTitle(request.getTitle());
     	storyModel.setIsPublished(false);
-        storyModel.setFbFriends(request.getFbFriends());
         storyModel.setLikes(0L);
         storyModel.setLastFriendWithEntry(fbId);
         storyModel.setLastEntry(request.getEntry());
@@ -124,4 +129,12 @@ public class StoryModel extends BaseModel {
     public void setRating(Integer rating) {
         this.rating = rating;
     }
+
+	public List<String> getEntries() {
+		return entries;
+	}
+
+	public void setEntries(List<String> entries) {
+		this.entries = entries;
+	}
 }

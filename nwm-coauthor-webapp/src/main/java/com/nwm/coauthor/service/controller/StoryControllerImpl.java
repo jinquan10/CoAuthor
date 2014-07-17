@@ -37,7 +37,7 @@ import com.nwm.coauthor.service.manager.StoryManagerImpl;
 import com.nwm.coauthor.service.resource.request.ChangeTitleRequest;
 import com.nwm.coauthor.service.resource.request.NewEntryRequest;
 import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
-import com.nwm.coauthor.service.resource.request.NewStoryRequest;
+import com.nwm.coauthor.service.resource.request.NewStory;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.StoriesResponse;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
@@ -59,12 +59,12 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 
     @Override
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<StoryResponse> createStory(@RequestHeader("Authorization") String coToken, @RequestBody NewStoryRequest createStoryRequest) throws SomethingWentWrongException,
+    public ResponseEntity<StoryResponse> createStory(@RequestHeader("Authorization") String coToken, @RequestBody NewStory createStoryRequest) throws SomethingWentWrongException,
             AuthenticationUnauthorizedException, BadRequestException {
         validateCreateStoryRequest(createStoryRequest);
 
-        String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
-        StoryResponse storyResponse = storyManager.createStory(fbId, createStoryRequest);
+//        String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
+        StoryResponse storyResponse = storyManager.createStory(coToken, createStoryRequest);
 
         return new ResponseEntity<StoryResponse>(storyResponse, HttpStatus.CREATED);
     }
@@ -268,7 +268,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
         }
     }
 
-    protected void validateCreateStoryRequest(NewStoryRequest createStoryRequest) throws BadRequestException {
+    protected void validateCreateStoryRequest(NewStory createStoryRequest) throws BadRequestException {
         boolean isError = false;
         Map<String, String> batchErrors = new HashMap<String, String>();
 
@@ -280,11 +280,6 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
             isError = true;
         } else if (createStoryRequest.getEntry().length() > maxCharsPerEntry) {
             batchErrors.put("entry", "Your entry exceeds the number of characters specified.");
-            isError = true;
-        }
-
-        if (createStoryRequest.getFbFriends() == null || createStoryRequest.getFbFriends().size() < minFriends) {
-            batchErrors.put("fbFriends", "You must include at least " + minFriends + " Facebook friend.");
             isError = true;
         }
 

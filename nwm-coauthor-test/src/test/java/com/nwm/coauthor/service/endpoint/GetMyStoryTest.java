@@ -17,7 +17,7 @@ import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.service.builder.NewStoryBuilder;
 import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
-import com.nwm.coauthor.service.resource.request.NewStoryRequest;
+import com.nwm.coauthor.service.resource.request.NewStory;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 public class GetMyStoryTest extends BaseTest {
@@ -25,7 +25,7 @@ public class GetMyStoryTest extends BaseTest {
     public void getMyStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, NonMemberException {
         UserModel leader = UserBuilder.createUser();
 
-        NewStoryRequest newStoryRequest = NewStoryBuilder.init().build();
+        NewStory newStoryRequest = NewStoryBuilder.init().build();
 
         ResponseEntity<StoryResponse> createdStoryResponse = storyClient.createStory(leader.getCoToken(), newStoryRequest);
         StoryResponse createdStory = createdStoryResponse.getBody();
@@ -74,7 +74,7 @@ public class GetMyStoryTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel nonMember = UserBuilder.createUser();
         
-        NewStoryRequest newStoryRequest = NewStoryBuilder.init().build();
+        NewStory newStoryRequest = NewStoryBuilder.init().build();
 
         ResponseEntity<StoryResponse> createdStoryResponse = storyClient.createStory(leader.getCoToken(), newStoryRequest);
         StoryResponse createdStory = createdStoryResponse.getBody();

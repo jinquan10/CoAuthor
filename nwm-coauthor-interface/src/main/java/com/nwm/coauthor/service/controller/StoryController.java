@@ -21,14 +21,14 @@ import com.nwm.coauthor.exception.VersioningException;
 import com.nwm.coauthor.service.resource.request.ChangeTitleRequest;
 import com.nwm.coauthor.service.resource.request.NewEntryRequest;
 import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
-import com.nwm.coauthor.service.resource.request.NewStoryRequest;
+import com.nwm.coauthor.service.resource.request.NewStory;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.StoriesResponse;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 public interface StoryController {
     // - Create
-    public ResponseEntity<StoryResponse> createStory(String coToken, NewStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException;
+    public ResponseEntity<StoryResponse> createStory(String coToken, NewStory createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException;
 
     // - Read
     public ResponseEntity<StoriesResponse> getMyStories(String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException;
