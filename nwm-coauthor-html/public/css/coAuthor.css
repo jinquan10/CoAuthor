@@ -10,3 +10,15 @@
 .pointer {
 	cursor: pointer;
 }
+
+.title {
+/* 	font-family: CoAuthorTitle; */
+	font-family: Times New Roman;
+	font-style: italic;
+	font-size: xx-large;
+}
+
+@font-face {
+	font-family: 'CoAuthorTitle';
+/* 	src: url('Dion.ttf') format('truetype'); */
+}
