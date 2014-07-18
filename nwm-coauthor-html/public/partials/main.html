@@ -3,27 +3,38 @@
 		<h1 class="title">CoAuthor</h1>
 	</div>
 
-	<nav class="navbar navbar-default" role="navigation">
+	<nav
+		class="navbar navbar-default"
+		role="navigation">
 		<div class="container">
 			<ul class="nav navbar-nav">
 				<li>
 					<div class="btn-group navbar-btn">
-						<button ng-click="loadNewStorySchema();" class="btn btn-success"
-							data-toggle="modal" data-target="#newStoryModal">New
-							Story</button>
+						<button
+							ng-click="loadNewStorySchema();"
+							class="btn btn-success"
+							data-toggle="modal"
+							data-target="#newStoryModal">New Story</button>
 					</div>
 			</ul>
 		</div>
 	</nav>
 	<div class="row">
 		<div class="col-md-3">
-			<div class="panel-group" id="accordion">
-				<div class="panel panel-default pointer" data-toggle="collapse"
-					data-parent="#accordion" href="#collapseOne">
+			<div
+				class="panel-group"
+				id="accordion">
+				<div
+					class="panel panel-default pointer"
+					data-toggle="collapse"
+					data-parent="#accordion"
+					href="#collapseOne">
 					<div class="panel-heading">
 						<h4 class="text-center panel-title">My Stories</h4>
 					</div>
-					<div id="collapseOne" class="panel-collapse collapse in">
+					<div
+						id="collapseOne"
+						class="panel-collapse collapse in">
 						<div class="panel-body">sfasdf</div>
 					</div>
 				</div>
@@ -37,14 +48,19 @@
 		</div>
 	</div>
 
-	<div id="newStoryModal" class="modal fade">
+	<div
+		id="newStoryModal"
+		class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
+					<button
+						type="button"
+						class="close"
+						data-dismiss="modal">
 						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 class="modal-title center">New Story</h4>
+					<h4 class="modal-title center">{{storyForCreateModel.title}}</h4>
 				</div>
 				<div class="modal-body">
 					<form name="newStoryForm">
@@ -52,43 +68,18 @@
 							ng-repeat="displayField in storySchemaForCreateDisplay | orderBy:'displayOrder'"
 							style="clear: both">
 							<div style="float: left">
-								<ng-form ng-switch on="metadataSchema[displayField.key].type"
-									class="input-group" name="field{{$index}}"> <span
+								<ng-form
+									class="input-group"
+									name="field{{$index}}"> <span
 									class="input-group-addon">{{displayField.displayName}}</span> <input
-									ng-switch-default
-									type="metadataSchema[displayField.key]['type']"
-									style="width: 600px" class="form-control"
-									ng-model="metadataCreationModel[displayField.key]"
-									ng-required="metadataSchema[displayField.key].required" />
-
-								<div ng-switch-when="selection" class="btn-group btn-group-sm">
-									<button data-toggle="dropdown" style="width: 575px"
-										type="button" class="btn btn-default"
-										ng-model="metadataCreationModel[displayField.key]"
-										ng-required="metadataSchema[displayField.key].required">&nbsp{{getSelectionDisplay(metadataCreationModel[displayField.key],
-										metadataSchema[displayField.key].selectOptions)}}</button>
-									<button type="button" class="btn btn-default dropdown-toggle"
-										data-toggle="dropdown">
-										<span class="caret"></span>
-									</button>
-									<ul class="dropdown-menu" role="menu"
-										style="max-height: 300px; overflow-y: auto; overflow-x: hidden">
-										<li style="width: 600px; text-align: center"
-											ng-repeat="option in metadataSchema[displayField.key].selectOptions | orderBy:'displayValue'"><a
-											ng-click="setSelection(option, displayField.key, metadataCreationModel)">{{option.displayValue}}</a></li>
-									</ul>
-								</div>
-
-								<div ng-switch-when="date" class='input-group date'>
-									<input ng-required="metadataSchema[displayField.key].required"
-										style="width: 600px;" id="datePicker{{$index}}"
-										ng-mouseover="initDatePicker('datePicker' + $index, metadataSchema[displayField.key].dateFormat, metadataCreationModel, displayField.key);"
-										type="text" class="form-control" />
-								</div>
+									class="form-control text-center input-box"
+									ng-model="storyForCreateModel[displayField.name]"
+									ng-required="storySchemaForCreate[displayField.name].required" />
 							</div>
 
 							<div style="float: left">
-								<span ng-show="field{{$index}}.$error.required"
+								<span
+									ng-show="field{{$index}}.$error.required"
 									class="input-group-addon required-field">This field is
 									required!</span>
 							</div>
@@ -96,8 +87,13 @@
 					</form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary">Save changes</button>
+					<button
+						type="button"
+						class="btn btn-default"
+						data-dismiss="modal">Close</button>
+					<button
+						type="button"
+						class="btn btn-primary">Save changes</button>
 				</div>
 			</div>
 			<!-- /.modal-content -->
@@ -106,3 +102,32 @@
 	</div>
 	<!-- /.modal -->
 </div>
+
+
+<!-- <div -->
+<!-- 	ng-switch-when="selection" -->
+<!-- 	class="btn-group btn-group-sm"> -->
+<!-- 	<button -->
+<!-- 		data-toggle="dropdown" -->
+<!-- 		style="width: 575px" -->
+<!-- 		type="button" -->
+<!-- 		class="btn btn-default" -->
+<!-- 		ng-model="metadataCreationModel[displayField.key]" -->
+<!-- 		ng-required="metadataSchema[displayField.key].required">&nbsp{{getSelectionDisplay(metadataCreationModel[displayField.key], -->
+<!-- 		metadataSchema[displayField.key].selectOptions)}}</button> -->
+<!-- 	<button -->
+<!-- 		type="button" -->
+<!-- 		class="btn btn-default dropdown-toggle" -->
+<!-- 		data-toggle="dropdown"> -->
+<!-- 		<span class="caret"></span> -->
+<!-- 	</button> -->
+<!-- 	<ul -->
+<!-- 		class="dropdown-menu" -->
+<!-- 		role="menu" -->
+<!-- 		style="max-height: 300px; overflow-y: auto; overflow-x: hidden"> -->
+<!-- 		<li -->
+<!-- 			style="width: 600px; text-align: center" -->
+<!-- 			ng-repeat="option in metadataSchema[displayField.key].selectOptions | orderBy:'displayValue'"><a -->
+<!-- 			ng-click="setSelection(option, displayField.key, metadataCreationModel)">{{option.displayValue}}</a></li> -->
+<!-- 	</ul> -->
+<!-- </div> -->

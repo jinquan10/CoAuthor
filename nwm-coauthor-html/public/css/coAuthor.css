@@ -22,3 +22,11 @@
 	font-family: 'CoAuthorTitle';
 /* 	src: url('Dion.ttf') format('truetype'); */
 }
+
+.input-box {
+	width: 900px;
+}
+
+.input-group-addon {
+	width: 100px;
+}

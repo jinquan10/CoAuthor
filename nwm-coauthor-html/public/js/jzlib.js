@@ -15,3 +15,11 @@ function getSchemaDisplay(schema) {
 
 	return display;
 }
+
+function isPromiseOrResolved(key) {
+    if (key == '$promise' || key == '$resolved'){
+        return true;
+    }
+    
+    return false;
+}

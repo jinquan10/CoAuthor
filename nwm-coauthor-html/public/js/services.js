@@ -6,11 +6,11 @@ function getHost(){
     return window.location.protocol + '//' + window.location.host + '/nwm-coauthor-webapp';
 }
 
-coAuthorServices.factory('Story', [ '$resource', function($resource) {
-	return $resource(host + '/stories:path', {}, {
-		getSchemaNew : {
+coAuthorServices.factory('Schemas', [ '$resource', function($resource) {
+	return $resource(host + '/schemas/:type', {}, {
+		getSchemaForCreate : {
 			method : 'GET',
-			params: {path: '/schema/new'}
+			params : {type: 'new-story'}
 		}
 	});
 } ]);
