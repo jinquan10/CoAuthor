@@ -53,45 +53,43 @@
 		class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<div class="modal-header">
-					<button
-						type="button"
-						class="close"
-						data-dismiss="modal">
-						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-					</button>
-					<h4 class="modal-title center">{{storyForCreateModel.title}}</h4>
-				</div>
-				<div class="modal-body">
-					<form name="newStoryForm">
-						<div
-							ng-repeat="displayField in storySchemaForCreateDisplay | orderBy:'displayOrder'"
-							style="clear: both">
-							<div style="float: left">
-								<ng-form
-									class="input-group"
-									name="field{{$index}}"> <span
-									class="input-group-addon">{{displayField.displayName}}</span> <input
-									class="form-control text-center input-box"
-									ng-model="storyForCreateModel[displayField.name]"
-									ng-required="storySchemaForCreate[displayField.name].required" />
-							</div>
+				<form name="newStoryForm">
+					<div class="modal-header">
+						<button
+							type="button"
+							class="close"
+							data-dismiss="modal">
+							<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+						</button>
+						<ng-form
+							class="center"
+							name="newStoryTitleNgForm"> <input
+							class="input-title form-control text-center"
+							ng-model="storyForCreateModel['title']"
+							ng-required="storySchemaForCreate['title'].required"
+							placeholder="{{storySchemaForCreate['title'].hintText}}" /> </ng-form>
+					</div>
 
-							<div style="float: left">
-								<span
-									ng-show="field{{$index}}.$error.required"
-									class="input-group-addon required-field">This field is
-									required!</span>
-							</div>
+					<div class="modal-body">
+						<div>
+							<ng-form
+								class="center"
+								name="newStoryEntryNgForm"> <textarea
+								ng-model="storyForCreateModel['entry']"
+								ng-required="storySchemaForCreate['entry'].required"
+								placeholder="{{storySchemaForCreate['entry'].hintText}}"
+								class="form-control input-entry"
+								rows="3"></textarea> </ng-form>
 						</div>
-					</form>
-				</div>
+					</div>
+				</form>
 				<div class="modal-footer">
 					<button
 						type="button"
 						class="btn btn-default"
 						data-dismiss="modal">Close</button>
 					<button
+						ng-show="newStoryForm.$error.required"
 						type="button"
 						class="btn btn-primary">Save changes</button>
 				</div>

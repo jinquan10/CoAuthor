@@ -85,35 +85,35 @@ public class MyStoriesTest extends BaseTest {
     	assertEquals(2, myStoriesResponse.getBody().getMyStories().size());
     }
 
-    @Test
-    public void getMyStoriesAsMember() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException{
-    	UserModel leader = UserBuilder.createUser();
-    	UserModel member = UserBuilder.createUser();
-    	
-    	storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).build());
-    	storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).build());
-    	
-    	ResponseEntity<StoriesResponse> myStoriesResponse = storyClient.getMyStories(member.getCoToken());
-    	assertNotNull(myStoriesResponse.getBody().getMyStories());
-    	assertEquals(2, myStoriesResponse.getBody().getMyStories().size());
-    }
+//    @Test
+//    public void getMyStoriesAsMember() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException{
+//    	UserModel leader = UserBuilder.createUser();
+//    	UserModel member = UserBuilder.createUser();
+//    	
+//    	storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).build());
+//    	storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).build());
+//    	
+//    	ResponseEntity<StoriesResponse> myStoriesResponse = storyClient.getMyStories(member.getCoToken());
+//    	assertNotNull(myStoriesResponse.getBody().getMyStories());
+//    	assertEquals(2, myStoriesResponse.getBody().getMyStories().size());
+//    }
     
-    @Test
-    public void getMyStoriesAsLeaderAndMember() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException{
-    	UserModel leader = UserBuilder.createUser();
-    	UserModel member = UserBuilder.createUser();
-    	
-    	storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).build());
-    	storyClient.createStory(member.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(leader).build());
-    	
-    	ResponseEntity<StoriesResponse> myStoriesResponse = storyClient.getMyStories(leader.getCoToken());
-    	assertNotNull(myStoriesResponse.getBody().getMyStories());
-    	assertEquals(2, myStoriesResponse.getBody().getMyStories().size());
-    	
-    	myStoriesResponse = storyClient.getMyStories(member.getCoToken());
-    	assertNotNull(myStoriesResponse.getBody().getMyStories());
-    	assertEquals(2, myStoriesResponse.getBody().getMyStories().size());    	
-    }
+//    @Test
+//    public void getMyStoriesAsLeaderAndMember() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException{
+//    	UserModel leader = UserBuilder.createUser();
+//    	UserModel member = UserBuilder.createUser();
+//    	
+//    	storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).build());
+//    	storyClient.createStory(member.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(leader).build());
+//    	
+//    	ResponseEntity<StoriesResponse> myStoriesResponse = storyClient.getMyStories(leader.getCoToken());
+//    	assertNotNull(myStoriesResponse.getBody().getMyStories());
+//    	assertEquals(2, myStoriesResponse.getBody().getMyStories().size());
+//    	
+//    	myStoriesResponse = storyClient.getMyStories(member.getCoToken());
+//    	assertNotNull(myStoriesResponse.getBody().getMyStories());
+//    	assertEquals(2, myStoriesResponse.getBody().getMyStories().size());    	
+//    }
     
 //    @Test
 //    public void getPrivateStories_UserShouldSeeOneEntry_WhenMoreThanOneEntryIsSubmitted() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException,

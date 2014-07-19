@@ -15,8 +15,29 @@ public class JsonSchemaField {
     private String dateFormat;
     private String format;
     private String formatErrorMessage;
+    private Integer minLength;
+    private Integer maxLength;
+    private String hintText;
     private List<JsonSelect> selectOptions;
 
+    public String getHintText() {
+		return hintText;
+	}
+	public void setHintText(String hintText) {
+		this.hintText = hintText;
+	}
+	public Integer getMinLength() {
+		return minLength;
+	}
+	public void setMinLength(Integer minLength) {
+		this.minLength = minLength;
+	}
+	public Integer getMaxLength() {
+		return maxLength;
+	}
+	public void setMaxLength(Integer maxLength) {
+		this.maxLength = maxLength;
+	}
     public Boolean getReadOnly() {
         return readOnly;
     }

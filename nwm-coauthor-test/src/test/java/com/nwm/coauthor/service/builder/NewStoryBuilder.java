@@ -30,23 +30,6 @@ public class NewStoryBuilder {
         return this;
     }
 
-    public NewStoryBuilder fbIdList(List<String> fbFriends) {
-        request.setFbFriends(fbFriends);
-        return this;
-    }
-
-    public NewStoryBuilder fbFriendsFromUserModel(UserModel friend) {
-		String fbId = friend.getFbId();
-
-		if(getRequest().getFbFriends() == null){
-		    getRequest().setFbFriends(new ArrayList<String>());
-		}
-		
-		request.getFbFriends().add(fbId);
-		
-		return this;
-    }
-    
     public NewStoryBuilder title(String title) {
         request.setTitle(title);
         return this;
@@ -55,7 +38,6 @@ public class NewStoryBuilder {
     
     public NewStory build() {
         request.setEntry(request.getEntry() == null ? "12345" : request.getEntry());
-        request.setFbFriends(request.getFbFriends() == null ? (UserBuilder.getDefaultFBFriends()) : request.getFbFriends());
         request.setTitle(request.getTitle() == null ? null : request.getTitle());
 
         return request;

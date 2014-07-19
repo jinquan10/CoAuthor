@@ -134,6 +134,18 @@ public class JsonSchemaUtil {
                 jsonField.setRequired(true);
             }
 
+            if(containsAnnotation(field, MinLength.class)) {
+            	jsonField.setMinLength(field.getAnnotation(MinLength.class).value());
+            }
+            
+            if(containsAnnotation(field, MaxLength.class)) {
+            	jsonField.setMaxLength(field.getAnnotation(MaxLength.class).value());
+            }
+
+            if(containsAnnotation(field, HintText.class)) {
+            	jsonField.setHintText(field.getAnnotation(HintText.class).value());
+            }
+            
             if(containsAnnotation(field, ReadOnlyField.class)) {
                 jsonField.setReadOnly(true);
             }

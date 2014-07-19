@@ -14,7 +14,14 @@
 	</properties>
 
 	<dependencyManagement>
+
 		<dependencies>
+			<dependency>
+				<groupId>org.springframework.android</groupId>
+				<artifactId>spring-android-rest-template</artifactId>
+				<version>1.0.1.RELEASE</version>
+			</dependency>
+
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
@@ -108,7 +115,7 @@
 		<module>nwm-coauthor-interface</module>
 		<module>nwm-coauthor-client</module>
 		<module>nwm-coauthor-webapp</module>
-		<module>nwm-coauthor-test</module>
-		<module>nwm-coauthor-android</module>
+<!-- 		<module>nwm-coauthor-test</module> -->
+<!-- 		<module>nwm-coauthor-android</module> -->
 	</modules>
 </project>
