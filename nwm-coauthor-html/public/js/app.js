@@ -1,5 +1,5 @@
 var coAuthorApp = angular.module('coAuthorApp', [
-        'ngRoute', 'coAuthorControllers', 'coAuthorServices'
+        'ngRoute', 'coAuthorControllers', 'coAuthorServices', 'ngCookies'
 ]);
 
 coAuthorApp.config([

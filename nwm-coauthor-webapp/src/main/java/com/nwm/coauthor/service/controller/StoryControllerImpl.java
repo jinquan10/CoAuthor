@@ -61,7 +61,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<StoryResponse> createStory(@RequestHeader("Authorization") String coToken, @RequestBody NewStory createStoryRequest) throws SomethingWentWrongException,
             AuthenticationUnauthorizedException, BadRequestException {
-        validateCreateStoryRequest(createStoryRequest);
+//        validateCreateStoryRequest(createStoryRequest);
 
 //        String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
         StoryResponse storyResponse = storyManager.createStory(coToken, createStoryRequest);

@@ -20,7 +20,9 @@
 		</div>
 	</nav>
 	<div class="row">
-		<div class="col-md-3">
+		<div
+			class="col-md-3"
+			ng-hide="!loggedIn">
 			<div
 				class="panel-group"
 				id="accordion">
@@ -40,11 +42,13 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
-			<div>Public stories</div>
+		<div ng-class="getPublicStoryClass()">
+			<div class="center">Public stories</div>
 		</div>
-		<div class="col-md-3">
-			<div>My Favorites</div>
+		<div
+			class="col-md-3"
+			ng-hide="!loggedIn">
+			<div class="center">My Favorites</div>
 		</div>
 	</div>
 
@@ -85,7 +89,9 @@
 								placeholder="{{storySchemaForCreate['entry'].hintText}}"
 								class="form-control input-entry tooltips"
 								rows="3"></textarea>
-							<div id="newStoryCharsRemaining" class="char-remaining"></div>
+							<div
+								id="newStoryCharsRemaining"
+								class="char-remaining"></div>
 							</ng-form>
 
 						</div>
