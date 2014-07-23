@@ -46,3 +46,7 @@
 	float: right;
 	display: block; 
 }
+
+.no-border {
+	border: 0;
+}

@@ -4,7 +4,7 @@
 	</div>
 
 	<nav
-		class="navbar navbar-default"
+		class="navbar navbar-default no-border"
 		role="navigation">
 		<div class="container">
 			<ul class="nav navbar-nav">
@@ -43,7 +43,26 @@
 			</div>
 		</div>
 		<div ng-class="getPublicStoryClass()">
-			<div class="center">Public stories</div>
+			<div class="center">
+				<div
+					class="panel-group"
+					id="accordion">
+					<div
+						class="panel panel-default pointer"
+						data-toggle="collapse"
+						data-parent="#accordion"
+						href="#collapseOne">
+						<div class="panel-heading">
+							<h4 class="text-center panel-title"></h4>
+						</div>
+						<div
+							id="collapseOne"
+							class="panel-collapse collapse in">
+							<div class="panel-body">sfasdf</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		<div
 			class="col-md-3"
