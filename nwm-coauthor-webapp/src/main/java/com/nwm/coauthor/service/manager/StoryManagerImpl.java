@@ -3,7 +3,6 @@ package com.nwm.coauthor.service.manager;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -50,15 +49,10 @@ public class StoryManagerImpl {
 
     int numCharToGet = 1000;
 
-    public StoryResponse createStory(String coToken, NewStory request) {
+    public void createStory(String coToken, NewStory request) {
         StoryModel newStoryModel = StoryModel.createStoryModelFromRequest(coToken, request);
-
+        
         storyDAO.createStory(newStoryModel);
-
-        StoryResponse storyResponse = new StoryResponse();
-        BeanUtils.copyProperties(newStoryModel, storyResponse);
-
-        return storyResponse;
     }
     
     public StoryResponse publishStory(String fbId, String storyId) throws StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException, SomethingWentWrongException {
