@@ -4,7 +4,7 @@ coAuthorControllers.controller('mainController', [
         '$cookies', '$scope', '$routeParams', '$http', 'Schemas', 'Story', function($cookies, $scope, $routeParams, $http, Schemas, Story) {
 
             $scope.storyForCreateModel = {};
-            $scope.loggedIn = ($cookies.coToken != "null");
+            $scope.loggedIn = ($cookies.coToken != undefined);
             
             $scope.loadNewStorySchema = function loadNewStorySchemaFn() {
                 Schemas.getSchemaForCreate(function(res) {
@@ -22,10 +22,10 @@ coAuthorControllers.controller('mainController', [
             }
             
             $scope.getPublicStoryClass = function() {
-                if ($cookies.coToken == "null") {
-                    return "col-md-12";
-                } else {
+                if ($scope.loggedIn) {
                     return "col-md-6";
+                } else {
+                    return "col-md-12";
                 }
             }
         }
