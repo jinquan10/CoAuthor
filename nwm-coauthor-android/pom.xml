@@ -30,15 +30,15 @@
 	<build>
 		<finalName>${project.artifactId}</finalName>
 		<plugins>
-			<plugin>
-				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
-				<artifactId>android-maven-plugin</artifactId>
-				<configuration>
-					<sdk>
-						<platform>16</platform>
-					</sdk>
-				</configuration>
-			</plugin>
+<!-- 			<plugin> -->
+<!-- 				<groupId>com.jayway.maven.plugins.android.generation2</groupId> -->
+<!-- 				<artifactId>android-maven-plugin</artifactId> -->
+<!-- 				<configuration> -->
+<!-- 					<sdk> -->
+<!-- 						<platform>16</platform> -->
+<!-- 					</sdk> -->
+<!-- 				</configuration> -->
+<!-- 			</plugin> -->
 		</plugins>
 	</build>
 </project>

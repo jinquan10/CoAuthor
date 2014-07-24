@@ -1,53 +1,68 @@
 package com.nwm.coauthor.service.model;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import org.bson.types.ObjectId;
+import org.joda.time.DateTime;
+import org.springframework.data.annotation.Id;
 
 import com.nwm.coauthor.service.resource.request.NewStory;
 
 public class StoryModel extends BaseModel {
-	private String storyId;
-	private String leaderFbId;    	// - changeable by the leader only
+	@Id
+	private String id;
     private String title;
-    private Boolean isPublished;
-    private List<String> fbFriends;
-    private Long likes;    		// - changeable by public
-    private String lastFriendWithEntry; // - changed when an entry is submitted
-    private String lastEntry; 
-    private Long storyLastUpdated;  // - changed when anything above is updated
-    private Integer currEntryCharCount;
-    private Integer rating;
+
+    private Integer views;
+    private Integer charCount;
+    private Integer stars;
     
-    private List<String> entries;
-    
-	public static StoryModel createStoryModelFromRequest(String fbId, NewStory request){
+    private List<EntryModel> entries;
+
+    public static StoryModel fromNewStory(Long timeZoneOffsetMinutes, String coToken, String createdByDisplayName, NewStory request){
+    	Long now = DateTime.now().getMillis();
+
+    	EntryModel entry = entryFromNewStory(timeZoneOffsetMinutes, coToken, createdByDisplayName, request.getEntry(), now);
+    	
+    	List<EntryModel> theEntries = new ArrayList<EntryModel>();
+    	theEntries.add(entry);
+
     	StoryModel storyModel = new StoryModel();
     	
-    	List<String> entries = new ArrayList<String>();
-    	entries.add(request.getEntry());
+    	storyModel.setCoToken(coToken);
+    	storyModel.setCreatedByDisplayName(createdByDisplayName);
+    	storyModel.setCreatedOn(now);
+    	storyModel.setLastUpdated(now);
+    	storyModel.setTimeZoneOffsetMinutes(timeZoneOffsetMinutes);
     	
-    	storyModel.setStoryId(new ObjectId().toString());
-    	storyModel.setLeaderFbId(fbId);
     	storyModel.setTitle(request.getTitle());
-    	storyModel.setIsPublished(false);
-        storyModel.setLikes(0L);
-        storyModel.setLastFriendWithEntry(fbId);
-        storyModel.setLastEntry(request.getEntry());
-        storyModel.setStoryLastUpdated(new Date().getTime());
-        storyModel.setCurrEntryCharCount(request.getEntry().length());
-        
+    	storyModel.setViews(1);
+    	storyModel.setCharCount(request.getEntry().length());
+    	storyModel.setEntries(theEntries);
+    	
         return storyModel;
     }
+
+    private static EntryModel entryFromNewStory(Long timeZoneOffsetMinutes, String coToken, String createdByDisplayName, String entry, Long now) {
+    	EntryModel entryModel = new EntryModel();
+
+    	entryModel.setCharCount(entry.length());
+    	entryModel.setCoToken(coToken);
+    	entryModel.setCreatedByDisplayName(createdByDisplayName);
+    	entryModel.setCreatedOn(now);
+    	entryModel.setEntry(entry);
+    	entryModel.setLastUpdated(now);
+    	entryModel.setTimeZoneOffsetMinutes(timeZoneOffsetMinutes);
+    	
+    	return entryModel;
+    }
     
-	public String getLeaderFbId() {
-		return leaderFbId;
+	public String getId() {
+		return id;
 	}
 
-	public void setLeaderFbId(String leaderFbId) {
-		this.leaderFbId = leaderFbId;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getTitle() {
@@ -58,83 +73,35 @@ public class StoryModel extends BaseModel {
 		this.title = title;
 	}
 
-	public Boolean getIsPublished() {
-		return isPublished;
-	}
-
-	public void setIsPublished(Boolean isPublished) {
-		this.isPublished = isPublished;
-	}
-
-	public List<String> getFbFriends() {
-		return fbFriends;
-	}
-
-	public void setFbFriends(List<String> fbFriends) {
-		this.fbFriends = fbFriends;
-	}
-
-	public Long getLikes() {
-		return likes;
-	}
-
-	public void setLikes(Long likes) {
-		this.likes = likes;
-	}
-
-	public String getLastFriendWithEntry() {
-		return lastFriendWithEntry;
-	}
-
-	public void setLastFriendWithEntry(String lastFriendWithEntry) {
-		this.lastFriendWithEntry = lastFriendWithEntry;
-	}
-
-	public Long getStoryLastUpdated() {
-		return storyLastUpdated;
-	}
-
-	public void setStoryLastUpdated(Long storyLastUpdated) {
-		this.storyLastUpdated = storyLastUpdated;
-	}
-
-	public String getLastEntry() {
-		return lastEntry;
-	}
-
-	public void setLastEntry(String lastEntry) {
-		this.lastEntry = lastEntry;
-	}
-
-	public String getStoryId() {
-		return storyId;
-	}
-
-	public void setStoryId(String storyId) {
-		this.storyId = storyId;
-	}
-
-    public Integer getCurrEntryCharCount() {
-        return currEntryCharCount;
-    }
-
-    public void setCurrEntryCharCount(Integer currEntryCharCount) {
-        this.currEntryCharCount = currEntryCharCount;
-    }
-
-    public Integer getRating() {
-        return rating;
-    }
-
-    public void setRating(Integer rating) {
-        this.rating = rating;
-    }
-
-	public List<String> getEntries() {
+	public List<EntryModel> getEntries() {
 		return entries;
 	}
 
-	public void setEntries(List<String> entries) {
+	public void setEntries(List<EntryModel> entries) {
 		this.entries = entries;
+	}
+
+	public Integer getViews() {
+		return views;
+	}
+
+	public void setViews(Integer views) {
+		this.views = views;
+	}
+
+	public Integer getCharCount() {
+		return charCount;
+	}
+
+	public void setCharCount(Integer charCount) {
+		this.charCount = charCount;
+	}
+
+	public Integer getStars() {
+		return stars;
+	}
+
+	public void setStars(Integer stars) {
+		this.stars = stars;
 	}
 }

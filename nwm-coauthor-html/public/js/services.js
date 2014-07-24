@@ -23,13 +23,10 @@ coAuthorServices.factory('Schemas', [
 
 coAuthorServices.factory('Story', [
         '$resource', function($resource) {
-            return $resource(host + '/schemas/:type', {}, {
-//                getSchemaForCreate : {
-//                    method : 'GET',
-//                    params : {
-//                        type : 'new-story'
-//                    }
-//                }
+            return $resource(host + '/story', {}, {
+                create : {
+                    method : 'POST'
+                }
             });
         }
 ]);

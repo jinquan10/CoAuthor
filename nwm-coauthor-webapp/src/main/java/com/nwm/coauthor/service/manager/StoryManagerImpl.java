@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.mongodb.WriteResult;
+import com.nwm.coauthor.Constants;
 import com.nwm.coauthor.exception.AlreadyAMemberException;
 import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.AlreadyPublishedException;
@@ -26,7 +27,6 @@ import com.nwm.coauthor.service.dao.CommentDAOImpl;
 import com.nwm.coauthor.service.dao.EntryDAOImpl;
 import com.nwm.coauthor.service.dao.StoryDAOImpl;
 import com.nwm.coauthor.service.dao.UserDAOImpl;
-import com.nwm.coauthor.service.model.EntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.model.UpdateStoryForNewEntryModel;
 import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
@@ -49,9 +49,16 @@ public class StoryManagerImpl {
 
     int numCharToGet = 1000;
 
-    public void createStory(String coToken, NewStory request) {
-        StoryModel newStoryModel = StoryModel.createStoryModelFromRequest(coToken, request);
-        
+    public void createStory(Long timeZoneOffsetMinutes, String coToken, NewStory request) {
+    	String createdByDisplayName = null;
+    	
+    	if (!StringUtils.hasText(coToken)) {
+    		createdByDisplayName = Constants.ANONYMOUS_USER;
+    	} else {
+    		// - fetch the user's name
+    	}
+    	
+        StoryModel newStoryModel = StoryModel.fromNewStory(timeZoneOffsetMinutes, coToken, createdByDisplayName, request);
         storyDAO.createStory(newStoryModel);
     }
     
@@ -202,7 +209,7 @@ public class StoryManagerImpl {
         StoryResponse response = parseAddEntryExceptions(fbId, storyId, charCountForVersioning);
         UpdateStoryForNewEntryModel storyUpdateModel = UpdateStoryForNewEntryModel.init(storyId, entry, fbId, response.getCurrEntryCharCount() + entry.length());
         storyDAO.updateStoryForAddingEntry(storyUpdateModel);
-        entryDAO.addEntry(EntryModel.newEntryModel(storyUpdateModel));
+//        entryDAO.addEntry(EntryModel.newEntryModel(storyUpdateModel));
 
         return storyUpdateModel.mergeWithStoryResponse(response);
     }

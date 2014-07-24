@@ -4,7 +4,10 @@ coAuthorControllers.controller('mainController', [
         '$cookies', '$scope', '$routeParams', '$http', 'Schemas', 'Story', function($cookies, $scope, $routeParams, $http, Schemas, Story) {
 
             $scope.storyForCreateModel = {};
-            $scope.loggedIn = ($cookies.coToken != undefined);
+            $scope.loggedIn = ($cookies.Authorization != undefined);
+            
+            $http.defaults.headers.common['TimeZoneOffsetMinutes'] = new Date().getTimezoneOffset();
+            $http.defaults.headers.common['Authorization'] = $cookies.Authorization;
             
             $scope.loadNewStorySchema = function loadNewStorySchemaFn() {
                 Schemas.getSchemaForCreate(function(res) {
@@ -16,9 +19,9 @@ coAuthorControllers.controller('mainController', [
             };
             
             $scope.createStory = function createStoryFn() {
-//                Story.create($scope.storySchemaForCreate, function(res)){
-//                    $scope.storyForCreateModel = {};
-//                }
+                Story.create($scope.storyForCreateModel, function(res){
+                    $scope.storyForCreateModel = {};
+                });
             }
             
             $scope.getPublicStoryClass = function() {

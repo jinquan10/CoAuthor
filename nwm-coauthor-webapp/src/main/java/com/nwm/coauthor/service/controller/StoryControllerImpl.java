@@ -60,13 +60,13 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 	@Override
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	@RequestMapping(method = RequestMethod.POST)
-	public void createStory(@RequestHeader("Authorization") String coToken, @RequestBody NewStory createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException,
+	public void createStory(@RequestHeader("TimeZoneOffsetMinutes") Long timeZoneOffsetMinutes, @RequestHeader(required = false, value = "Authorization") String coToken, @RequestBody NewStory createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException,
 			BadRequestException {
 		// validateCreateStoryRequest(createStoryRequest);
 		// String fbId =
 		// authenticationManager.authenticateCOTokenForFbId(coToken);
 
-		storyManager.createStory(coToken, createStoryRequest);
+		storyManager.createStory(timeZoneOffsetMinutes, coToken, createStoryRequest);
 	}
 
 	@Override

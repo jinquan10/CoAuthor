@@ -28,7 +28,7 @@ import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 public interface StoryController {
     // - Create
-    public void createStory(String coToken, NewStory createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException;
+    public void createStory(Long timeZoneOffsetMinutes, String coToken, NewStory createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException;
 
     // - Read
     public ResponseEntity<StoriesResponse> getMyStories(String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException;

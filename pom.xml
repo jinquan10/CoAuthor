@@ -11,6 +11,7 @@
 		<jacksonJson>2.4.1.1</jacksonJson>
 		<testParallelMode>methods</testParallelMode>
 		<testThreadCount>3</testThreadCount>
+		<joda.time>2.3</joda.time>
 	</properties>
 
 	<dependencyManagement>
@@ -20,6 +21,12 @@
 				<groupId>org.springframework.android</groupId>
 				<artifactId>spring-android-rest-template</artifactId>
 				<version>1.0.1.RELEASE</version>
+			</dependency>
+
+			<dependency>
+				<groupId>joda-time</groupId>
+				<artifactId>joda-time</artifactId>
+				<version>${joda.time}</version>
 			</dependency>
 
 			<dependency>
@@ -115,7 +122,7 @@
 		<module>nwm-coauthor-interface</module>
 		<module>nwm-coauthor-client</module>
 		<module>nwm-coauthor-webapp</module>
-<!-- 		<module>nwm-coauthor-test</module> -->
-<!-- 		<module>nwm-coauthor-android</module> -->
+		<!-- <module>nwm-coauthor-test</module> -->
+		<!-- <module>nwm-coauthor-android</module> -->
 	</modules>
 </project>
