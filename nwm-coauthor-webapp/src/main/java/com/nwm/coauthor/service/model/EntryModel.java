@@ -1,10 +1,11 @@
 package com.nwm.coauthor.service.model;
 
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document(collection = "entry")
 public class EntryModel extends BaseModel {
     private String entry;
     private Integer charCount;
-
     
     public EntryModel (){
     	

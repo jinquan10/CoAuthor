@@ -1,5 +1,7 @@
 package com.nwm.coauthor.service.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 
 import com.nwm.coauthor.exception.AlreadyAMemberException;
@@ -27,9 +29,16 @@ import com.nwm.coauthor.service.resource.response.StoriesResponse;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 public interface StoryController {
-    // - Create
-    public void createStory(Long timeZoneOffsetMinutes, String coToken, NewStory createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException;
 
+    public void createStory(Long timeZoneOffsetMinutes, String coToken, NewStory createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException;
+    ResponseEntity<List<StoryResponse>> getTopViewStories();
+
+    
+    
+    
+    
+    
+    
     // - Read
     public ResponseEntity<StoriesResponse> getMyStories(String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException;
 	public ResponseEntity<StoryResponse> getMyStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, SomethingWentWrongException, NonMemberException;
@@ -58,4 +67,5 @@ public interface StoryController {
     // get public stories by # of comments
     // get public stories by longest
     //	public void comment(String coToken, String storyId, CommentRequest request);
+
 }

@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.nwm.coauthor.service.resource.request.NewStory;
 
+@Document(collection = "story")
 public class StoryModel extends BaseModel {
 	@Id
 	private String id;
@@ -18,6 +20,9 @@ public class StoryModel extends BaseModel {
     private Integer stars;
     
     private List<EntryModel> entries;
+    
+    private EntryModel firstEntry;
+    private EntryModel lastEntry;
 
     public static StoryModel fromNewStory(Long timeZoneOffsetMinutes, String coToken, String createdByDisplayName, NewStory request){
     	Long now = DateTime.now().getMillis();
@@ -29,7 +34,7 @@ public class StoryModel extends BaseModel {
 
     	StoryModel storyModel = new StoryModel();
     	
-    	storyModel.setCoToken(coToken);
+    	storyModel.setCreatedById(coToken);
     	storyModel.setCreatedByDisplayName(createdByDisplayName);
     	storyModel.setCreatedOn(now);
     	storyModel.setLastUpdated(now);
@@ -39,6 +44,7 @@ public class StoryModel extends BaseModel {
     	storyModel.setViews(1);
     	storyModel.setCharCount(request.getEntry().length());
     	storyModel.setEntries(theEntries);
+    	storyModel.setFirstEntry(entry);
     	
         return storyModel;
     }
@@ -47,7 +53,7 @@ public class StoryModel extends BaseModel {
     	EntryModel entryModel = new EntryModel();
 
     	entryModel.setCharCount(entry.length());
-    	entryModel.setCoToken(coToken);
+    	entryModel.setCreatedById(coToken);
     	entryModel.setCreatedByDisplayName(createdByDisplayName);
     	entryModel.setCreatedOn(now);
     	entryModel.setEntry(entry);
@@ -103,5 +109,21 @@ public class StoryModel extends BaseModel {
 
 	public void setStars(Integer stars) {
 		this.stars = stars;
+	}
+
+	public EntryModel getFirstEntry() {
+		return firstEntry;
+	}
+
+	public void setFirstEntry(EntryModel firstEntry) {
+		this.firstEntry = firstEntry;
+	}
+
+	public EntryModel getLastEntry() {
+		return lastEntry;
+	}
+
+	public void setLastEntry(EntryModel lastEntry) {
+		this.lastEntry = lastEntry;
 	}
 }

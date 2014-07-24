@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
 import com.mongodb.WriteResult;
+import com.nwm.coauthor.Constants;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.model.TotalCharsModel;
 import com.nwm.coauthor.service.model.UpdateStoryForNewEntryModel;
@@ -153,4 +154,11 @@ public class StoryDAOImpl {
         
         return mongoTemplate.findAndModify(q, update, FindAndModifyOptions.options().returnNew(true), StoryResponse.class, "storyModel");
     }
+
+	public List<StoryResponse> getTopViewStories(Integer topViewCount) {
+		Query query = new Query();
+		query.limit(topViewCount);
+		
+		return mongoTemplate.find(query, StoryResponse.class, Constants.STORY_COLLECTION);
+	}
 }

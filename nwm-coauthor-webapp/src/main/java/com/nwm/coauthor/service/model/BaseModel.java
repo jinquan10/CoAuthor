@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
 public class BaseModel {
-    private String coToken;
+    private String createdById;
     private String createdByDisplayName;
     
     private Long createdOn;
@@ -15,12 +15,6 @@ public class BaseModel {
 
     private Long timeZoneOffsetMinutes;
     
-	public String getCoToken() {
-		return coToken;
-	}
-	public void setCoToken(String coToken) {
-		this.coToken = coToken;
-	}
 	public String getCreatedByDisplayName() {
 		return createdByDisplayName;
 	}
@@ -44,5 +38,11 @@ public class BaseModel {
 	}
 	public void setTimeZoneOffsetMinutes(Long timeZoneOffsetMinutes) {
 		this.timeZoneOffsetMinutes = timeZoneOffsetMinutes;
+	}
+	public String getCreatedById() {
+		return createdById;
+	}
+	public void setCreatedById(String createdById) {
+		this.createdById = createdById;
 	}
 }

@@ -1,33 +1,23 @@
 package com.nwm.coauthor.service.resource.response;
 
-import java.util.List;
-
 import com.nwm.coauthor.service.resource.BaseResource;
 
 public class StoryResponse extends BaseResource{
-	private String storyId;
-	private String leaderFbId;    	// - changeable by the leader only
+	private String id;
     private String title;
-    private Boolean isPublished;
-    private List<String> fbFriends;
-    private Long likes;    		// - changeable by public
-    private String lastFriendWithEntry; // - changed when an entry is submitted
-    private String lastEntry; 
-    private Long storyLastUpdated;  // - changed when anything above is updated
-    private Integer currEntryCharCount;    	// - changed when entry is added
-    private Double rating;
+
+    private Integer views;
+    private Integer charCount;
+    private Integer stars;
     
-	public String getStoryId() {
-		return storyId;
+    private EntryResponse firstEntry;
+    private EntryResponse lastEntry;
+    
+	public String getId() {
+		return id;
 	}
-	public void setStoryId(String storyId) {
-		this.storyId = storyId;
-	}
-	public String getLeaderFbId() {
-		return leaderFbId;
-	}
-	public void setLeaderFbId(String leaderFbId) {
-		this.leaderFbId = leaderFbId;
+	public void setId(String id) {
+		this.id = id;
 	}
 	public String getTitle() {
 		return title;
@@ -35,52 +25,34 @@ public class StoryResponse extends BaseResource{
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public Boolean getIsPublished() {
-		return isPublished;
+	public Integer getViews() {
+		return views;
 	}
-	public void setIsPublished(Boolean isPublished) {
-		this.isPublished = isPublished;
+	public void setViews(Integer views) {
+		this.views = views;
 	}
-	public List<String> getFbFriends() {
-		return fbFriends;
+	public Integer getCharCount() {
+		return charCount;
 	}
-	public void setFbFriends(List<String> fbFriends) {
-		this.fbFriends = fbFriends;
+	public void setCharCount(Integer charCount) {
+		this.charCount = charCount;
 	}
-	public Long getLikes() {
-		return likes;
+	public Integer getStars() {
+		return stars;
 	}
-	public void setLikes(Long likes) {
-		this.likes = likes;
+	public void setStars(Integer stars) {
+		this.stars = stars;
 	}
-	public String getLastFriendWithEntry() {
-		return lastFriendWithEntry;
+	public EntryResponse getFirstEntry() {
+		return firstEntry;
 	}
-	public void setLastFriendWithEntry(String lastFriendWithEntry) {
-		this.lastFriendWithEntry = lastFriendWithEntry;
+	public void setFirstEntry(EntryResponse firstEntry) {
+		this.firstEntry = firstEntry;
 	}
-	public String getLastEntry() {
+	public EntryResponse getLastEntry() {
 		return lastEntry;
 	}
-	public void setLastEntry(String lastEntry) {
+	public void setLastEntry(EntryResponse lastEntry) {
 		this.lastEntry = lastEntry;
 	}
-	public Long getStoryLastUpdated() {
-		return storyLastUpdated;
-	}
-	public void setStoryLastUpdated(Long storyLastUpdated) {
-		this.storyLastUpdated = storyLastUpdated;
-	}
-	public Integer getCurrEntryCharCount() {
-		return currEntryCharCount;
-	}
-	public void setCurrEntryCharCount(Integer currEntryCharCount) {
-		this.currEntryCharCount = currEntryCharCount;
-	}
-    public Double getRating() {
-        return rating;
-    }
-    public void setRating(Double rating) {
-        this.rating = rating;
-    }
 }

@@ -15,7 +15,6 @@ import com.nwm.coauthor.exception.AlreadyPublishedException;
 import com.nwm.coauthor.exception.CannotGetEntriesException;
 import com.nwm.coauthor.exception.ConsecutiveEntryBySameMemberException;
 import com.nwm.coauthor.exception.MoreEntriesLeftException;
-import com.nwm.coauthor.exception.NoTitleForPublishingException;
 import com.nwm.coauthor.exception.NonMemberException;
 import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.StoryNotFoundException;
@@ -28,7 +27,6 @@ import com.nwm.coauthor.service.dao.EntryDAOImpl;
 import com.nwm.coauthor.service.dao.StoryDAOImpl;
 import com.nwm.coauthor.service.dao.UserDAOImpl;
 import com.nwm.coauthor.service.model.StoryModel;
-import com.nwm.coauthor.service.model.UpdateStoryForNewEntryModel;
 import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
 import com.nwm.coauthor.service.resource.request.NewStory;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
@@ -62,31 +60,6 @@ public class StoryManagerImpl {
         storyDAO.createStory(newStoryModel);
     }
     
-    public StoryResponse publishStory(String fbId, String storyId) throws StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException, SomethingWentWrongException {
-        Long now = new Date().getTime();
-        WriteResult writeResult = storyDAO.publishStory(fbId, storyId, now);
-
-        StoryResponse story = null;
-
-        if (writeResult.getN() == 0) {
-            story = storyDAO.getStory(storyId);
-            if (story == null) {
-                throw new StoryNotFoundException();
-            }
-
-            if (!story.getLeaderFbId().equals(fbId)) {
-                throw new UserIsNotLeaderException();
-            }
-
-            if (!StringUtils.hasText(story.getTitle())) {
-                throw new NoTitleForPublishingException();
-            }
-            
-            throw new SomethingWentWrongException(String.format("fbId: %s | storyId: %s", fbId, storyId));
-        }
-
-        return storyDAO.getStory(storyId);
-    }
 
     public StoryResponse changeTitle(String fbId, String storyId, String title) throws StoryNotFoundException, UserIsNotLeaderException, AlreadyPublishedException, SomethingWentWrongException {
         Long now = new Date().getTime();
@@ -101,14 +74,6 @@ public class StoryManagerImpl {
                 throw new StoryNotFoundException();
             }
 
-            if (!story.getLeaderFbId().equals(fbId)) {
-                throw new UserIsNotLeaderException();
-            }
-
-            if (story.getIsPublished() != null && story.getIsPublished()) {
-                throw new AlreadyPublishedException();
-            }
-            
             throw new SomethingWentWrongException(String.format("fbId: %s | storyId: %s | title: %s", fbId, storyId, title));            
         }
 
@@ -145,12 +110,6 @@ public class StoryManagerImpl {
             throw new StoryNotFoundException();
         }
 
-        if (!myStory.getLeaderFbId().equals(fbId)) {
-            if (!myStory.getFbFriends().contains(fbId)) {
-                throw new NonMemberException();
-            }
-        }
-
         return myStory;
     }
 
@@ -180,18 +139,6 @@ public class StoryManagerImpl {
             throw new StoryNotFoundException();
         }
 
-        if (story.getLeaderFbId().equals(fbId)) {
-            return true;
-        }
-
-        if (story.getFbFriends().contains(fbId)) {
-            return true;
-        }
-
-        if (story.getIsPublished() != null && story.getIsPublished()) {
-            return true;
-        }
-
         return false;
     }
 
@@ -203,17 +150,6 @@ public class StoryManagerImpl {
         return response;
     }
 
-    // - update first, then check for errors, and return the story by fetching
-    public StoryResponse newEntry(String fbId, String storyId, String entry, Integer charCountForVersioning) throws VersioningException, StoryNotFoundException, NonMemberException,
-            ConsecutiveEntryBySameMemberException {
-        StoryResponse response = parseAddEntryExceptions(fbId, storyId, charCountForVersioning);
-        UpdateStoryForNewEntryModel storyUpdateModel = UpdateStoryForNewEntryModel.init(storyId, entry, fbId, response.getCurrEntryCharCount() + entry.length());
-        storyDAO.updateStoryForAddingEntry(storyUpdateModel);
-//        entryDAO.addEntry(EntryModel.newEntryModel(storyUpdateModel));
-
-        return storyUpdateModel.mergeWithStoryResponse(response);
-    }
-
     private StoryResponse parseAddEntryExceptions(String fbId, String storyId, Integer charCountForVersioning) throws StoryNotFoundException, NonMemberException, VersioningException,
             ConsecutiveEntryBySameMemberException {
 
@@ -221,18 +157,6 @@ public class StoryManagerImpl {
 
         if (story == null) {
             throw new StoryNotFoundException();
-        }
-
-        if (!story.getLeaderFbId().equals(fbId) && !story.getFbFriends().contains(fbId)) {
-            throw new NonMemberException();
-        }
-
-        if (!story.getCurrEntryCharCount().equals(charCountForVersioning)) {
-            throw new VersioningException();
-        }
-
-        if (story.getLastFriendWithEntry().equals(fbId)) {
-            throw new ConsecutiveEntryBySameMemberException();
         }
 
         return story;
@@ -297,18 +221,6 @@ public class StoryManagerImpl {
         if (privateStory == null) {
             throw new StoryNotFoundException();
         }
-
-        if (privateStory.getLeaderFbId().equals(fbId)) {
-            throw new UserLikingOwnStoryException();
-        }
-
-        if (privateStory.getFbFriends().contains(fbId)) {
-            throw new UserLikingOwnStoryException();
-        }
-
-        if (privateStory.getIsPublished() == null || !privateStory.getIsPublished()) {
-            throw new UnpublishedStoryLikedException();
-        }
     }
 
     public StoryResponse newFriends(String fbId, String storyId, NewFriendsRequest request) throws StoryNotFoundException, AlreadyAMemberException, NonMemberException, SomethingWentWrongException {
@@ -325,37 +237,18 @@ public class StoryManagerImpl {
                 throw new AlreadyAMemberException();
             }
             
-            if(!hasPermissionToAddFriend(newFriendsResponse, fbId)){
-                throw new NonMemberException();
-            }
-            
             throw new SomethingWentWrongException(String.format("fbId: %s | storyId: %s | request: %s", fbId, storyId, request.getNewFriends().toString()));
         }
         
         return newFriendsResponse;
     }
 
-    private boolean hasPermissionToAddFriend(StoryResponse newFriendsResponse, String fbId) {
-        List<String> members = newFriendsResponse.getFbFriends();
-        String leader = newFriendsResponse.getLeaderFbId();
-        
-        return members.contains(fbId) || leader.equals(fbId);
-    }
-
     private boolean isAlreadyAMember(NewFriendsRequest request, StoryResponse newFriendsResponse) {
-        List<String> fbFriends = newFriendsResponse.getFbFriends();
-        List<String> newFriends = request.getNewFriends();
-        
-        if(newFriends.contains(newFriendsResponse.getLeaderFbId())){
-            return true;
-        }
-        
-        for(int i = 0; i < fbFriends.size(); i++){
-            if(newFriends.contains(fbFriends.get(i))){
-                return true;
-            }
-        }
         
         return false;
     }
+
+	public List<StoryResponse> getTopViewStories() {
+		return storyDAO.getTopViewStories(Constants.TOP_VIEW_STORIES_COUNT);
+	}
 }

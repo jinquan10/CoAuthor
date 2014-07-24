@@ -23,9 +23,16 @@ coAuthorServices.factory('Schemas', [
 
 coAuthorServices.factory('Story', [
         '$resource', function($resource) {
-            return $resource(host + '/story', {}, {
+            return $resource(host + '/story/:type', {}, {
                 create : {
                     method : 'POST'
+                },
+                getTopViewStories : {
+                    method : 'GET',
+                    params : {
+                        type : 'top-view-stories'
+                    },
+                    isArray : true
                 }
             });
         }

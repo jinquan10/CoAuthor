@@ -12,12 +12,6 @@ public class UpdateStoryForNewEntryModel extends BaseModel{
     private Integer currEntryCharCount;
     
     public StoryResponse mergeWithStoryResponse(StoryResponse response){
-        response.setStoryLastUpdated(storyLastUpdated);
-        response.setStoryId(storyId);
-        response.setLastEntry(lastEntry);
-        response.setLastFriendWithEntry(lastFriendWithEntry);
-        response.setCurrEntryCharCount(currEntryCharCount);
-        
         return response;
     }
     

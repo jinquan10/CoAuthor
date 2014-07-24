@@ -1,64 +1,54 @@
 <div class="container">
-	<div class="center">
-		<h1 class="title">CoAuthor</h1>
+	<div >
+		<div class="center">
+			<h1 class="title">CoAuthor</h1>
+		</div>
+
+		<nav
+			class="navbar navbar-default no-border"
+			role="navigation">
+			<div class="container">
+				<ul class="nav navbar-nav">
+					<li>
+						<div class="btn-group navbar-btn">
+							<button
+								ng-click="loadNewStorySchema();"
+								class="btn btn-primary"
+								data-toggle="modal"
+								data-target="#newStoryModal">New Story</button>
+						</div>
+				</ul>
+			</div>
+		</nav>
+
 	</div>
 
-	<nav
-		class="navbar navbar-default no-border"
-		role="navigation">
-		<div class="container">
-			<ul class="nav navbar-nav">
-				<li>
-					<div class="btn-group navbar-btn">
-						<button
-							ng-click="loadNewStorySchema();"
-							class="btn btn-primary"
-							data-toggle="modal"
-							data-target="#newStoryModal">New Story</button>
-					</div>
-			</ul>
-		</div>
-	</nav>
 	<div class="row">
 		<div
 			class="col-md-3"
 			ng-hide="!loggedIn">
-			<div
-				class="panel-group"
-				id="accordion">
-				<div
-					class="panel panel-default pointer"
-					data-toggle="collapse"
-					data-parent="#accordion"
-					href="#collapseOne">
+			<div class="panel-group">
+				<div class="panel panel-default pointer">
 					<div class="panel-heading">
-						<h4 class="text-center panel-title">My Stories</h4>
+						<h4 class="text-center panel-title">{{story.title}}</h4>
 					</div>
-					<div
-						id="collapseOne"
-						class="panel-collapse collapse in">
-						<div class="panel-body">sfasdf</div>
+					<div class="panel-collapse collapse in">
+						<div class="panel-body">{{story.firstEntry}}</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div ng-class="getPublicStoryClass()">
 			<div class="center">
-				<div
-					class="panel-group"
-					id="accordion">
+				<div class="panel-group story-body">
 					<div
-						class="panel panel-default pointer"
-						data-toggle="collapse"
-						data-parent="#accordion"
-						href="#collapseOne">
-						<div class="panel-heading">
-							<h4 class="text-center panel-title"></h4>
+						ng-repeat="story in stories | orderBy:'views':reverse"
+						class="panel panel-default pointer">
+						<div class="">
+							<h4 class="underscore">{{story.title}}</h4>
 						</div>
-						<div
-							id="collapseOne"
-							class="panel-collapse collapse in">
-							<div class="panel-body">sfasdf</div>
+						<div>
+							<div class="panel-body">{{story.firstEntry.entry}}</div>
 						</div>
 					</div>
 				</div>

@@ -8,9 +8,10 @@ import com.nwm.coauthor.service.util.RequiredField;
 
 public class NewStory extends BaseResource{
 	
-	@HintText("Enter a title:")
+	@RequiredField
 	@MinLength(1)
 	@MaxLength(100)
+	@HintText("Enter a title:")
 	private String title;
 	
 	@RequiredField
