@@ -59,7 +59,6 @@
 }
 
 .story-body {
-	width: 600px;
 	word-wrap: break-word;
 }
 
@@ -71,4 +70,43 @@
 
 .story-list {
 	border: 0;
+}
+
+body {
+	padding-top: 70px;
+	background-color: #F8F8F8;
+}
+
+.float-left {
+	float: left;
+}
+
+.float-right {
+	float: right;
+}
+
+.clear {
+	clear: both;
+}
+
+.list-group-item:hover {
+	background-color: #F8F8F8;
+}
+
+.filter-item:hover {
+	background-color: #F8F8F8;
+}
+
+.filter-item {
+	margin: 0;
+}
+
+.story-filter-dropdown { /* 	font-family: CoAuthorTitle; */
+	font-family: Times New Roman;
+	font-style: italic;
+	font-size: medium;
+} 
+
+.dropdown-menu {
+	min-width: 0px;
 }

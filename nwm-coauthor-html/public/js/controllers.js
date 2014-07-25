@@ -8,8 +8,14 @@ coAuthorControllers.controller('mainController', [
             
             $http.defaults.headers.common['TimeZoneOffsetMinutes'] = new Date().getTimezoneOffset();
             $http.defaults.headers.common['Authorization'] = $cookies.Authorization;
+
+            $scope.storyFilter = null;
             
             getTopViewStories();
+            
+            $scope.selectedStoryFilter = function(filter) {
+                $scope.storyFilter = filter;
+            }
             
             $scope.loadNewStorySchema = function loadNewStorySchemaFn() {
                 Schemas.getSchemaForCreate(function(res) {

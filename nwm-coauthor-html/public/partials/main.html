@@ -1,128 +1,206 @@
 <div class="container">
-	<div >
-		<div class="center">
-			<h1 class="title">CoAuthor</h1>
-		</div>
 
-		<nav
-			class="navbar navbar-default no-border"
-			role="navigation">
-			<div class="container">
-				<ul class="nav navbar-nav">
-					<li>
-						<div class="btn-group navbar-btn">
-							<button
-								ng-click="loadNewStorySchema();"
-								class="btn btn-primary"
-								data-toggle="modal"
-								data-target="#newStoryModal">New Story</button>
-						</div>
-				</ul>
-			</div>
-		</nav>
+    <!-- Nav -->
+    <div>
+        <div class="center">
+            <!-- 			<h1 class="title">CoAuthor</h1> -->
+        </div>
 
-	</div>
+        <nav
+            class="navbar navbar-inverse no-border navbar-fixed-top"
+            role="navigation">
+            <div class="container">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <div class="btn-group navbar-btn">
+                            <button
+                                ng-click="loadNewStorySchema();"
+                                class="btn btn-primary"
+                                data-toggle="modal"
+                                data-target="#newStoryModal">New
+                                Story</button>
+                        </div>
+                </ul>
+            </div>
+        </nav>
 
-	<div class="row">
-		<div
-			class="col-md-3"
-			ng-hide="!loggedIn">
-			<div class="panel-group">
-				<div class="panel panel-default pointer">
-					<div class="panel-heading">
-						<h4 class="text-center panel-title">{{story.title}}</h4>
-					</div>
-					<div class="panel-collapse collapse in">
-						<div class="panel-body">{{story.firstEntry}}</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div ng-class="getPublicStoryClass()">
-			<div class="center">
-				<div class="panel-group story-body">
-					<div
-						ng-repeat="story in stories | orderBy:'views':reverse"
-						class="panel panel-default pointer">
-						<div class="">
-							<h4 class="underscore">{{story.title}}</h4>
-						</div>
-						<div>
-							<div class="panel-body">{{story.firstEntry.entry}}</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div
-			class="col-md-3"
-			ng-hide="!loggedIn">
-			<div class="center">My Favorites</div>
-		</div>
-	</div>
+    </div>
 
-	<div
-		id="newStoryModal"
-		class="modal fade">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<form name="newStoryForm">
-					<div class="modal-header">
-						<button
-							type="button"
-							class="close"
-							data-dismiss="modal">
-							<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-						</button>
-						<ng-form
-							class="center"
-							name="newStoryTitleNgForm"> <input
-							data-toggle="tooltip"
-							data-placement="left"
-							title="You can change this later."
-							class="input-title form-control text-center tooltips"
-							ng-model="storyForCreateModel['title']"
-							ng-required="storySchemaForCreate['title'].required"
-							placeholder="{{storySchemaForCreate['title'].hintText}}" /> </ng-form>
-					</div>
+    <!-- Content -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel-group">
+                <div class="panel panel-default no-border">
+                    <div class="title underscore text-center">CoAuthor</div>
+                    <div class="panel-body">
+                        <div class="list-group">
+                            <div
+                                class="list-group-item pointer row no-border">
+                                <div class="col-md-10">View
+                                    Stories</div>
+                                <div class="col-md-2">
+                                    <span
+                                        class="glyphicon glyphicon-eye-open text-right"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel-group story-body">
+                <div
+                    class="dropdown panel panel-default pointer no-border">
+                    <div
+                        class="row"
+                        data-toggle="dropdown">
+                        <div
+                            ng-switch
+                            on="storyFilter">
+                            <div
+                                class="col-md-6"
+                                ng-switch-default>
+                                <span
+                                    class="glyphicon glyphicon-eye-open"></span>
+                                <span>Stories by Most Views</span>
+                            </div>
 
-					<div class="modal-body">
-						<div>
-							<ng-form
-								class="center"
-								name="newStoryEntryNgForm"> <textarea
-								id="newStoryTextarea"
-								ng-model="storyForCreateModel['entry']"
-								ng-required="storySchemaForCreate['entry'].required"
-								ng-maxlength="{{storySchemaForCreate['entry'].maxLength}}"
-								placeholder="{{storySchemaForCreate['entry'].hintText}}"
-								class="form-control input-entry tooltips"
-								rows="3"></textarea>
-							<div
-								id="newStoryCharsRemaining"
-								class="char-remaining"></div>
-							</ng-form>
+                            <div
+                                class="col-md-6"
+                                ng-switch-when="views">
+                                <span
+                                    class="glyphicon glyphicon-eye-open"></span>
+                                <span>Stories by Most Views</span>
+                            </div>
 
-						</div>
-					</div>
-				</form>
-				<div class="modal-footer">
-					<button
-						type="button"
-						class="btn btn-default"
-						data-dismiss="modal">Close</button>
-					<button
-						ng-disabled="newStoryForm.$invalid"
-						ng-click="createStory();"
-						type="button"
-						class="btn btn-primary">Create!</button>
-				</div>
-			</div>
-			<!-- /.modal-content -->
-		</div>
-		<!-- /.modal-dialog -->
-	</div>
-	<!-- /.modal -->
+                            <div
+                                class="col-md-6"
+                                ng-switch-when="stars">
+                                <span
+                                    class="glyphicon glyphicon-star-empty"></span>
+                                <span>Stories by Most Stars</span>
+                            </div>
+
+                            <div
+                                class="col-md-6"
+                                ng-switch-when="users">
+                                <span class="glyphicon glyphicon-user"></span>
+                                <span>Stories by Most Users</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 text-right">
+                            <span>Filter Stories</span> <span
+                                class="caret"></span>
+                        </div>
+                    </div>
+
+                    <div
+                        class="dropdown-menu dropdown-menu-right no-border list-group">
+                        <div
+                            ng-click="selectedStoryFilter('views');"
+                            class="list-group-item filter-item row no-border">
+                            <span class="glyphicon glyphicon-eye-open"></span>
+                            <span> Views</span>
+                        </div>
+
+                        <div
+                            ng-click="selectedStoryFilter('stars');"
+                            class="list-group-item filter-item row no-border">
+                            <span class="glyphicon glyphicon-star-empty"></span>
+                            <span> Stars</span>
+                        </div>
+
+                        <div
+                            ng-click="selectedStoryFilter('users');"
+                            class="list-group-item filter-item row no-border">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <span> Users</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    ng-repeat="story in stories | orderBy:'views':reverse"
+                    class="panel panel-default pointer no-border">
+                    <div class="title underscore">{{story.title}}</div>
+                    <div>
+                        <div class="panel-body">{{story.firstEntry.entry}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="center">Ads or my stories/favorites</div>
+        </div>
+    </div>
+
+    <div
+        id="newStoryModal"
+        class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="newStoryForm">
+                    <div class="modal-header">
+                        <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span><span
+                                class="sr-only">Close</span>
+                        </button>
+                        <ng-form
+                            class="center"
+                            name="newStoryTitleNgForm"> <input
+                            data-toggle="tooltip"
+                            data-placement="left"
+                            title="You can change this later."
+                            class="input-title form-control text-center tooltips"
+                            ng-model="storyForCreateModel['title']"
+                            maxlength="{{storySchemaForCreate['title'].maxLength}}"
+                            ng-required="storySchemaForCreate['title'].required"
+                            placeholder="{{storySchemaForCreate['title'].hintText}}" />
+                        </ng-form>
+                    </div>
+
+                    <div class="modal-body">
+                        <div>
+                            <ng-form
+                                class="center"
+                                name="newStoryEntryNgForm"> <textarea
+                                id="newStoryTextarea"
+                                ng-model="storyForCreateModel['entry']"
+                                ng-required="storySchemaForCreate['entry'].required"
+                                maxlength="{{storySchemaForCreate['entry'].maxLength}}"
+                                placeholder="{{storySchemaForCreate['entry'].hintText}}"
+                                class="form-control input-entry tooltips"
+                                rows="3"></textarea>
+                            <div
+                                id="newStoryCharsRemaining"
+                                class="char-remaining"></div>
+                            </ng-form>
+
+                        </div>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-default"
+                        data-dismiss="modal">Close</button>
+                    <button
+                        ng-disabled="newStoryForm.$invalid"
+                        ng-click="createStory();"
+                        type="button"
+                        class="btn btn-primary">Create!</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
 </div>
 
 

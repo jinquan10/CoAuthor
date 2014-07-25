@@ -32,8 +32,6 @@ function bindCharsRemaining(characterLimit, messageElement, sourceText) {
 
         if (charactersUsed > characterLimit) {
             charactersUsed = characterLimit;
-            $(this).val($(this).val().substr(0, characterLimit));
-            $(this).scrollTop($(this)[0].scrollHeight);
         }
 
         var charactersRemaining = characterLimit - charactersUsed;
