@@ -95,18 +95,21 @@ body {
 
 .filter-item:hover {
 	background-color: #F8F8F8;
+	cursor: pointer;
 }
 
 .filter-item {
 	margin: 0;
 }
 
-.story-filter-dropdown { /* 	font-family: CoAuthorTitle; */
-	font-family: Times New Roman;
-	font-style: italic;
-	font-size: medium;
+.story-filter-toggle { /* 	font-family: CoAuthorTitle; */
+    padding-left: 15px;
 } 
 
 .dropdown-menu {
 	min-width: 0px;
+}
+
+.panel-group {
+	margin-bottom: 5px;
 }

@@ -1,11 +1,9 @@
-<div class="container">
-
+<div class="container-fluid">
     <!-- Nav -->
     <div>
         <div class="center">
             <!-- 			<h1 class="title">CoAuthor</h1> -->
         </div>
-
         <nav
             class="navbar navbar-inverse no-border navbar-fixed-top"
             role="navigation">
@@ -23,104 +21,94 @@
                 </ul>
             </div>
         </nav>
-
     </div>
-
     <!-- Content -->
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-3 col-xs-3">
             <div class="panel-group">
                 <div class="panel panel-default no-border">
                     <div class="title underscore text-center">CoAuthor</div>
                     <div class="panel-body">
                         <div class="list-group">
                             <div
-                                class="list-group-item pointer row no-border">
-                                <div class="col-md-10">View
-                                    Stories</div>
-                                <div class="col-md-2">
-                                    <span
-                                        class="glyphicon glyphicon-eye-open text-right"></span>
-                                </div>
+                                class="list-group-item pointer no-border text-center">
+                                <span
+                                    class="glyphicon glyphicon-eye-open text-right"></span>
+                                <span>View Stories</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="panel-group story-body">
-                <div
-                    class="dropdown panel panel-default pointer no-border">
+        <div class="col-md-6 col-xs-6">
+            <div class="row">
+                <div class="col-md-6 col-xs-6">
                     <div
-                        class="row"
-                        data-toggle="dropdown">
-                        <div
-                            ng-switch
-                            on="storyFilter">
+                        class="panel panel-default pointer no-border story-filter-toggle">
+                        <div class="row">
                             <div
-                                class="col-md-6"
-                                ng-switch-default>
-                                <span
-                                    class="glyphicon glyphicon-eye-open"></span>
-                                <span>Stories by Most Views</span>
+                                ng-switch
+                                on="storyFilter">
+                                <div
+                                    class="col-md-8 col-xs-8"
+                                    ng-switch-default>
+                                    <span
+                                        class="glyphicon glyphicon-eye-open"></span>
+                                    <span>Stories by Most Views</span>
+                                </div>
+                                <div
+                                    class="col-md-8 col-xs-8"
+                                    ng-switch-when="views">
+                                    <span
+                                        class="glyphicon glyphicon-eye-open"></span>
+                                    <span>Stories by Most Views</span>
+                                </div>
+                                <div
+                                    class="col-md-8 col-xs-8"
+                                    ng-switch-when="stars">
+                                    <span
+                                        class="glyphicon glyphicon-star-empty"></span>
+                                    <span>Stories by Most Stars</span>
+                                </div>
+                                <div
+                                    class="col-md-8 col-xs-8"
+                                    ng-switch-when="users">
+                                    <span
+                                        class="glyphicon glyphicon-user"></span>
+                                    <span>Stories by Most Users</span>
+                                </div>
                             </div>
-
-                            <div
-                                class="col-md-6"
-                                ng-switch-when="views">
-                                <span
-                                    class="glyphicon glyphicon-eye-open"></span>
-                                <span>Stories by Most Views</span>
-                            </div>
-
-                            <div
-                                class="col-md-6"
-                                ng-switch-when="stars">
-                                <span
-                                    class="glyphicon glyphicon-star-empty"></span>
-                                <span>Stories by Most Stars</span>
-                            </div>
-
-                            <div
-                                class="col-md-6"
-                                ng-switch-when="users">
-                                <span class="glyphicon glyphicon-user"></span>
-                                <span>Stories by Most Users</span>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 text-right">
-                            <span>Filter Stories</span> <span
-                                class="caret"></span>
-                        </div>
-                    </div>
-
-                    <div
-                        class="dropdown-menu dropdown-menu-right no-border list-group">
-                        <div
-                            ng-click="selectedStoryFilter('views');"
-                            class="list-group-item filter-item row no-border">
-                            <span class="glyphicon glyphicon-eye-open"></span>
-                            <span> Views</span>
-                        </div>
-
-                        <div
-                            ng-click="selectedStoryFilter('stars');"
-                            class="list-group-item filter-item row no-border">
-                            <span class="glyphicon glyphicon-star-empty"></span>
-                            <span> Stars</span>
-                        </div>
-
-                        <div
-                            ng-click="selectedStoryFilter('users');"
-                            class="list-group-item filter-item row no-border">
-                            <span class="glyphicon glyphicon-user"></span>
-                            <span> Users</span>
                         </div>
                     </div>
                 </div>
-
+                <div class="col-md-6 col-xs-6">
+                    <button class="btn btn-primary" data-toggle="dropdown">
+                        <span>Filter Stories</span><span class="caret"></span>
+                    </button>
+                    <div class="dropdown-menu no-border list-group">
+                        <div
+                            ng-click="selectedStoryFilter('views');"
+                            class="list-group-item filter-item no-border">
+                            <span class="glyphicon glyphicon-eye-open"></span>
+                            <span> Stories by Most Views</span>
+                        </div>
+                        <div
+                            ng-click="selectedStoryFilter('stars');"
+                            class="list-group-item filter-item no-border">
+                            <span class="glyphicon glyphicon-star-empty"></span>
+                            <span> Stories by Most Stars</span>
+                        </div>
+                        <div
+                            ng-click="selectedStoryFilter('users');"
+                            class="list-group-item filter-item no-border">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <span> Stories by Most Users</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-group story-body">
                 <div
                     ng-repeat="story in stories | orderBy:'views':reverse"
                     class="panel panel-default pointer no-border">
@@ -131,11 +119,10 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 col-xs-3">
             <div class="center">Ads or my stories/favorites</div>
         </div>
     </div>
-
     <div
         id="newStoryModal"
         class="modal fade">
@@ -163,7 +150,6 @@
                             placeholder="{{storySchemaForCreate['title'].hintText}}" />
                         </ng-form>
                     </div>
-
                     <div class="modal-body">
                         <div>
                             <ng-form
@@ -180,7 +166,6 @@
                                 id="newStoryCharsRemaining"
                                 class="char-remaining"></div>
                             </ng-form>
-
                         </div>
                     </div>
                 </form>
@@ -196,38 +181,6 @@
                         class="btn btn-primary">Create!</button>
                 </div>
             </div>
-            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
     </div>
-    <!-- /.modal -->
 </div>
-
-
-<!-- <div -->
-<!-- 	ng-switch-when="selection" -->
-<!-- 	class="btn-group btn-group-sm"> -->
-<!-- 	<button -->
-<!-- 		data-toggle="dropdown" -->
-<!-- 		style="width: 575px" -->
-<!-- 		type="button" -->
-<!-- 		class="btn btn-default" -->
-<!-- 		ng-model="metadataCreationModel[displayField.key]" -->
-<!-- 		ng-required="metadataSchema[displayField.key].required">&nbsp{{getSelectionDisplay(metadataCreationModel[displayField.key], -->
-<!-- 		metadataSchema[displayField.key].selectOptions)}}</button> -->
-<!-- 	<button -->
-<!-- 		type="button" -->
-<!-- 		class="btn btn-default dropdown-toggle" -->
-<!-- 		data-toggle="dropdown"> -->
-<!-- 		<span class="caret"></span> -->
-<!-- 	</button> -->
-<!-- 	<ul -->
-<!-- 		class="dropdown-menu" -->
-<!-- 		role="menu" -->
-<!-- 		style="max-height: 300px; overflow-y: auto; overflow-x: hidden"> -->
-<!-- 		<li -->
-<!-- 			style="width: 600px; text-align: center" -->
-<!-- 			ng-repeat="option in metadataSchema[displayField.key].selectOptions | orderBy:'displayValue'"><a -->
-<!-- 			ng-click="setSelection(option, displayField.key, metadataCreationModel)">{{option.displayValue}}</a></li> -->
-<!-- 	</ul> -->
-<!-- </div> -->
