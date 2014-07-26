@@ -12,6 +12,7 @@
 		<testParallelMode>methods</testParallelMode>
 		<testThreadCount>3</testThreadCount>
 		<joda.time>2.3</joda.time>
+		<webapp.context>nwm-coauthor-webapp</webapp.context>
 	</properties>
 
 	<dependencyManagement>
@@ -62,9 +63,14 @@
 				<plugin>
 					<groupId>org.apache.tomcat.maven</groupId>
 					<artifactId>tomcat7-maven-plugin</artifactId>
-					<version>2.1</version>
+					<version>2.2</version>
 
 					<configuration>
+						<url>http://54.191.122.202:8080/manager/text</url>
+						<username>${deploy.username}</username>
+						<password>${deploy.password}</password>
+						<path>/${webapp.context}</path>
+						
 						<port>8080</port>
 					</configuration>
 				</plugin>

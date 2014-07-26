@@ -9,7 +9,7 @@
 	</parent>
 	<artifactId>nwm-coauthor-webapp</artifactId>
 	<packaging>war</packaging>
-	<name>nwm-coauthor-webapp</name>
+	<name>${webapp.context}</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -133,6 +133,6 @@
 			</plugin>
 		</plugins>
 
-		<finalName>nwm-coauthor-webapp</finalName>
+		<finalName>${webapp.context}</finalName>
 	</build>
 </project>
