@@ -31,8 +31,17 @@
                                     data-toggle="dropdown"
                                     ng-switch-default>
                                     <span
-                                        class="glyphicon glyphicon-eye-open"></span>
+                                        class="glyphicon glyphicon-filter"></span>
                                     <span>Filter Stories </span><span
+                                        class="caret"></span>
+                                </button>
+                                <button
+                                    class="btn btn-primary dropdown-toggle"
+                                    data-toggle="dropdown"
+                                    ng-switch-when="views">
+                                    <span
+                                        class="glyphicon glyphicon-eye-open"></span>
+                                    <span>Stories by Most Views </span><span
                                         class="caret"></span>
                                 </button>
                                 <button
@@ -41,7 +50,7 @@
                                     ng-switch-when="stars">
                                     <span
                                         class="glyphicon glyphicon-star-empty"></span>
-                                    <span> Stories by Most Stars</span><span
+                                    <span>Stories by Most Stars </span><span
                                         class="caret"></span>
                                 </button>
                                 <button
@@ -50,7 +59,7 @@
                                     ng-switch-when="users">
                                     <span
                                         class="glyphicon glyphicon-user"></span>
-                                    <span> Stories by Most Users</span><span
+                                    <span>Stories by Most Users </span><span
                                         class="caret"></span>
                                 </button>
                                 <div
