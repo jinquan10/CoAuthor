@@ -13,9 +13,9 @@ coAuthorControllers.controller('mainController', [
             
             getTopViewStories();
             
-            $scope.selectedStoryFilter = function(filter) {
-                $scope.storyFilter = filter;
-            }
+            $scope.selectedStoryFilter = function(v){
+                $scope.storyFilter = v;
+            };
             
             $scope.loadNewStorySchema = function loadNewStorySchemaFn() {
                 Schemas.getSchemaForCreate(function(res) {

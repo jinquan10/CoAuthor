@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container">
     <!-- Nav -->
     <div>
         <div class="center">
@@ -42,69 +42,52 @@
             </div>
         </div>
         <div class="col-md-6 col-xs-6">
-            <div class="row">
-                <div class="col-md-6 col-xs-6">
-                    <div
-                        class="panel panel-default pointer no-border story-filter-toggle">
-                        <div class="row">
-                            <div
-                                ng-switch
-                                on="storyFilter">
-                                <div
-                                    class="col-md-8 col-xs-8"
-                                    ng-switch-default>
-                                    <span
-                                        class="glyphicon glyphicon-eye-open"></span>
-                                    <span>Stories by Most Views</span>
-                                </div>
-                                <div
-                                    class="col-md-8 col-xs-8"
-                                    ng-switch-when="views">
-                                    <span
-                                        class="glyphicon glyphicon-eye-open"></span>
-                                    <span>Stories by Most Views</span>
-                                </div>
-                                <div
-                                    class="col-md-8 col-xs-8"
-                                    ng-switch-when="stars">
-                                    <span
-                                        class="glyphicon glyphicon-star-empty"></span>
-                                    <span>Stories by Most Stars</span>
-                                </div>
-                                <div
-                                    class="col-md-8 col-xs-8"
-                                    ng-switch-when="users">
-                                    <span
-                                        class="glyphicon glyphicon-user"></span>
-                                    <span>Stories by Most Users</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-xs-6">
-                    <button class="btn btn-primary" data-toggle="dropdown">
-                        <span>Filter Stories</span><span class="caret"></span>
+            <div class="dropdown text-right filter-row">
+                <div
+                    data-toggle="dropdown"
+                    ng-switch
+                    on="storyFilter">
+                    <button
+                        class="btn btn-primary"
+                        ng-switch-default>
+                        <span class="glyphicon glyphicon-eye-open"></span>
+                        <span> Stories by Most Views</span><span
+                            class="caret"></span>
                     </button>
-                    <div class="dropdown-menu no-border list-group">
-                        <div
-                            ng-click="selectedStoryFilter('views');"
-                            class="list-group-item filter-item no-border">
-                            <span class="glyphicon glyphicon-eye-open"></span>
-                            <span> Stories by Most Views</span>
-                        </div>
-                        <div
-                            ng-click="selectedStoryFilter('stars');"
-                            class="list-group-item filter-item no-border">
-                            <span class="glyphicon glyphicon-star-empty"></span>
-                            <span> Stories by Most Stars</span>
-                        </div>
-                        <div
-                            ng-click="selectedStoryFilter('users');"
-                            class="list-group-item filter-item no-border">
-                            <span class="glyphicon glyphicon-user"></span>
-                            <span> Stories by Most Users</span>
-                        </div>
+                    <button
+                        class="btn btn-primary"
+                        ng-switch-when="stars">
+                        <span class="glyphicon glyphicon-star-empty"></span>
+                        <span> Stories by Most Stars</span><span
+                            class="caret"></span>
+                    </button>
+                    <button
+                        class="btn btn-primary"
+                        ng-switch-when="users">
+                        <span class="glyphicon glyphicon-user"></span>
+                        <span> Stories by Most Users</span><span
+                            class="caret"></span>
+                    </button>
+                </div>
+                <div
+                    class="dropdown-menu dropdown-menu-right no-border list-group">
+                    <div
+                        ng-click="selectedStoryFilter('views');"
+                        class="list-group-item filter-item no-border">
+                        <span class="glyphicon glyphicon-eye-open"></span>
+                        <span> Stories by Most Views</span>
+                    </div>
+                    <div
+                        ng-click="selectedStoryFilter('stars');"
+                        class="list-group-item filter-item no-border">
+                        <span class="glyphicon glyphicon-star-empty"></span>
+                        <span> Stories by Most Stars</span>
+                    </div>
+                    <div
+                        ng-click="selectedStoryFilter('users');"
+                        class="list-group-item filter-item no-border">
+                        <span class="glyphicon glyphicon-user"></span> <span>
+                            Stories by Most Users</span>
                     </div>
                 </div>
             </div>
