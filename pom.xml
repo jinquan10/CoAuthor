@@ -66,11 +66,11 @@
 					<version>2.2</version>
 
 					<configuration>
-						<url>http://54.191.122.202:8080/manager/text</url>
+						<url>http://localhost:8080/manager/text</url>
 						<username>${deploy.username}</username>
 						<password>${deploy.password}</password>
 						<path>/${webapp.context}</path>
-						
+
 						<port>8080</port>
 					</configuration>
 				</plugin>
