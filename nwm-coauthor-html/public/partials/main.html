@@ -1,107 +1,93 @@
-<div class="container">
-    <!-- Nav -->
-    <div>
-        <div class="center">
-            <!-- 			<h1 class="title">CoAuthor</h1> -->
-        </div>
-        <nav class="navbar navbar-inverse no-border navbar-fixed-top">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-3 col-xs-3"></div>
-                    <div class="col-md-6 col-xs-6">
+
+<!-- Nav -->
+<nav class="navbar navbar-inverse no-border navbar-fixed-top">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 col-xs-3"></div>
+            <div class="col-md-6 col-xs-6">
+                <div class="col-md-5 col-xs-5 text-left no-padding">
+                    <div class="btn-group navbar-btn">
+                        <button
+                            ng-click="loadNewStorySchema();"
+                            class="btn btn-primary"
+                            data-toggle="modal"
+                            data-target="#newStoryModal">New
+                            Story</button>
+                    </div>
+                </div>
+                <div class="col-md-7 col-xs-7 text-right no-padding">
+                    <div
+                        class="navbar-btn"
+                        ng-switch
+                        on="storyFilter">
+                        <button
+                            class="btn btn-primary dropdown-toggle"
+                            data-toggle="dropdown"
+                            ng-switch-default>
+                            <span class="glyphicon glyphicon-filter"></span>
+                            <span>Filter Stories </span><span
+                                class="caret"></span>
+                        </button>
+                        <button
+                            class="btn btn-primary dropdown-toggle"
+                            data-toggle="dropdown"
+                            ng-switch-when="views">
+                            <span class="glyphicon glyphicon-eye-open"></span>
+                            <span>Stories by Most Views </span><span
+                                class="caret"></span>
+                        </button>
+                        <button
+                            class="btn btn-primary dropdown-toggle"
+                            data-toggle="dropdown"
+                            ng-switch-when="stars">
+                            <span class="glyphicon glyphicon-star-empty"></span>
+                            <span>Stories by Most Stars </span><span
+                                class="caret"></span>
+                        </button>
+                        <button
+                            class="btn btn-primary dropdown-toggle"
+                            data-toggle="dropdown"
+                            ng-switch-when="users">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <span>Stories by Most Users </span><span
+                                class="caret"></span>
+                        </button>
                         <div
-                            class="col-md-5 col-xs-5 text-left no-padding">
-                            <div class="btn-group navbar-btn">
-                                <button
-                                    ng-click="loadNewStorySchema();"
-                                    class="btn btn-primary"
-                                    data-toggle="modal"
-                                    data-target="#newStoryModal">New
-                                    Story</button>
-                            </div>
-                        </div>
-                        <div
-                            class="col-md-7 col-xs-7 text-right no-padding">
+                            class="dropdown-menu dropdown-menu-right no-border list-group"
+                            role="menu">
                             <div
-                                class="navbar-btn"
-                                ng-switch
-                                on="storyFilter">
-                                <button
-                                    class="btn btn-primary dropdown-toggle"
-                                    data-toggle="dropdown"
-                                    ng-switch-default>
-                                    <span
-                                        class="glyphicon glyphicon-filter"></span>
-                                    <span>Filter Stories </span><span
-                                        class="caret"></span>
-                                </button>
-                                <button
-                                    class="btn btn-primary dropdown-toggle"
-                                    data-toggle="dropdown"
-                                    ng-switch-when="views">
-                                    <span
-                                        class="glyphicon glyphicon-eye-open"></span>
-                                    <span>Stories by Most Views </span><span
-                                        class="caret"></span>
-                                </button>
-                                <button
-                                    class="btn btn-primary dropdown-toggle"
-                                    data-toggle="dropdown"
-                                    ng-switch-when="stars">
-                                    <span
-                                        class="glyphicon glyphicon-star-empty"></span>
-                                    <span>Stories by Most Stars </span><span
-                                        class="caret"></span>
-                                </button>
-                                <button
-                                    class="btn btn-primary dropdown-toggle"
-                                    data-toggle="dropdown"
-                                    ng-switch-when="users">
-                                    <span
-                                        class="glyphicon glyphicon-user"></span>
-                                    <span>Stories by Most Users </span><span
-                                        class="caret"></span>
-                                </button>
-                                <div
-                                    class="dropdown-menu dropdown-menu-right no-border list-group"
-                                    role="menu">
-                                    <div
-                                        ng-click="selectedStoryFilter('views');"
-                                        class="list-group-item filter-item no-border">
-                                        <span
-                                            class="glyphicon glyphicon-eye-open"></span>
-                                        <span> Stories by Most
-                                            Views</span>
-                                    </div>
-                                    <div
-                                        ng-click="selectedStoryFilter('stars');"
-                                        class="list-group-item filter-item no-border">
-                                        <span
-                                            class="glyphicon glyphicon-star-empty"></span>
-                                        <span> Stories by Most
-                                            Stars</span>
-                                    </div>
-                                    <div
-                                        ng-click="selectedStoryFilter('users');"
-                                        class="list-group-item filter-item no-border">
-                                        <span
-                                            class="glyphicon glyphicon-user"></span>
-                                        <span> Stories by Most
-                                            Users</span>
-                                    </div>
-                                </div>
+                                ng-click="selectedStoryFilter('views');"
+                                class="list-group-item filter-item no-border">
+                                <span
+                                    class="glyphicon glyphicon-eye-open"></span>
+                                <span> Stories by Most Views</span>
+                            </div>
+                            <div
+                                ng-click="selectedStoryFilter('stars');"
+                                class="list-group-item filter-item no-border">
+                                <span
+                                    class="glyphicon glyphicon-star-empty"></span>
+                                <span> Stories by Most Stars</span>
+                            </div>
+                            <div
+                                ng-click="selectedStoryFilter('users');"
+                                class="list-group-item filter-item no-border">
+                                <span class="glyphicon glyphicon-user"></span>
+                                <span> Stories by Most Users</span>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3 col-xs-3"></div>
                 </div>
             </div>
-        </nav>
+            <div class="col-md-3 col-xs-3"></div>
+        </div>
     </div>
-    <!-- Content -->
+</nav>
+<!-- Content -->
+<div class="container content">
     <div class="row">
         <div class="col-md-3 col-xs-3">
-            <div class="panel-group affix nav-width">
+            <div class="panel-group">
                 <div class="panel panel-default no-border">
                     <div class="title underscore text-center">CoAuthor</div>
                     <div class="panel-body">
@@ -133,63 +119,63 @@
             <div class="center">Ads or my stories/favorites</div>
         </div>
     </div>
-    <div
-        id="newStoryModal"
-        class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form name="newStoryForm">
-                    <div class="modal-header">
-                        <button
-                            type="button"
-                            class="close"
-                            data-dismiss="modal">
-                            <span aria-hidden="true">&times;</span><span
-                                class="sr-only">Close</span>
-                        </button>
+</div>
+<div
+    id="newStoryModal"
+    class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form name="newStoryForm">
+                <div class="modal-header">
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span><span
+                            class="sr-only">Close</span>
+                    </button>
+                    <ng-form
+                        class="center"
+                        name="newStoryTitleNgForm"> <input
+                        data-toggle="tooltip"
+                        data-placement="left"
+                        title="You can change this later."
+                        class="input-title form-control text-center tooltips"
+                        ng-model="storyForCreateModel['title']"
+                        maxlength="{{storySchemaForCreate['title'].maxLength}}"
+                        ng-required="storySchemaForCreate['title'].required"
+                        placeholder="{{storySchemaForCreate['title'].hintText}}" />
+                    </ng-form>
+                </div>
+                <div class="modal-body">
+                    <div>
                         <ng-form
                             class="center"
-                            name="newStoryTitleNgForm"> <input
-                            data-toggle="tooltip"
-                            data-placement="left"
-                            title="You can change this later."
-                            class="input-title form-control text-center tooltips"
-                            ng-model="storyForCreateModel['title']"
-                            maxlength="{{storySchemaForCreate['title'].maxLength}}"
-                            ng-required="storySchemaForCreate['title'].required"
-                            placeholder="{{storySchemaForCreate['title'].hintText}}" />
+                            name="newStoryEntryNgForm"> <textarea
+                            id="newStoryTextarea"
+                            ng-model="storyForCreateModel['entry']"
+                            ng-required="storySchemaForCreate['entry'].required"
+                            maxlength="{{storySchemaForCreate['entry'].maxLength}}"
+                            placeholder="{{storySchemaForCreate['entry'].hintText}}"
+                            class="form-control input-entry tooltips"
+                            rows="3"></textarea>
+                        <div
+                            id="newStoryCharsRemaining"
+                            class="char-remaining"></div>
                         </ng-form>
                     </div>
-                    <div class="modal-body">
-                        <div>
-                            <ng-form
-                                class="center"
-                                name="newStoryEntryNgForm"> <textarea
-                                id="newStoryTextarea"
-                                ng-model="storyForCreateModel['entry']"
-                                ng-required="storySchemaForCreate['entry'].required"
-                                maxlength="{{storySchemaForCreate['entry'].maxLength}}"
-                                placeholder="{{storySchemaForCreate['entry'].hintText}}"
-                                class="form-control input-entry tooltips"
-                                rows="3"></textarea>
-                            <div
-                                id="newStoryCharsRemaining"
-                                class="char-remaining"></div>
-                            </ng-form>
-                        </div>
-                    </div>
-                </form>
-                <div class="modal-footer">
-                    <button
-                        type="button"
-                        class="btn btn-default"
-                        data-dismiss="modal">Close</button>
-                    <button
-                        ng-disabled="newStoryForm.$invalid"
-                        ng-click="createStory();"
-                        type="button"
-                        class="btn btn-primary">Create!</button>
                 </div>
+            </form>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-default"
+                    data-dismiss="modal">Close</button>
+                <button
+                    ng-disabled="newStoryForm.$invalid"
+                    ng-click="createStory();"
+                    type="button"
+                    class="btn btn-primary">Create!</button>
             </div>
         </div>
     </div>

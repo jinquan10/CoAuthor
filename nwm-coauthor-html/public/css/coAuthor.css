@@ -122,6 +122,14 @@ body {
 	padding: 0;
 }
 
-.nav-width {
-	width: 260px;
+.static {
+	position: static;
+}
+
+.fixed {
+	position: fixed;
+}
+
+.container {
+	width: 1170px;
 }
