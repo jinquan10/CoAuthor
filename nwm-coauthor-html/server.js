@@ -1,5 +1,5 @@
 var http = require("http"), url = require("url"), path = require("path"), fs = require("fs"), static = require('node-static'), httpProxy = require('http-proxy'),
-port = process.argv[2] || 8888;
+port = process.argv[2] || 80;
 
 var proxyKeyWord = 'nwm-coauthor-webapp';
 var proxyHost = 'http://localhost:8080';
