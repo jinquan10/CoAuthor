@@ -73,7 +73,7 @@
 }
 
 body {
-	padding-top: 70px;
+	padding-top: 60px;
 	background-color: #F8F8F8;
 }
 
@@ -116,4 +116,12 @@ body {
 
 .filter-row {
 	margin-bottom: 5px;
+}
+
+.no-padding {
+	padding: 0;
+}
+
+.nav-width {
+	width: 260px;
 }

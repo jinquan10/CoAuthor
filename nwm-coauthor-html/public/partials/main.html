@@ -4,28 +4,95 @@
         <div class="center">
             <!-- 			<h1 class="title">CoAuthor</h1> -->
         </div>
-        <nav
-            class="navbar navbar-inverse no-border navbar-fixed-top"
-            role="navigation">
+        <nav class="navbar navbar-inverse no-border navbar-fixed-top">
             <div class="container">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <div class="btn-group navbar-btn">
-                            <button
-                                ng-click="loadNewStorySchema();"
-                                class="btn btn-primary"
-                                data-toggle="modal"
-                                data-target="#newStoryModal">New
-                                Story</button>
+                <div class="row">
+                    <div class="col-md-3 col-xs-3"></div>
+                    <div class="col-md-6 col-xs-6">
+                        <div
+                            class="col-md-5 col-xs-5 text-left no-padding">
+                            <div class="btn-group navbar-btn">
+                                <button
+                                    ng-click="loadNewStorySchema();"
+                                    class="btn btn-primary"
+                                    data-toggle="modal"
+                                    data-target="#newStoryModal">New
+                                    Story</button>
+                            </div>
                         </div>
-                </ul>
+                        <div
+                            class="col-md-7 col-xs-7 text-right no-padding">
+                            <div
+                                class="btn-group navbar-btn"
+                                ng-switch
+                                on="storyFilter">
+                                <button
+                                    class="btn btn-primary dropdown-toggle"
+                                    data-toggle="dropdown"
+                                    ng-switch-default>
+                                    <span
+                                        class="glyphicon glyphicon-eye-open"></span>
+                                    <span> Stories by Most Views</span><span
+                                        class="caret"></span>
+                                </button>
+                                <button
+                                    class="btn btn-primary dropdown-toggle"
+                                    data-toggle="dropdown"
+                                    ng-switch-when="stars">
+                                    <span
+                                        class="glyphicon glyphicon-star-empty"></span>
+                                    <span> Stories by Most Stars</span><span
+                                        class="caret"></span>
+                                </button>
+                                <button
+                                    class="btn btn-primary dropdown-toggle"
+                                    data-toggle="dropdown"
+                                    ng-switch-when="users">
+                                    <span
+                                        class="glyphicon glyphicon-user"></span>
+                                    <span> Stories by Most Users</span><span
+                                        class="caret"></span>
+                                </button>
+                                <div
+                                    class="dropdown-menu no-border list-group"
+                                    role="menu">
+                                    <div
+                                        ng-click="selectedStoryFilter('views');"
+                                        class="list-group-item filter-item no-border">
+                                        <span
+                                            class="glyphicon glyphicon-eye-open"></span>
+                                        <span> Stories by Most
+                                            Views</span>
+                                    </div>
+                                    <div
+                                        ng-click="selectedStoryFilter('stars');"
+                                        class="list-group-item filter-item no-border">
+                                        <span
+                                            class="glyphicon glyphicon-star-empty"></span>
+                                        <span> Stories by Most
+                                            Stars</span>
+                                    </div>
+                                    <div
+                                        ng-click="selectedStoryFilter('users');"
+                                        class="list-group-item filter-item no-border">
+                                        <span
+                                            class="glyphicon glyphicon-user"></span>
+                                        <span> Stories by Most
+                                            Users</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-xs-3"></div>
+                </div>
             </div>
         </nav>
     </div>
     <!-- Content -->
     <div class="row">
         <div class="col-md-3 col-xs-3">
-            <div class="panel-group">
+            <div class="panel-group affix nav-width">
                 <div class="panel panel-default no-border">
                     <div class="title underscore text-center">CoAuthor</div>
                     <div class="panel-body">
@@ -42,55 +109,6 @@
             </div>
         </div>
         <div class="col-md-6 col-xs-6">
-            <div class="dropdown text-right filter-row">
-                <div
-                    data-toggle="dropdown"
-                    ng-switch
-                    on="storyFilter">
-                    <button
-                        class="btn btn-primary"
-                        ng-switch-default>
-                        <span class="glyphicon glyphicon-eye-open"></span>
-                        <span> Stories by Most Views</span><span
-                            class="caret"></span>
-                    </button>
-                    <button
-                        class="btn btn-primary"
-                        ng-switch-when="stars">
-                        <span class="glyphicon glyphicon-star-empty"></span>
-                        <span> Stories by Most Stars</span><span
-                            class="caret"></span>
-                    </button>
-                    <button
-                        class="btn btn-primary"
-                        ng-switch-when="users">
-                        <span class="glyphicon glyphicon-user"></span>
-                        <span> Stories by Most Users</span><span
-                            class="caret"></span>
-                    </button>
-                </div>
-                <div
-                    class="dropdown-menu dropdown-menu-right no-border list-group">
-                    <div
-                        ng-click="selectedStoryFilter('views');"
-                        class="list-group-item filter-item no-border">
-                        <span class="glyphicon glyphicon-eye-open"></span>
-                        <span> Stories by Most Views</span>
-                    </div>
-                    <div
-                        ng-click="selectedStoryFilter('stars');"
-                        class="list-group-item filter-item no-border">
-                        <span class="glyphicon glyphicon-star-empty"></span>
-                        <span> Stories by Most Stars</span>
-                    </div>
-                    <div
-                        ng-click="selectedStoryFilter('users');"
-                        class="list-group-item filter-item no-border">
-                        <span class="glyphicon glyphicon-user"></span> <span>
-                            Stories by Most Users</span>
-                    </div>
-                </div>
-            </div>
             <div class="panel-group story-body">
                 <div
                     ng-repeat="story in stories | orderBy:'views':reverse"
