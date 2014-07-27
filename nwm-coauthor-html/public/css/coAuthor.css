@@ -126,6 +126,11 @@ body {
 	padding: 0;
 }
 
+.co-nav {
+	position: fixed;
+	width: 200px;
+}
+
 .container {
-	width: 900px;
+	width: 927px;
 }
