@@ -19,15 +19,15 @@ import com.nwm.coauthor.service.builder.NewStoryBuilder;
 import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
-import com.nwm.coauthor.service.resource.response.StoryResponse;
+import com.nwm.coauthor.service.resource.response.StoryInListResponse;
 
 public class GetEntriesTest extends BaseTest {
     @Test
     public void getZeroEntriesRightAfterNewStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, CannotGetEntriesException, StoryNotFoundException, VersioningException, MoreEntriesLeftException {
         UserModel leader = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
-        StoryResponse newStory = newStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryInListResponse newStory = newStoryResponse.getBody();
 
         ResponseEntity<EntriesResponse> entriesResponse = storyClient.getEntries(leader.getCoToken(), newStory.getStoryId(), newStory.getCurrEntryCharCount(), newStory.getCurrEntryCharCount());
         EntriesResponse entries = entriesResponse.getBody();
@@ -39,8 +39,8 @@ public class GetEntriesTest extends BaseTest {
     public void getOneEntryRightAfterNewStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, CannotGetEntriesException, StoryNotFoundException, VersioningException, MoreEntriesLeftException {
         UserModel leader = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
-        StoryResponse newStory = newStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryInListResponse newStory = newStoryResponse.getBody();
 
         ResponseEntity<EntriesResponse> entriesResponse = storyClient.getEntries(leader.getCoToken(), newStory.getStoryId(), 0, newStory.getCurrEntryCharCount());
         EntriesResponse entries = entriesResponse.getBody();
@@ -53,8 +53,8 @@ public class GetEntriesTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel nonMember = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().title("title").build());
-        StoryResponse newStory = newStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().title("title").build());
+        StoryInListResponse newStory = newStoryResponse.getBody();
 
         storyClient.publishStory(leader.getCoToken(), newStory.getStoryId());
         
@@ -69,8 +69,8 @@ public class GetEntriesTest extends BaseTest {
     public void storyNotFound() throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException, SomethingWentWrongException, StoryNotFoundException, VersioningException, MoreEntriesLeftException {
         UserModel leader = UserBuilder.createUser();
         
-        ResponseEntity<StoryResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
-        StoryResponse newStory = newStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryInListResponse newStory = newStoryResponse.getBody();
         
         storyClient.getEntries(leader.getCoToken(), new ObjectId().toString(), newStory.getCurrEntryCharCount(), newStory.getCurrEntryCharCount());
     }
@@ -80,8 +80,8 @@ public class GetEntriesTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel nonMember = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
-        StoryResponse newStory = newStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryInListResponse newStory = newStoryResponse.getBody();
 
         storyClient.getEntries(nonMember.getCoToken(), newStory.getStoryId(), 0, newStory.getCurrEntryCharCount());
     }
@@ -90,8 +90,8 @@ public class GetEntriesTest extends BaseTest {
     public void incorrectChars() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, CannotGetEntriesException, StoryNotFoundException, VersioningException, MoreEntriesLeftException{
         UserModel leader = UserBuilder.createUser();
         
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
-        StoryResponse newStory = storyResponse.getBody();
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryInListResponse newStory = storyResponse.getBody();
         
         storyClient.getEntries(leader.getCoToken(), newStory.getStoryId(), 0, 0);
     }

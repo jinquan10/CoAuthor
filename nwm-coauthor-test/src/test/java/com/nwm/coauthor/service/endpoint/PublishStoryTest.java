@@ -18,7 +18,7 @@ import com.nwm.coauthor.service.builder.NewStoryBuilder;
 import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.request.NewStory;
-import com.nwm.coauthor.service.resource.response.StoryResponse;
+import com.nwm.coauthor.service.resource.response.StoryInListResponse;
 
 public class PublishStoryTest extends BaseTest {
     @Test(expected = UserIsNotLeaderException.class)
@@ -26,11 +26,11 @@ public class PublishStoryTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel member = UserBuilder.createUser();
         
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).build());
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).build());
         try{
             storyClient.publishStory(member.getCoToken(), storyResponse.getBody().getStoryId());
         }finally{
-            ResponseEntity<StoryResponse> storyForEditResponse = storyClient.getMyStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
+            ResponseEntity<StoryInListResponse> storyForEditResponse = storyClient.getMyStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
             assertEquals(false, storyForEditResponse.getBody().getIsPublished());            
         }
     }
@@ -41,11 +41,11 @@ public class PublishStoryTest extends BaseTest {
         UserModel nonMember = UserBuilder.createUser();
 
         NewStory storyRequest = NewStoryBuilder.init().title("The one").build();
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
         try{
             storyClient.publishStory(nonMember.getCoToken(), storyResponse.getBody().getStoryId());
         }finally{
-            ResponseEntity<StoryResponse> storyForEditResponse = storyClient.getMyStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
+            ResponseEntity<StoryInListResponse> storyForEditResponse = storyClient.getMyStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
             assertEquals(false, storyForEditResponse.getBody().getIsPublished());            
         }
     }
@@ -55,11 +55,11 @@ public class PublishStoryTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
 
         NewStory storyRequest = NewStoryBuilder.init().title(null).build();
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
         try{
             storyClient.publishStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
         }finally{
-            ResponseEntity<StoryResponse> storyForEditResponse = storyClient.getMyStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
+            ResponseEntity<StoryInListResponse> storyForEditResponse = storyClient.getMyStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
             assertEquals(false, storyForEditResponse.getBody().getIsPublished());            
         }
     }
@@ -76,17 +76,17 @@ public class PublishStoryTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
 
         NewStory storyRequest = NewStoryBuilder.init().title("The one").build();
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
-        StoryResponse createdStory = storyResponse.getBody();
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
+        StoryInListResponse createdStory = storyResponse.getBody();
         
-        ResponseEntity<StoryResponse> publishResponse = null;
+        ResponseEntity<StoryInListResponse> publishResponse = null;
         try{
             publishResponse = storyClient.publishStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
         }finally{
             assertNotEquals(createdStory.getStoryLastUpdated(), publishResponse.getBody().getStoryLastUpdated());
             
             assertEquals(true, publishResponse.getBody().getIsPublished());
-            ResponseEntity<StoryResponse> storyForEditResponse = storyClient.getMyStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
+            ResponseEntity<StoryInListResponse> storyForEditResponse = storyClient.getMyStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
             assertEquals(true, storyForEditResponse.getBody().getIsPublished());
         }
     }
@@ -96,12 +96,12 @@ public class PublishStoryTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
 
         NewStory storyRequest = NewStoryBuilder.init().title("").build();
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
         
         try{
             storyClient.publishStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
         }finally{
-            ResponseEntity<StoryResponse> storyForEditResponse = storyClient.getMyStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
+            ResponseEntity<StoryInListResponse> storyForEditResponse = storyClient.getMyStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
             assertEquals(false, storyForEditResponse.getBody().getIsPublished());            
         }
     }    

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.nwm.coauthor.Constants;
 import com.nwm.coauthor.exception.AlreadyAMemberException;
 import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.AlreadyPublishedException;
@@ -39,11 +40,10 @@ import com.nwm.coauthor.service.resource.request.NewEntryRequest;
 import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
 import com.nwm.coauthor.service.resource.request.NewStory;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
-import com.nwm.coauthor.service.resource.response.StoriesResponse;
-import com.nwm.coauthor.service.resource.response.StoryResponse;
+import com.nwm.coauthor.service.resource.response.StoryInListResponse;
 
 @Controller
-@RequestMapping(value = "/story", produces = "application/json")
+@RequestMapping(produces = "application/json")
 public class StoryControllerImpl extends BaseControllerImpl implements StoryController {
 	int minCharsPerEntry = 3;
 	int maxCharsPerEntry = 1000;
@@ -59,7 +59,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 
 	@Override
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
-	@RequestMapping(method = RequestMethod.POST, consumes = "application/json")
+	@RequestMapping(value = Constants.CREATE_STORY_PATH, method = RequestMethod.POST, consumes = "application/json")
 	public void createStory(@RequestHeader("TimeZoneOffsetMinutes") Long timeZoneOffsetMinutes, @RequestHeader(required = false, value = "Authorization") String coToken,
 			@RequestBody NewStory createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
 		// validateCreateStoryRequest(createStoryRequest);
@@ -70,21 +70,21 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 	}
 
 	@Override
-	@RequestMapping(value = "/top-view-stories", method = RequestMethod.GET)
-	public ResponseEntity<List<StoryResponse>> getTopViewStories() {
-		return new ResponseEntity<List<StoryResponse>>(storyManager.getTopViewStories(), HttpStatus.OK);
+	@RequestMapping(value = Constants.TOP_VIEW_STORIES_PATH, method = RequestMethod.GET)
+	public ResponseEntity<List<StoryInListResponse>> getTopViewStories() {
+		return new ResponseEntity<List<StoryInListResponse>>(storyManager.getTopViewStories(), HttpStatus.OK);
 	}
 	
-	@Override
-	@RequestMapping(value = "/mine", method = RequestMethod.GET)
-	public ResponseEntity<StoriesResponse> getMyStories(@RequestHeader("Authorization") String coToken) throws AuthenticationUnauthorizedException,
-			SomethingWentWrongException {
-		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
-
-		StoriesResponse myStories = storyManager.getMyStories(fbId);
-
-		return new ResponseEntity<StoriesResponse>(myStories, HttpStatus.OK);
-	}
+//	@Override
+//	@RequestMapping(value = "/mine", method = RequestMethod.GET)
+//	public ResponseEntity<StoriesInListResponse> getMyStories(@RequestHeader("Authorization") String coToken) throws AuthenticationUnauthorizedException,
+//			SomethingWentWrongException {
+//		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
+//
+//		StoriesInListResponse myStories = storyManager.getMyStories(fbId);
+//
+//		return new ResponseEntity<StoriesInListResponse>(myStories, HttpStatus.OK);
+//	}
 
 	@Override
 	@RequestMapping(value = "/{storyId}/entries/{beginIndex}/clientCharVersion/{clientCharVersion}", method = RequestMethod.GET)
@@ -101,7 +101,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 
 	@Override
 	@RequestMapping(value = "/{storyId}/entry", method = RequestMethod.POST)
-	public ResponseEntity<StoryResponse> newEntry(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestBody NewEntryRequest newEntryRequest)
+	public ResponseEntity<StoryInListResponse> newEntry(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestBody NewEntryRequest newEntryRequest)
 			throws BadRequestException, AuthenticationUnauthorizedException, VersioningException, StoryNotFoundException, NonMemberException,
 			ConsecutiveEntryBySameMemberException {
 //		validateNewEntry(newEntryRequest);
@@ -115,32 +115,32 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 
 	@Override
 	@RequestMapping(value = "/{storyId}/mine", method = RequestMethod.GET)
-	public ResponseEntity<StoryResponse> getMyStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException,
+	public ResponseEntity<StoryInListResponse> getMyStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException,
 			AuthenticationUnauthorizedException, StoryNotFoundException, NonMemberException {
 		validateRequestStoryId(storyId);
 
 		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
-		StoryResponse response = storyManager.getMyStory(fbId, storyId);
+		StoryInListResponse response = storyManager.getMyStory(fbId, storyId);
 
-		return new ResponseEntity<StoryResponse>(response, HttpStatus.OK);
+		return new ResponseEntity<StoryInListResponse>(response, HttpStatus.OK);
 	}
 
 	@Override
 	@RequestMapping(value = "/{storyId}/like", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public ResponseEntity<StoryResponse> likeStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException,
+	public ResponseEntity<StoryInListResponse> likeStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException,
 			AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException,
 			SomethingWentWrongException {
 		validateRequestStoryId(storyId);
 
 		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
 
-		return new ResponseEntity<StoryResponse>(storyManager.likeStory(fbId, storyId), HttpStatus.OK);
+		return new ResponseEntity<StoryInListResponse>(storyManager.likeStory(fbId, storyId), HttpStatus.OK);
 	}
 
 	@Override
 	@RequestMapping(value = "/{storyId}/publish", method = RequestMethod.POST)
-	public ResponseEntity<StoryResponse> publishStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException,
+	public ResponseEntity<StoryInListResponse> publishStory(@RequestHeader("Authorization") String coToken, @PathVariable String storyId) throws BadRequestException,
 			AuthenticationUnauthorizedException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException, SomethingWentWrongException {
 //		validateRequestStoryId(storyId);
 //
@@ -153,25 +153,25 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 
 	@Override
 	@RequestMapping(value = "/{storyId}/title", method = RequestMethod.PUT)
-	public ResponseEntity<StoryResponse> changeTitle(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestBody ChangeTitleRequest request)
+	public ResponseEntity<StoryInListResponse> changeTitle(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestBody ChangeTitleRequest request)
 			throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, UserIsNotLeaderException, StoryNotFoundException,
 			AlreadyPublishedException {
 
 		validateChangeTitleRequest(request);
 		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
 
-		return new ResponseEntity<StoryResponse>(storyManager.changeTitle(fbId, storyId, request.getTitle()), HttpStatus.OK);
+		return new ResponseEntity<StoryInListResponse>(storyManager.changeTitle(fbId, storyId, request.getTitle()), HttpStatus.OK);
 	}
 
 	@Override
 	@RequestMapping(value = "/{storyId}/friends", method = RequestMethod.POST)
-	public ResponseEntity<StoryResponse> newFriends(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestBody NewFriendsRequest request)
+	public ResponseEntity<StoryInListResponse> newFriends(@RequestHeader("Authorization") String coToken, @PathVariable String storyId, @RequestBody NewFriendsRequest request)
 			throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, AlreadyAMemberException, NonMemberException {
 		validateNewFriends(request, storyId);
 
 		String fbId = authenticationManager.authenticateCOTokenForFbId(coToken);
 
-		return new ResponseEntity<StoryResponse>(storyManager.newFriends(fbId, storyId, request), HttpStatus.OK);
+		return new ResponseEntity<StoryInListResponse>(storyManager.newFriends(fbId, storyId, request), HttpStatus.OK);
 	}
 
 	private void validateNewFriends(NewFriendsRequest request, String storyId) throws BadRequestException {
@@ -315,7 +315,7 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 	}
 
 	@Override
-	public ResponseEntity<StoryResponse> rateStory(String coToken, String storyId, Integer rating) throws SomethingWentWrongException {
+	public ResponseEntity<StoryInListResponse> rateStory(String coToken, String storyId, Integer rating) throws SomethingWentWrongException {
 		// TODO Auto-generated method stub
 		return null;
 	}

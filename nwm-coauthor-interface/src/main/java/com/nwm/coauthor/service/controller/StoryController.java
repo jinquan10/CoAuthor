@@ -25,13 +25,12 @@ import com.nwm.coauthor.service.resource.request.NewEntryRequest;
 import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
 import com.nwm.coauthor.service.resource.request.NewStory;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
-import com.nwm.coauthor.service.resource.response.StoriesResponse;
-import com.nwm.coauthor.service.resource.response.StoryResponse;
+import com.nwm.coauthor.service.resource.response.StoryInListResponse;
 
 public interface StoryController {
 
     public void createStory(Long timeZoneOffsetMinutes, String coToken, NewStory createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException;
-    ResponseEntity<List<StoryResponse>> getTopViewStories();
+    ResponseEntity<List<StoryInListResponse>> getTopViewStories();
 
     
     
@@ -40,17 +39,17 @@ public interface StoryController {
     
     
     // - Read
-    public ResponseEntity<StoriesResponse> getMyStories(String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException;
-	public ResponseEntity<StoryResponse> getMyStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, SomethingWentWrongException, NonMemberException;
+//    public ResponseEntity<StoriesInListResponse> getMyStories(String coToken) throws AuthenticationUnauthorizedException, SomethingWentWrongException;
+	public ResponseEntity<StoryInListResponse> getMyStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, SomethingWentWrongException, NonMemberException;
 
 	// - Update
-	public ResponseEntity<StoryResponse> newEntry(String coToken, String storyId, NewEntryRequest newEntryRequest) throws BadRequestException, AuthenticationUnauthorizedException, VersioningException, StoryNotFoundException, NonMemberException, ConsecutiveEntryBySameMemberException, SomethingWentWrongException;
-	public ResponseEntity<StoryResponse> likeStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException, SomethingWentWrongException, UserLikingOwnStoryException, UnpublishedStoryLikedException;
-	public ResponseEntity<StoryResponse> publishStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException, SomethingWentWrongException;
-    public ResponseEntity<StoryResponse> changeTitle(String coToken, String storyId, ChangeTitleRequest request) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, UserIsNotLeaderException, StoryNotFoundException, AlreadyPublishedException, AlreadyLikedException;
-    public ResponseEntity<StoryResponse> newFriends(String coToken, String storyId, NewFriendsRequest request) throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, AlreadyAMemberException, NonMemberException;
+	public ResponseEntity<StoryInListResponse> newEntry(String coToken, String storyId, NewEntryRequest newEntryRequest) throws BadRequestException, AuthenticationUnauthorizedException, VersioningException, StoryNotFoundException, NonMemberException, ConsecutiveEntryBySameMemberException, SomethingWentWrongException;
+	public ResponseEntity<StoryInListResponse> likeStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, AlreadyLikedException, StoryNotFoundException, SomethingWentWrongException, UserLikingOwnStoryException, UnpublishedStoryLikedException;
+	public ResponseEntity<StoryInListResponse> publishStory(String coToken, String storyId) throws BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, UserIsNotLeaderException, NoTitleForPublishingException, SomethingWentWrongException;
+    public ResponseEntity<StoryInListResponse> changeTitle(String coToken, String storyId, ChangeTitleRequest request) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, UserIsNotLeaderException, StoryNotFoundException, AlreadyPublishedException, AlreadyLikedException;
+    public ResponseEntity<StoryInListResponse> newFriends(String coToken, String storyId, NewFriendsRequest request) throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, AlreadyAMemberException, NonMemberException;
 
-    public ResponseEntity<StoryResponse> rateStory(String coToken, String storyId, Integer rating) throws SomethingWentWrongException, BadRequestException;
+    public ResponseEntity<StoryInListResponse> rateStory(String coToken, String storyId, Integer rating) throws SomethingWentWrongException, BadRequestException;
 
     // public newFavoriteStory();
     // public getFavoriteStories();

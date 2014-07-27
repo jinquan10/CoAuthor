@@ -2,7 +2,7 @@ package com.nwm.coauthor.service.model;
 
 import java.util.Date;
 
-import com.nwm.coauthor.service.resource.response.StoryResponse;
+import com.nwm.coauthor.service.resource.response.StoryInListResponse;
 
 public class UpdateStoryForNewEntryModel extends BaseModel{
     private Long storyLastUpdated;
@@ -11,7 +11,7 @@ public class UpdateStoryForNewEntryModel extends BaseModel{
     private String lastFriendWithEntry;
     private Integer currEntryCharCount;
     
-    public StoryResponse mergeWithStoryResponse(StoryResponse response){
+    public StoryInListResponse mergeWithStoryResponse(StoryInListResponse response){
         return response;
     }
     

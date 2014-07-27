@@ -19,7 +19,7 @@ import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.request.ChangeTitleRequest;
 import com.nwm.coauthor.service.resource.request.NewStory;
-import com.nwm.coauthor.service.resource.response.StoryResponse;
+import com.nwm.coauthor.service.resource.response.StoryInListResponse;
 
 
 public class ChangeTitleTest extends BaseTest {
@@ -34,7 +34,7 @@ public class ChangeTitleTest extends BaseTest {
     public void nullTitle() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, UserIsNotLeaderException, StoryNotFoundException, AlreadyPublishedException {
         UserModel user = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(user.getCoToken(), NewStoryBuilder.init().build());
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(user.getCoToken(), NewStoryBuilder.init().build());
 
         try {
             storyClient.changeTitle(user.getCoToken(), storyResponse.getBody().getStoryId(), ChangeTitleRequest.initWithTitle(null));
@@ -51,7 +51,7 @@ public class ChangeTitleTest extends BaseTest {
     public void emptyTitle() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, UserIsNotLeaderException, StoryNotFoundException, AlreadyPublishedException {
         UserModel user = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(user.getCoToken(), NewStoryBuilder.init().build());
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(user.getCoToken(), NewStoryBuilder.init().build());
 
         try {
             storyClient.changeTitle(user.getCoToken(), storyResponse.getBody().getStoryId(), ChangeTitleRequest.initWithTitle(""));
@@ -71,7 +71,7 @@ public class ChangeTitleTest extends BaseTest {
         
         NewStory request = NewStoryBuilder.init().fbFriendsFromUserModel(member).build();
         
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), request);
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), request);
         storyClient.changeTitle(member.getCoToken(), storyResponse.getBody().getStoryId(), ChangeTitleRequest.initWithTitle("title"));
     }
 
@@ -82,7 +82,7 @@ public class ChangeTitleTest extends BaseTest {
         
         NewStory request = NewStoryBuilder.init().build();
         
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), request);
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), request);
         storyClient.changeTitle(nonMember.getCoToken(), storyResponse.getBody().getStoryId(), ChangeTitleRequest.initWithTitle("title"));
     }    
     
@@ -91,7 +91,7 @@ public class ChangeTitleTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         NewStory storyRequest = NewStoryBuilder.init().title("The one").build();
 
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
         storyClient.publishStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
         
         storyClient.changeTitle(leader.getCoToken(), storyResponse.getBody().getStoryId(), ChangeTitleRequest.initWithTitle("title"));
@@ -102,12 +102,12 @@ public class ChangeTitleTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         NewStory storyRequest = NewStoryBuilder.init().title("The one").build();
 
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
-        StoryResponse createdStory = storyResponse.getBody();
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
+        StoryInListResponse createdStory = storyResponse.getBody();
         
-        ResponseEntity<StoryResponse> titleResponse = storyClient.changeTitle(leader.getCoToken(), storyResponse.getBody().getStoryId(), ChangeTitleRequest.initWithTitle("title"));
+        ResponseEntity<StoryInListResponse> titleResponse = storyClient.changeTitle(leader.getCoToken(), storyResponse.getBody().getStoryId(), ChangeTitleRequest.initWithTitle("title"));
         
-        StoryResponse title = titleResponse.getBody();
+        StoryInListResponse title = titleResponse.getBody();
         
         assertNotEquals(createdStory.getStoryLastUpdated(), title.getStoryLastUpdated());
     }
@@ -117,16 +117,16 @@ public class ChangeTitleTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         NewStory storyRequest = NewStoryBuilder.init().build();
 
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
-        StoryResponse createdStory = storyResponse.getBody();
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
+        StoryInListResponse createdStory = storyResponse.getBody();
         
-        ResponseEntity<StoryResponse> changedTitleResponse = storyClient.changeTitle(leader.getCoToken(), storyResponse.getBody().getStoryId(), ChangeTitleRequest.initWithTitle("title"));
-        StoryResponse story = changedTitleResponse.getBody();
+        ResponseEntity<StoryInListResponse> changedTitleResponse = storyClient.changeTitle(leader.getCoToken(), storyResponse.getBody().getStoryId(), ChangeTitleRequest.initWithTitle("title"));
+        StoryInListResponse story = changedTitleResponse.getBody();
         
         assertNotEquals(createdStory.getStoryLastUpdated(), story.getStoryLastUpdated());
         assertEquals(story.getTitle(), "title");
         
-        ResponseEntity<StoryResponse> publishResponse = storyClient.publishStory(leader.getCoToken(), story.getStoryId());
+        ResponseEntity<StoryInListResponse> publishResponse = storyClient.publishStory(leader.getCoToken(), story.getStoryId());
         story = publishResponse.getBody();
         
         assertNotEquals(createdStory.getStoryLastUpdated(), story.getStoryLastUpdated());

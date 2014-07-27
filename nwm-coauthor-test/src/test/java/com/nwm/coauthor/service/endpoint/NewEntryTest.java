@@ -24,7 +24,7 @@ import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.request.NewEntryRequest;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.EntryResponse;
-import com.nwm.coauthor.service.resource.response.StoryResponse;
+import com.nwm.coauthor.service.resource.response.StoryInListResponse;
 import com.nwm.coauthor.service.util.StringUtil;
 
 public class NewEntryTest extends BaseTest {
@@ -34,12 +34,12 @@ public class NewEntryTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel friend = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
-        StoryResponse newStory = storyResponse.getBody();
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
+        StoryInListResponse newStory = storyResponse.getBody();
 
         String lastEntry = "newEntry";
-        ResponseEntity<StoryResponse> newEntryResponse = storyClient.newEntry(friend.getCoToken(), newStory.getStoryId(), NewEntryRequest.newEntry(lastEntry, newStory.getCurrEntryCharCount()));
-        StoryResponse newEntryStory = newEntryResponse.getBody();
+        ResponseEntity<StoryInListResponse> newEntryResponse = storyClient.newEntry(friend.getCoToken(), newStory.getStoryId(), NewEntryRequest.newEntry(lastEntry, newStory.getCurrEntryCharCount()));
+        StoryInListResponse newEntryStory = newEntryResponse.getBody();
 
         assertEquals(HttpStatus.CREATED, newEntryResponse.getStatusCode());
         assertEquals((int) (newStory.getCurrEntryCharCount() + lastEntry.length()), (int) (newEntryStory.getCurrEntryCharCount()));
@@ -63,7 +63,7 @@ public class NewEntryTest extends BaseTest {
         int numEntries = 124;
         int totalEntries = numEntries + 1;
 
-        StoryResponse story = insertATonOfEntries(leader, numCharsPerEntry, numEntries, totalEntries);
+        StoryInListResponse story = insertATonOfEntries(leader, numCharsPerEntry, numEntries, totalEntries);
 
         List<EntryResponse> entries = getATonOfEntries(leader, story, 0);
 
@@ -82,7 +82,7 @@ public class NewEntryTest extends BaseTest {
         int numEntries = 124;
         int totalEntries = numEntries + 1;
 
-        StoryResponse story = insertATonOfEntries(leader, numCharsPerEntry, numEntries, totalEntries);
+        StoryInListResponse story = insertATonOfEntries(leader, numCharsPerEntry, numEntries, totalEntries);
 
         List<EntryResponse> entries = getATonOfEntries(leader, story, 0);
 
@@ -114,7 +114,7 @@ public class NewEntryTest extends BaseTest {
         int numEntries = 143;
         int totalEntries = numEntries + 1;
 
-        StoryResponse story = insertATonOfEntries(leader, numCharsPerEntry, numEntries, totalEntries);
+        StoryInListResponse story = insertATonOfEntries(leader, numCharsPerEntry, numEntries, totalEntries);
 
         storyClient.getEntries(leader.getCoToken(), story.getStoryId(), 0, story.getCurrEntryCharCount());
     }
@@ -125,8 +125,8 @@ public class NewEntryTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel friend = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
-        StoryResponse story = storyResponse.getBody();
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
+        StoryInListResponse story = storyResponse.getBody();
 
         storyClient.newEntry(friend.getCoToken(), new ObjectId().toString(), NewEntryRequest.newEntry("blah", story.getCurrEntryCharCount()));
     }
@@ -139,8 +139,8 @@ public class NewEntryTest extends BaseTest {
 
         UserModel nonMember = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
-        StoryResponse story = storyResponse.getBody();
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
+        StoryInListResponse story = storyResponse.getBody();
 
         storyClient.newEntry(nonMember.getCoToken(), story.getStoryId(), NewEntryRequest.newEntry("blah", story.getCurrEntryCharCount()));
     }
@@ -151,8 +151,8 @@ public class NewEntryTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel friend = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
-        StoryResponse story = storyResponse.getBody();
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
+        StoryInListResponse story = storyResponse.getBody();
 
         storyClient.newEntry(friend.getCoToken(), story.getStoryId(), NewEntryRequest.newEntry("blah", 0));
     }
@@ -163,8 +163,8 @@ public class NewEntryTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel friend = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
-        StoryResponse story = storyResponse.getBody();
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
+        StoryInListResponse story = storyResponse.getBody();
 
         storyClient.newEntry(leader.getCoToken(), story.getStoryId(), NewEntryRequest.newEntry("blah", story.getCurrEntryCharCount()));
     }
@@ -175,8 +175,8 @@ public class NewEntryTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel friend = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
-        StoryResponse story = storyResponse.getBody();
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
+        StoryInListResponse story = storyResponse.getBody();
 
         try {
             storyClient.newEntry(leader.getCoToken(), story.getStoryId(), NewEntryRequest.newEntry("blah", null));
@@ -192,8 +192,8 @@ public class NewEntryTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel friend = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
-        StoryResponse story = storyResponse.getBody();
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
+        StoryInListResponse story = storyResponse.getBody();
 
         try {
             storyClient.newEntry(leader.getCoToken(), new ObjectId().toString(), NewEntryRequest.newEntry(null, story.getCurrEntryCharCount()));
@@ -209,8 +209,8 @@ public class NewEntryTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel friend = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
-        StoryResponse story = storyResponse.getBody();
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
+        StoryInListResponse story = storyResponse.getBody();
 
         try {
             storyClient.newEntry(leader.getCoToken(), new ObjectId().toString(), NewEntryRequest.newEntry("", story.getCurrEntryCharCount()));
@@ -226,8 +226,8 @@ public class NewEntryTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel friend = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
-        StoryResponse story = storyResponse.getBody();
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
+        StoryInListResponse story = storyResponse.getBody();
 
         try {
             storyClient.newEntry(leader.getCoToken(), new ObjectId().toString(), NewEntryRequest.newEntry("a", story.getCurrEntryCharCount()));
@@ -243,8 +243,8 @@ public class NewEntryTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel friend = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
-        StoryResponse story = storyResponse.getBody();
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
+        StoryInListResponse story = storyResponse.getBody();
 
         try {
             storyClient.newEntry(leader.getCoToken(), new ObjectId().toString(), NewEntryRequest.newEntry(StringUtil.repeat('a', 1001), story.getCurrEntryCharCount()));
@@ -264,7 +264,7 @@ public class NewEntryTest extends BaseTest {
         return numChars;
     }
 
-    private List<EntryResponse> getATonOfEntries(UserModel leader, StoryResponse story, Integer beginIndex) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException,
+    private List<EntryResponse> getATonOfEntries(UserModel leader, StoryInListResponse story, Integer beginIndex) throws BadRequestException, AuthenticationUnauthorizedException, CannotGetEntriesException,
             StoryNotFoundException, VersioningException, SomethingWentWrongException {
 
         ResponseEntity<EntriesResponse> entriesResponse = null;
@@ -280,24 +280,24 @@ public class NewEntryTest extends BaseTest {
         return entriesResponse.getBody().getEntries();
     }
 
-    private StoryResponse insertATonOfEntries(UserModel leader, int numCharsPerEntry, int numEntries, int totalEntries) throws SomethingWentWrongException, AuthenticationUnauthorizedException,
+    private StoryInListResponse insertATonOfEntries(UserModel leader, int numCharsPerEntry, int numEntries, int totalEntries) throws SomethingWentWrongException, AuthenticationUnauthorizedException,
             BadRequestException, VersioningException, StoryNotFoundException, NonMemberException, ConsecutiveEntryBySameMemberException {
         UserModel friend = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
-        StoryResponse newStory = storyResponse.getBody();
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(friend).build());
+        StoryInListResponse newStory = storyResponse.getBody();
 
         String entry = StringUtil.repeat('a', numCharsPerEntry);
 
         boolean isLeaderTurn = false;
-        StoryResponse newEntryResponseStory = newStory;
+        StoryInListResponse newEntryResponseStory = newStory;
         for (int i = 0; i < numEntries; i++) {
             if (isLeaderTurn) {
-                ResponseEntity<StoryResponse> newEntryResponse = storyClient.newEntry(leader.getCoToken(), newStory.getStoryId(),
+                ResponseEntity<StoryInListResponse> newEntryResponse = storyClient.newEntry(leader.getCoToken(), newStory.getStoryId(),
                         NewEntryRequest.newEntry(entry, newEntryResponseStory.getCurrEntryCharCount()));
                 newEntryResponseStory = newEntryResponse.getBody();
             } else {
-                ResponseEntity<StoryResponse> newEntryResponse = storyClient.newEntry(friend.getCoToken(), newStory.getStoryId(),
+                ResponseEntity<StoryInListResponse> newEntryResponse = storyClient.newEntry(friend.getCoToken(), newStory.getStoryId(),
                         NewEntryRequest.newEntry(entry, newEntryResponseStory.getCurrEntryCharCount()));
                 newEntryResponseStory = newEntryResponse.getBody();
             }

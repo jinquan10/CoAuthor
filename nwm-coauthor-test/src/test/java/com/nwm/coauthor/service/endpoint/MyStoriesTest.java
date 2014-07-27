@@ -17,15 +17,15 @@ import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.service.builder.NewStoryBuilder;
 import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
-import com.nwm.coauthor.service.resource.response.StoriesResponse;
-import com.nwm.coauthor.service.resource.response.StoryResponse;
+import com.nwm.coauthor.service.resource.response.StoriesInListResponse;
+import com.nwm.coauthor.service.resource.response.StoryInListResponse;
 
 public class MyStoriesTest extends BaseTest {
     @Test
     public void hasNoStory() throws AuthenticationUnauthorizedException, SomethingWentWrongException{
         UserModel nonMember = UserBuilder.createUser();
 
-        ResponseEntity<StoriesResponse> myStoriesResponse = storyClient.getMyStories(nonMember.getCoToken());
+        ResponseEntity<StoriesInListResponse> myStoriesResponse = storyClient.getMyStories(nonMember.getCoToken());
         assertNotNull(myStoriesResponse.getBody().getMyStories());
         assertEquals(0, myStoriesResponse.getBody().getMyStories().size());
     }
@@ -36,10 +36,10 @@ public class MyStoriesTest extends BaseTest {
     	
     	storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().title("asdf").build());
     	
-    	ResponseEntity<StoriesResponse> myStoriesResponse = storyClient.getMyStories(leader.getCoToken());
+    	ResponseEntity<StoriesInListResponse> myStoriesResponse = storyClient.getMyStories(leader.getCoToken());
     	assertNotNull(myStoriesResponse.getBody().getMyStories());
     	
-    	StoryResponse responseBody = myStoriesResponse.getBody().getMyStories().get(0);
+    	StoryInListResponse responseBody = myStoriesResponse.getBody().getMyStories().get(0);
     	
         assertNotNull(responseBody);
         assertNotNull(responseBody.getStoryId());
@@ -64,7 +64,7 @@ public class MyStoriesTest extends BaseTest {
     	assertNotNull(responseBody.getStoryLastUpdated());
     }
     
-    private void assertFbFriends(StoryResponse responseBody){
+    private void assertFbFriends(StoryInListResponse responseBody){
         List<String> fbFriends = responseBody.getFbFriends();
         assertNotNull(fbFriends);
         
@@ -80,7 +80,7 @@ public class MyStoriesTest extends BaseTest {
     	storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
     	storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
     	
-    	ResponseEntity<StoriesResponse> myStoriesResponse = storyClient.getMyStories(leader.getCoToken());
+    	ResponseEntity<StoriesInListResponse> myStoriesResponse = storyClient.getMyStories(leader.getCoToken());
     	assertNotNull(myStoriesResponse.getBody().getMyStories());
     	assertEquals(2, myStoriesResponse.getBody().getMyStories().size());
     }

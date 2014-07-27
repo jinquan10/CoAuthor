@@ -17,15 +17,15 @@ import com.nwm.coauthor.exception.StoryNotFoundException;
 import com.nwm.coauthor.service.builder.NewStoryBuilder;
 import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
-import com.nwm.coauthor.service.resource.response.StoryResponse;
+import com.nwm.coauthor.service.resource.response.StoryInListResponse;
 
 public class RateStoryTest extends BaseTest {
     @Test
     public void rateStory() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, NonMemberException {
         UserModel leader = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
-        StoryResponse storyResponse = createStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryInListResponse storyResponse = createStoryResponse.getBody();
 
         int numRatings = 5;
         double averageRating = 0.d;
@@ -48,8 +48,8 @@ public class RateStoryTest extends BaseTest {
     public void alreadyRated() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, NonMemberException {
         UserModel leader = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
-        StoryResponse storyResponse = createStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryInListResponse storyResponse = createStoryResponse.getBody();
         
         UserModel nonMember = UserBuilder.createUser();
         
@@ -61,8 +61,8 @@ public class RateStoryTest extends BaseTest {
     public void storyNotFound() throws SomethingWentWrongException, NonMemberException, AuthenticationUnauthorizedException, BadRequestException {
         UserModel leader = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
-        StoryResponse storyResponse = createStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryInListResponse storyResponse = createStoryResponse.getBody();
         
         UserModel nonMember = UserBuilder.createUser();
         
@@ -85,8 +85,8 @@ public class RateStoryTest extends BaseTest {
     public void lessThanMinRating() throws SomethingWentWrongException, NonMemberException, AuthenticationUnauthorizedException, BadRequestException{
         UserModel leader = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
-        StoryResponse storyResponse = createStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryInListResponse storyResponse = createStoryResponse.getBody();
         
         UserModel nonMember = UserBuilder.createUser();
         
@@ -103,8 +103,8 @@ public class RateStoryTest extends BaseTest {
     public void moreThanMaxRating() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
         UserModel leader = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
-        StoryResponse storyResponse = createStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryInListResponse storyResponse = createStoryResponse.getBody();
         
         UserModel nonMember = UserBuilder.createUser();
         
@@ -121,8 +121,8 @@ public class RateStoryTest extends BaseTest {
     public void memberOrLeaderMember() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException {
         UserModel leader = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
-        StoryResponse storyResponse = createStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryInListResponse storyResponse = createStoryResponse.getBody();
         
         UserModel nonMember = UserBuilder.createUser();
     }

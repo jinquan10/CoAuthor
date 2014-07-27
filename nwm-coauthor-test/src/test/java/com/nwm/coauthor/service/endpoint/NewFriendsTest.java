@@ -20,21 +20,21 @@ import com.nwm.coauthor.service.builder.NewStoryBuilder;
 import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
-import com.nwm.coauthor.service.resource.response.StoriesResponse;
-import com.nwm.coauthor.service.resource.response.StoryResponse;
+import com.nwm.coauthor.service.resource.response.StoriesInListResponse;
+import com.nwm.coauthor.service.resource.response.StoryInListResponse;
 
 public class NewFriendsTest extends BaseTest {
     @Test
     public void newFriend() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyAMemberException, NonMemberException {
         UserModel leader = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
-        StoryResponse story = createStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryInListResponse story = createStoryResponse.getBody();
 
         String newFriendFbId = String.valueOf(Math.random());
 
-        ResponseEntity<StoryResponse> newFriendsResponse = storyClient.newFriends(leader.getCoToken(), story.getStoryId(), NewFriendsRequest.init().addNewFriend(newFriendFbId));
-        StoryResponse newFriendsStory = newFriendsResponse.getBody();
+        ResponseEntity<StoryInListResponse> newFriendsResponse = storyClient.newFriends(leader.getCoToken(), story.getStoryId(), NewFriendsRequest.init().addNewFriend(newFriendFbId));
+        StoryInListResponse newFriendsStory = newFriendsResponse.getBody();
 
         assertTrue(newFriendsStory.getFbFriends().contains(newFriendFbId));
     }
@@ -43,14 +43,14 @@ public class NewFriendsTest extends BaseTest {
     public void newFriends() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyAMemberException, NonMemberException {
         UserModel leader = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
-        StoryResponse story = createStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryInListResponse story = createStoryResponse.getBody();
 
         String newFriendFbId = String.valueOf(Math.random());
         String newFriendFbId2 = String.valueOf(Math.random());
 
-        ResponseEntity<StoryResponse> newFriendsResponse = storyClient.newFriends(leader.getCoToken(), story.getStoryId(), NewFriendsRequest.init().addNewFriend(newFriendFbId).addNewFriend(newFriendFbId2));
-        StoryResponse newFriendsStory = newFriendsResponse.getBody();
+        ResponseEntity<StoryInListResponse> newFriendsResponse = storyClient.newFriends(leader.getCoToken(), story.getStoryId(), NewFriendsRequest.init().addNewFriend(newFriendFbId).addNewFriend(newFriendFbId2));
+        StoryInListResponse newFriendsStory = newFriendsResponse.getBody();
 
         assertTrue(newFriendsStory.getFbFriends().contains(newFriendFbId));
         assertTrue(newFriendsStory.getFbFriends().contains(newFriendFbId2));
@@ -60,25 +60,25 @@ public class NewFriendsTest extends BaseTest {
     public void newFriends_ThenNewFriendGetsStories() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyAMemberException, NonMemberException {
         UserModel leader = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
-        StoryResponse story = createStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryInListResponse story = createStoryResponse.getBody();
 
         String newFriendFbId = String.valueOf(Math.random());
 
-        ResponseEntity<StoryResponse> newFriendsResponse = storyClient.newFriends(leader.getCoToken(), story.getStoryId(), NewFriendsRequest.init().addNewFriend(newFriendFbId));
-        StoryResponse newFriendsStory = newFriendsResponse.getBody();
+        ResponseEntity<StoryInListResponse> newFriendsResponse = storyClient.newFriends(leader.getCoToken(), story.getStoryId(), NewFriendsRequest.init().addNewFriend(newFriendFbId));
+        StoryInListResponse newFriendsStory = newFriendsResponse.getBody();
 
         assertTrue(newFriendsStory.getFbFriends().contains(newFriendFbId));
 
         // - fake the login
         UserModel newFriend = UserBuilder.createUser(newFriendFbId);
-        ResponseEntity<StoriesResponse> myStoriesResponse = storyClient.getMyStories(newFriend.getCoToken());
-        StoriesResponse myStories = myStoriesResponse.getBody();
+        ResponseEntity<StoriesInListResponse> myStoriesResponse = storyClient.getMyStories(newFriend.getCoToken());
+        StoriesInListResponse myStories = myStoriesResponse.getBody();
 
-        List<StoryResponse> stories = myStories.getMyStories();
+        List<StoryInListResponse> stories = myStories.getMyStories();
         assertEquals(1, stories.size());
 
-        StoryResponse myStory = stories.get(0);
+        StoryInListResponse myStory = stories.get(0);
         assertEquals(story.getStoryId(), myStory.getStoryId());
         assertEquals(3, myStory.getFbFriends().size());
         assertNotEquals(story.getStoryLastUpdated(), myStory.getStoryLastUpdated());
@@ -98,8 +98,8 @@ public class NewFriendsTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel nonMember = UserBuilder.createUser();
         
-        ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
-        StoryResponse story = createStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryInListResponse story = createStoryResponse.getBody();
 
         String newFriendFbId = String.valueOf(Math.random());
         storyClient.newFriends(nonMember.getCoToken(), story.getStoryId(), NewFriendsRequest.init().addNewFriend(newFriendFbId));
@@ -109,8 +109,8 @@ public class NewFriendsTest extends BaseTest {
     public void nullRequest() throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, AlreadyAMemberException, NonMemberException{
         UserModel leader = UserBuilder.createUser();
         
-        ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
-        StoryResponse story = createStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryInListResponse story = createStoryResponse.getBody();
 
         storyClient.newFriends(leader.getCoToken(), story.getStoryId(), null);        
     }
@@ -119,8 +119,8 @@ public class NewFriendsTest extends BaseTest {
     public void zeroLengthRequest() throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, AlreadyAMemberException, NonMemberException{
         UserModel leader = UserBuilder.createUser();
         
-        ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
-        StoryResponse story = createStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryInListResponse story = createStoryResponse.getBody();
 
         try{
             storyClient.newFriends(leader.getCoToken(), story.getStoryId(), NewFriendsRequest.init());
@@ -134,8 +134,8 @@ public class NewFriendsTest extends BaseTest {
     public void nullListRequest() throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, AlreadyAMemberException, NonMemberException{
         UserModel leader = UserBuilder.createUser();
         
-        ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
-        StoryResponse story = createStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryInListResponse story = createStoryResponse.getBody();
 
         NewFriendsRequest request = NewFriendsRequest.init();
         request.setNewFriends(null);
@@ -152,8 +152,8 @@ public class NewFriendsTest extends BaseTest {
     public void alreadyAMemberALeader() throws SomethingWentWrongException, BadRequestException, AuthenticationUnauthorizedException, StoryNotFoundException, AlreadyAMemberException, NonMemberException{
         UserModel leader = UserBuilder.createUser();
         
-        ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
-        StoryResponse story = createStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        StoryInListResponse story = createStoryResponse.getBody();
 
         storyClient.newFriends(leader.getCoToken(), story.getStoryId(), NewFriendsRequest.init().addNewFriend(leader.getFbId()));        
     }
@@ -163,8 +163,8 @@ public class NewFriendsTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel member = UserBuilder.createUser();
         
-        ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).build());
-        StoryResponse story = createStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).build());
+        StoryInListResponse story = createStoryResponse.getBody();
 
         storyClient.newFriends(leader.getCoToken(), story.getStoryId(), NewFriendsRequest.init().addNewFriend(member.getFbId()));
     }
@@ -175,8 +175,8 @@ public class NewFriendsTest extends BaseTest {
         UserModel member = UserBuilder.createUser();
         UserModel member2 = UserBuilder.createUser();
         
-        ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).fbFriendsFromUserModel(member2).build());
-        StoryResponse story = createStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).fbFriendsFromUserModel(member2).build());
+        StoryInListResponse story = createStoryResponse.getBody();
 
         storyClient.newFriends(leader.getCoToken(), story.getStoryId(), NewFriendsRequest.init().addNewFriend(member.getFbId()));
     }    
@@ -189,8 +189,8 @@ public class NewFriendsTest extends BaseTest {
         
         UserModel nonMember = UserBuilder.createUser();
         
-        ResponseEntity<StoryResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).fbFriendsFromUserModel(member2).build());
-        StoryResponse story = createStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> createStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).fbFriendsFromUserModel(member2).build());
+        StoryInListResponse story = createStoryResponse.getBody();
 
         storyClient.newFriends(leader.getCoToken(), story.getStoryId(), NewFriendsRequest.init()
                 .addNewFriend(member.getFbId())

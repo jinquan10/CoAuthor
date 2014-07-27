@@ -20,8 +20,8 @@ import com.nwm.coauthor.service.builder.NewStoryBuilder;
 import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.request.NewStory;
-import com.nwm.coauthor.service.resource.response.StoryResponse;
-import com.nwm.coauthor.service.resource.response.StoryResponse;
+import com.nwm.coauthor.service.resource.response.StoryInListResponse;
+import com.nwm.coauthor.service.resource.response.StoryInListResponse;
 
 public class LikeTest extends BaseTest {
     @Test
@@ -31,12 +31,12 @@ public class LikeTest extends BaseTest {
         UserModel nonMember = UserBuilder.createUser();
 
         NewStory storyRequest = NewStoryBuilder.init().title("title").build();
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
 
         storyClient.publishStory(leader.getCoToken(), storyResponse.getBody().getStoryId());
-        ResponseEntity<StoryResponse> StoryResponse = storyClient.likeStory(nonMember.getCoToken(), storyResponse.getBody().getStoryId());
+        ResponseEntity<StoryInListResponse> StoryResponse = storyClient.likeStory(nonMember.getCoToken(), storyResponse.getBody().getStoryId());
         
-        StoryResponse liked = StoryResponse.getBody();
+        StoryInListResponse liked = StoryResponse.getBody();
         assertEquals(new Long(1), liked.getLikes());
     }
 
@@ -46,17 +46,17 @@ public class LikeTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel nonMember = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().title("title").build());
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().title("title").build());
 
-        StoryResponse story = storyResponse.getBody();
+        StoryInListResponse story = storyResponse.getBody();
 
         storyClient.publishStory(leader.getCoToken(), story.getStoryId());
-        ResponseEntity<StoryResponse> StoryResponse = storyClient.likeStory(nonMember.getCoToken(), story.getStoryId());
+        ResponseEntity<StoryInListResponse> StoryResponse = storyClient.likeStory(nonMember.getCoToken(), story.getStoryId());
 
-        StoryResponse liked = StoryResponse.getBody();
+        StoryInListResponse liked = StoryResponse.getBody();
         assertEquals(new Long(1), liked.getLikes());
         
-        ResponseEntity<StoryResponse> myStoryResponse = storyClient.getMyStory(leader.getCoToken(), story.getStoryId());
+        ResponseEntity<StoryInListResponse> myStoryResponse = storyClient.getMyStory(leader.getCoToken(), story.getStoryId());
         assertEquals(new Long(1), myStoryResponse.getBody().getLikes());
     }
 
@@ -66,18 +66,18 @@ public class LikeTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel nonMember = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().title("title").build());
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().title("title").build());
 
-        StoryResponse story = storyResponse.getBody();
+        StoryInListResponse story = storyResponse.getBody();
 
         storyClient.publishStory(leader.getCoToken(), story.getStoryId());
         storyClient.createStory(nonMember.getCoToken(), NewStoryBuilder.init().title("title").build());
-        ResponseEntity<StoryResponse> StoryResponse = storyClient.likeStory(nonMember.getCoToken(), story.getStoryId());
+        ResponseEntity<StoryInListResponse> StoryResponse = storyClient.likeStory(nonMember.getCoToken(), story.getStoryId());
 
-        StoryResponse liked = StoryResponse.getBody();
+        StoryInListResponse liked = StoryResponse.getBody();
         assertEquals(new Long(1), liked.getLikes());        
         
-        ResponseEntity<StoryResponse> myStoryResponse = storyClient.getMyStory(leader.getCoToken(), story.getStoryId());
+        ResponseEntity<StoryInListResponse> myStoryResponse = storyClient.getMyStory(leader.getCoToken(), story.getStoryId());
         assertEquals(new Long(1), myStoryResponse.getBody().getLikes());
     }
     
@@ -88,7 +88,7 @@ public class LikeTest extends BaseTest {
         UserModel nonMember = UserBuilder.createUser();
 
         NewStory storyRequest = NewStoryBuilder.init().build();
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), storyRequest);
 
         storyClient.likeStory(nonMember.getCoToken(), storyResponse.getBody().getStoryId());
     }
@@ -98,7 +98,7 @@ public class LikeTest extends BaseTest {
             UserLikingOwnStoryException, UnpublishedStoryLikedException {
         UserModel leader = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> createdStory = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        ResponseEntity<StoryInListResponse> createdStory = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
 
         storyClient.likeStory(leader.getCoToken(), createdStory.getBody().getStoryId());
     }
@@ -109,7 +109,7 @@ public class LikeTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel member = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> createdStory = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).build());
+        ResponseEntity<StoryInListResponse> createdStory = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().fbFriendsFromUserModel(member).build());
 
         storyClient.likeStory(member.getCoToken(), createdStory.getBody().getStoryId());
     }
@@ -128,7 +128,7 @@ public class LikeTest extends BaseTest {
             AlreadyLikedException, UserLikingOwnStoryException, UnpublishedStoryLikedException {
         UserModel user = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> story = storyClient.createStory(user.getCoToken(), NewStoryBuilder.init().build());
+        ResponseEntity<StoryInListResponse> story = storyClient.createStory(user.getCoToken(), NewStoryBuilder.init().build());
         storyClient.likeStory(null, story.getBody().getStoryId());
     }
 
@@ -137,7 +137,7 @@ public class LikeTest extends BaseTest {
             AlreadyLikedException, UserLikingOwnStoryException, UnpublishedStoryLikedException {
         UserModel user = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> story = storyClient.createStory(user.getCoToken(), NewStoryBuilder.init().build());
+        ResponseEntity<StoryInListResponse> story = storyClient.createStory(user.getCoToken(), NewStoryBuilder.init().build());
         storyClient.likeStory("", story.getBody().getStoryId());
     }
 
@@ -146,7 +146,7 @@ public class LikeTest extends BaseTest {
             AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, AlreadyLikedException, UserLikingOwnStoryException, UnpublishedStoryLikedException {
         UserModel user = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> story = storyClient.createStory(user.getCoToken(), NewStoryBuilder.init().build());
+        ResponseEntity<StoryInListResponse> story = storyClient.createStory(user.getCoToken(), NewStoryBuilder.init().build());
         storyClient.likeStory("asdfasdf", story.getBody().getStoryId());
     }
 
@@ -156,9 +156,9 @@ public class LikeTest extends BaseTest {
         UserModel leader = UserBuilder.createUser();
         UserModel nonMember = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().title("title").build());
+        ResponseEntity<StoryInListResponse> storyResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().title("title").build());
 
-        StoryResponse story = storyResponse.getBody();
+        StoryInListResponse story = storyResponse.getBody();
 
         storyClient.publishStory(leader.getCoToken(), story.getStoryId());
         storyClient.likeStory(nonMember.getCoToken(), story.getStoryId());

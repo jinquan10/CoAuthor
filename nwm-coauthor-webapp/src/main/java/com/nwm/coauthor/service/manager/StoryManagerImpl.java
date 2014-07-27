@@ -31,8 +31,7 @@ import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
 import com.nwm.coauthor.service.resource.request.NewStory;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.EntryResponse;
-import com.nwm.coauthor.service.resource.response.StoriesResponse;
-import com.nwm.coauthor.service.resource.response.StoryResponse;
+import com.nwm.coauthor.service.resource.response.StoryInListResponse;
 
 @Component
 public class StoryManagerImpl {
@@ -45,6 +44,9 @@ public class StoryManagerImpl {
     @Autowired
     private EntryDAOImpl entryDAO;
 
+    @Autowired
+    private Constants constants;
+    
     int numCharToGet = 1000;
 
     public void createStory(Long timeZoneOffsetMinutes, String coToken, NewStory request) {
@@ -61,11 +63,11 @@ public class StoryManagerImpl {
     }
     
 
-    public StoryResponse changeTitle(String fbId, String storyId, String title) throws StoryNotFoundException, UserIsNotLeaderException, AlreadyPublishedException, SomethingWentWrongException {
+    public StoryInListResponse changeTitle(String fbId, String storyId, String title) throws StoryNotFoundException, UserIsNotLeaderException, AlreadyPublishedException, SomethingWentWrongException {
         Long now = new Date().getTime();
         WriteResult writeResult = storyDAO.changeStoryTitle(fbId, storyId, title, now);
 
-        StoryResponse story = null;
+        StoryInListResponse story = null;
 
         if (writeResult.getN() == 0) {
             story = storyDAO.getStory(storyId);
@@ -80,8 +82,8 @@ public class StoryManagerImpl {
         return storyDAO.getStory(storyId);
     }
     
-    public StoriesResponse getMyStories(String fbId) {
-        return StoriesResponse.wrapStoryCovers(storyDAO.getMyStories(fbId));
+    public StoriesInListResponse getMyStories(String fbId) {
+        return StoriesInListResponse.wrapStoryCovers(storyDAO.getMyStories(fbId));
     }
 
     public EntriesResponse getEntries(String fbId, String storyId, Integer beginIndex, Integer currChar) throws CannotGetEntriesException, StoryNotFoundException, MoreEntriesLeftException,
@@ -103,8 +105,8 @@ public class StoryManagerImpl {
         }
     }
 
-    public StoryResponse getMyStory(String fbId, String storyId) throws StoryNotFoundException, NonMemberException {
-        StoryResponse myStory = storyDAO.getStory(storyId);
+    public StoryInListResponse getMyStory(String fbId, String storyId) throws StoryNotFoundException, NonMemberException {
+        StoryInListResponse myStory = storyDAO.getStory(storyId);
 
         if (myStory == null) {
             throw new StoryNotFoundException();
@@ -133,7 +135,7 @@ public class StoryManagerImpl {
     }
 
     private boolean canGetEntries(String fbId, String storyId) throws StoryNotFoundException {
-        StoryResponse story = storyDAO.getStory(storyId);
+        StoryInListResponse story = storyDAO.getStory(storyId);
 
         if (story == null) {
             throw new StoryNotFoundException();
@@ -150,10 +152,10 @@ public class StoryManagerImpl {
         return response;
     }
 
-    private StoryResponse parseAddEntryExceptions(String fbId, String storyId, Integer charCountForVersioning) throws StoryNotFoundException, NonMemberException, VersioningException,
+    private StoryInListResponse parseAddEntryExceptions(String fbId, String storyId, Integer charCountForVersioning) throws StoryNotFoundException, NonMemberException, VersioningException,
             ConsecutiveEntryBySameMemberException {
 
-        StoryResponse story = storyDAO.getStory(storyId);
+        StoryInListResponse story = storyDAO.getStory(storyId);
 
         if (story == null) {
             throw new StoryNotFoundException();
@@ -191,13 +193,13 @@ public class StoryManagerImpl {
     // return request.getEntry().getEntryId();
     // }
     //
-    public StoryResponse likeStory(String fbId, String storyId) throws AlreadyLikedException, StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException, SomethingWentWrongException {
+    public StoryInListResponse likeStory(String fbId, String storyId) throws AlreadyLikedException, StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException, SomethingWentWrongException {
         checkLikeStoryRequirements(fbId, storyId);
         checkLikeUserRequirements(fbId, storyId);
         return persistLikeStory(fbId, storyId);
     }
 
-    private StoryResponse persistLikeStory(String fbId, String storyId) throws SomethingWentWrongException {
+    private StoryInListResponse persistLikeStory(String fbId, String storyId) throws SomethingWentWrongException {
         WriteResult userLikeResult = userDAO.likeStory(fbId, storyId);
         
         if(userLikeResult.getN() == 0){
@@ -216,15 +218,15 @@ public class StoryManagerImpl {
     }
 
     private void checkLikeStoryRequirements(String fbId, String storyId) throws StoryNotFoundException, UserLikingOwnStoryException, UnpublishedStoryLikedException {
-        StoryResponse privateStory = storyDAO.getStory(storyId);
+        StoryInListResponse privateStory = storyDAO.getStory(storyId);
 
         if (privateStory == null) {
             throw new StoryNotFoundException();
         }
     }
 
-    public StoryResponse newFriends(String fbId, String storyId, NewFriendsRequest request) throws StoryNotFoundException, AlreadyAMemberException, NonMemberException, SomethingWentWrongException {
-        StoryResponse newFriendsResponse = storyDAO.newFriends(fbId, storyId, request.getNewFriends());
+    public StoryInListResponse newFriends(String fbId, String storyId, NewFriendsRequest request) throws StoryNotFoundException, AlreadyAMemberException, NonMemberException, SomethingWentWrongException {
+        StoryInListResponse newFriendsResponse = storyDAO.newFriends(fbId, storyId, request.getNewFriends());
         
         if(newFriendsResponse == null){
             newFriendsResponse = storyDAO.getStory(storyId);
@@ -243,12 +245,23 @@ public class StoryManagerImpl {
         return newFriendsResponse;
     }
 
-    private boolean isAlreadyAMember(NewFriendsRequest request, StoryResponse newFriendsResponse) {
+    private boolean isAlreadyAMember(NewFriendsRequest request, StoryInListResponse newFriendsResponse) {
         
         return false;
     }
 
-	public List<StoryResponse> getTopViewStories() {
-		return storyDAO.getTopViewStories(Constants.TOP_VIEW_STORIES_COUNT);
+	public List<StoryInListResponse> getTopViewStories() {
+		List<StoryInListResponse> stories = storyDAO.getTopViewStories(Constants.TOP_VIEW_STORIES_COUNT);
+		addSelfLink(stories, Constants.TOP_VIEW_STORIES_PATH);
+		
+		return stories;
+	}
+	
+	private void addSelfLink(List<StoryInListResponse> stories, String path) {
+		if (stories != null) {
+			for (StoryInListResponse story : stories) {
+				story.setSelfLink(constants.serviceUrl + path);
+			}
+		}
 	}
 }

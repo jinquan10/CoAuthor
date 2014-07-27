@@ -18,7 +18,7 @@ import com.nwm.coauthor.service.builder.NewStoryBuilder;
 import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
 import com.nwm.coauthor.service.resource.request.NewStory;
-import com.nwm.coauthor.service.resource.response.StoryResponse;
+import com.nwm.coauthor.service.resource.response.StoryInListResponse;
 
 public class GetMyStoryTest extends BaseTest {
     @Test
@@ -27,17 +27,17 @@ public class GetMyStoryTest extends BaseTest {
 
         NewStory newStoryRequest = NewStoryBuilder.init().build();
 
-        ResponseEntity<StoryResponse> createdStoryResponse = storyClient.createStory(leader.getCoToken(), newStoryRequest);
-        StoryResponse createdStory = createdStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> createdStoryResponse = storyClient.createStory(leader.getCoToken(), newStoryRequest);
+        StoryInListResponse createdStory = createdStoryResponse.getBody();
 
         String storyId = createdStory.getStoryId();
 
-        ResponseEntity<StoryResponse> myStoryResponse = storyClient.getMyStory(leader.getCoToken(), storyId);
+        ResponseEntity<StoryInListResponse> myStoryResponse = storyClient.getMyStory(leader.getCoToken(), storyId);
 
         assertNotNull(myStoryResponse);
         assertEquals(HttpStatus.OK, myStoryResponse.getStatusCode());
 
-        StoryResponse myStory = myStoryResponse.getBody();
+        StoryInListResponse myStory = myStoryResponse.getBody();
 
         assertNotNull(myStory);
         assertEquals(myStory.getStoryId(), storyId);
@@ -57,7 +57,7 @@ public class GetMyStoryTest extends BaseTest {
     public void withEmptyStoryId() throws InterruptedException, SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, StoryNotFoundException, NonMemberException {
         UserModel leader = UserBuilder.createUser();
 
-        ResponseEntity<StoryResponse> myStoryResponse = storyClient.getMyStory(leader.getCoToken(), "");
+        ResponseEntity<StoryInListResponse> myStoryResponse = storyClient.getMyStory(leader.getCoToken(), "");
 
         assertNull(myStoryResponse.getBody().getStoryId());
     }
@@ -76,8 +76,8 @@ public class GetMyStoryTest extends BaseTest {
         
         NewStory newStoryRequest = NewStoryBuilder.init().build();
 
-        ResponseEntity<StoryResponse> createdStoryResponse = storyClient.createStory(leader.getCoToken(), newStoryRequest);
-        StoryResponse createdStory = createdStoryResponse.getBody();
+        ResponseEntity<StoryInListResponse> createdStoryResponse = storyClient.createStory(leader.getCoToken(), newStoryRequest);
+        StoryInListResponse createdStory = createdStoryResponse.getBody();
 
         String storyId = createdStory.getStoryId();
 

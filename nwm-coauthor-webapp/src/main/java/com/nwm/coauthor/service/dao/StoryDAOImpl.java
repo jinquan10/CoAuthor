@@ -19,7 +19,7 @@ import com.nwm.coauthor.Constants;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.model.TotalCharsModel;
 import com.nwm.coauthor.service.model.UpdateStoryForNewEntryModel;
-import com.nwm.coauthor.service.resource.response.StoryResponse;
+import com.nwm.coauthor.service.resource.response.StoryInListResponse;
 
 @Component
 public class StoryDAOImpl {
@@ -41,17 +41,17 @@ public class StoryDAOImpl {
         return model.getCurrEntryCharCount();
     }
     
-	public List<StoryResponse> getMyStories(String fbId) {
+	public List<StoryInListResponse> getMyStories(String fbId) {
 		Query q = new Query();
 		Criteria c = new Criteria();
 		c.orOperator(where("leaderFbId").is(fbId), where("fbFriends").is(fbId));
 		q.addCriteria(c);
 		
-		return mongoTemplate.find(q, StoryResponse.class, "storyModel");
+		return mongoTemplate.find(q, StoryInListResponse.class, "storyModel");
 	}
 
-    public StoryResponse getStory(String storyId) {
-        return mongoTemplate.findOne(new Query(where("storyId").is(storyId)), StoryResponse.class, "storyModel");
+    public StoryInListResponse getStory(String storyId) {
+        return mongoTemplate.findOne(new Query(where("storyId").is(storyId)), StoryInListResponse.class, "storyModel");
     }
 
     public WriteResult updateStoryForAddingEntry(UpdateStoryForNewEntryModel model) {
@@ -66,14 +66,14 @@ public class StoryDAOImpl {
         return mongoTemplate.updateFirst(q, u, StoryModel.class);
     }
 
-    public StoryResponse likeStory(String storyId) {
+    public StoryInListResponse likeStory(String storyId) {
         Query query = new Query();
         query.addCriteria(where("storyId").is(storyId));
 
         Update update = new Update();
         update.inc("likes", 1);
 
-        return mongoTemplate.findAndModify(query, update, FindAndModifyOptions.options().returnNew(true), StoryResponse.class, "storyModel");
+        return mongoTemplate.findAndModify(query, update, FindAndModifyOptions.options().returnNew(true), StoryInListResponse.class, "storyModel");
     }
     
 //    public List<PrivateStoryResponse> getStoriesByFbId(String fbId) {
@@ -137,7 +137,7 @@ public class StoryDAOImpl {
         return mongoTemplate.updateFirst(new Query(criteria), update, StoryModel.class);
     }
 
-    public StoryResponse newFriends(String fbId, String storyId, List<String> newFriends) {
+    public StoryInListResponse newFriends(String fbId, String storyId, List<String> newFriends) {
         Query q = new Query();
         
         Criteria a = new Criteria();
@@ -152,13 +152,13 @@ public class StoryDAOImpl {
         update.set("storyLastUpdated", new Date().getTime());
         update.pushAll("fbFriends", newFriends.toArray());
         
-        return mongoTemplate.findAndModify(q, update, FindAndModifyOptions.options().returnNew(true), StoryResponse.class, "storyModel");
+        return mongoTemplate.findAndModify(q, update, FindAndModifyOptions.options().returnNew(true), StoryInListResponse.class, "storyModel");
     }
 
-	public List<StoryResponse> getTopViewStories(Integer topViewCount) {
+	public List<StoryInListResponse> getTopViewStories(Integer topViewCount) {
 		Query query = new Query();
 		query.limit(topViewCount);
 		
-		return mongoTemplate.find(query, StoryResponse.class, Constants.STORY_COLLECTION);
+		return mongoTemplate.find(query, StoryInListResponse.class, Constants.STORY_COLLECTION);
 	}
 }

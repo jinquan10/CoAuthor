@@ -22,7 +22,7 @@ import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.service.builder.NewStoryBuilder;
 import com.nwm.coauthor.service.builder.UserBuilder;
 import com.nwm.coauthor.service.model.UserModel;
-import com.nwm.coauthor.service.resource.response.StoryResponse;
+import com.nwm.coauthor.service.resource.response.StoryInListResponse;
 import com.nwm.coauthor.service.util.StringUtil;
 
 public class NewStoryTest extends BaseTest {
@@ -30,10 +30,10 @@ public class NewStoryTest extends BaseTest {
     public void newStorySuccess() throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException, InterruptedException {
         UserModel leader = UserBuilder.createUser();
         
-        ResponseEntity<StoryResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
+        ResponseEntity<StoryInListResponse> newStoryResponse = storyClient.createStory(leader.getCoToken(), NewStoryBuilder.init().build());
         assertEquals(HttpStatus.CREATED, newStoryResponse.getStatusCode());
         
-        StoryResponse responseBody = newStoryResponse.getBody();
+        StoryInListResponse responseBody = newStoryResponse.getBody();
         
         assertNotNull(responseBody);
         assertNotNull(responseBody.getStoryId());
@@ -56,7 +56,7 @@ public class NewStoryTest extends BaseTest {
         assertTrue(StringUtils.hasText(responseBody.getLastEntry()));
     }
 
-    private void assertFbFriends(StoryResponse responseBody){
+    private void assertFbFriends(StoryInListResponse responseBody){
         List<String> fbFriends = responseBody.getFbFriends();
         assertNotNull(fbFriends);
         

@@ -10,7 +10,10 @@ coAuthorControllers.controller('mainController', [
             $http.defaults.headers.common['Authorization'] = $cookies.Authorization;
 
             $scope.storyFilter = null;
-
+            $scope.modalContent = 'viewStory';
+            
+            $scope.currStory = null;
+            
             getTopViewStories();
 
             $scope.selectedStoryFilter = function(v) {
