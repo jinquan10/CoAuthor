@@ -20,6 +20,7 @@ import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.model.TotalCharsModel;
 import com.nwm.coauthor.service.model.UpdateStoryForNewEntryModel;
 import com.nwm.coauthor.service.resource.response.StoryInListResponse;
+import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 @Component
 public class StoryDAOImpl {
@@ -50,8 +51,8 @@ public class StoryDAOImpl {
 		return mongoTemplate.find(q, StoryInListResponse.class, "storyModel");
 	}
 
-    public StoryInListResponse getStory(String storyId) {
-        return mongoTemplate.findOne(new Query(where("storyId").is(storyId)), StoryInListResponse.class, "storyModel");
+    public StoryResponse getStory(String id) {
+        return mongoTemplate.findById(id, StoryResponse.class, Constants.STORY_COLLECTION);
     }
 
     public WriteResult updateStoryForAddingEntry(UpdateStoryForNewEntryModel model) {

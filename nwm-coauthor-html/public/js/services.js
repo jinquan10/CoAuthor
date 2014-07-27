@@ -23,7 +23,7 @@ coAuthorServices.factory('Schemas', [
 
 coAuthorServices.factory('Story', [
         '$resource', function($resource) {
-            return $resource(host + '/story/:type', {}, {
+            return $resource(host + '/stories/:type', {}, {
                 create : {
                     method : 'POST'
                 },
@@ -33,6 +33,9 @@ coAuthorServices.factory('Story', [
                         type : 'top-view-stories'
                     },
                     isArray : true
+                },
+                getStory : {
+                    methid : 'GET'
                 }
             });
         }

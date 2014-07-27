@@ -7,9 +7,10 @@ import org.joda.time.DateTime;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.nwm.coauthor.Constants;
 import com.nwm.coauthor.service.resource.request.NewStory;
 
-@Document(collection = "story")
+@Document(collection = Constants.STORY_COLLECTION)
 public class StoryModel extends BaseModel {
 	@Id
 	private String id;
@@ -52,7 +53,6 @@ public class StoryModel extends BaseModel {
     private static EntryModel entryFromNewStory(Long timeZoneOffsetMinutes, String coToken, String createdByDisplayName, String entry, Long now) {
     	EntryModel entryModel = new EntryModel();
 
-    	entryModel.setCharCount(entry.length());
     	entryModel.setCreatedById(coToken);
     	entryModel.setCreatedByDisplayName(createdByDisplayName);
     	entryModel.setCreatedOn(now);

@@ -32,6 +32,7 @@ import com.nwm.coauthor.service.resource.request.NewStory;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.EntryResponse;
 import com.nwm.coauthor.service.resource.response.StoryInListResponse;
+import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 @Component
 public class StoryManagerImpl {
@@ -82,10 +83,6 @@ public class StoryManagerImpl {
         return storyDAO.getStory(storyId);
     }
     
-    public StoriesInListResponse getMyStories(String fbId) {
-        return StoriesInListResponse.wrapStoryCovers(storyDAO.getMyStories(fbId));
-    }
-
     public EntriesResponse getEntries(String fbId, String storyId, Integer beginIndex, Integer currChar) throws CannotGetEntriesException, StoryNotFoundException, MoreEntriesLeftException,
             VersioningException {
         if (canGetEntries(fbId, storyId)) {
@@ -252,16 +249,18 @@ public class StoryManagerImpl {
 
 	public List<StoryInListResponse> getTopViewStories() {
 		List<StoryInListResponse> stories = storyDAO.getTopViewStories(Constants.TOP_VIEW_STORIES_COUNT);
-		addSelfLink(stories, Constants.TOP_VIEW_STORIES_PATH);
+		
+//		StringBuffer strb = new StringBuffer();
+//		strb.append(constants.serviceUrl)
+//			.append(Constants.TOP_VIEW_STORIES_PATH)
+//			.append("/");
+//		
+//		addSelfLink(stories, strb.toString());
 		
 		return stories;
 	}
 	
-	private void addSelfLink(List<StoryInListResponse> stories, String path) {
-		if (stories != null) {
-			for (StoryInListResponse story : stories) {
-				story.setSelfLink(constants.serviceUrl + path);
-			}
-		}
+	public StoryResponse getStory(String id) {
+		return storyDAO.getStory(id);
 	}
 }

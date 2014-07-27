@@ -14,8 +14,17 @@ coAuthorControllers.controller('mainController', [
             
             $scope.currStory = null;
             
+            // - put this in the main.html somewhere
             getTopViewStories();
 
+            $scope.getStory = function(storyId) {
+                $("#modal").modal();
+                
+                Story.getStory({type: storyId}, function(res) {
+                    $scope.currStory = res;
+                });
+            };
+            
             $scope.selectedStoryFilter = function(v) {
                 $scope.storyFilter = v;
             };

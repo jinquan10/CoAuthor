@@ -41,6 +41,7 @@ import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
 import com.nwm.coauthor.service.resource.request.NewStory;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.StoryInListResponse;
+import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 @Controller
 @RequestMapping(produces = "application/json")
@@ -73,6 +74,12 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
 	@RequestMapping(value = Constants.TOP_VIEW_STORIES_PATH, method = RequestMethod.GET)
 	public ResponseEntity<List<StoryInListResponse>> getTopViewStories() {
 		return new ResponseEntity<List<StoryInListResponse>>(storyManager.getTopViewStories(), HttpStatus.OK);
+	}
+	
+	@Override
+	@RequestMapping(value = Constants.GET_STORY_PATH, method = RequestMethod.GET)
+	public ResponseEntity<StoryResponse> getStory(@PathVariable String id) {
+		return new ResponseEntity<StoryResponse>(storyManager.getStory(id), HttpStatus.OK);
 	}
 	
 //	@Override

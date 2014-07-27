@@ -26,12 +26,13 @@ import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
 import com.nwm.coauthor.service.resource.request.NewStory;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.StoryInListResponse;
+import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 public interface StoryController {
 
     public void createStory(Long timeZoneOffsetMinutes, String coToken, NewStory createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException;
     ResponseEntity<List<StoryInListResponse>> getTopViewStories();
-
+    ResponseEntity<StoryResponse> getStory(String id);
     
     
     
@@ -66,5 +67,6 @@ public interface StoryController {
     // get public stories by # of comments
     // get public stories by longest
     //	public void comment(String coToken, String storyId, CommentRequest request);
+	
 
 }

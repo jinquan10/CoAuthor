@@ -13,8 +13,6 @@ public class StoryInListResponse extends BaseResource{
     private EntryResponse firstEntry;
     private EntryResponse lastEntry;
     
-    private String selfLink;
-    
 	public String getId() {
 		return id;
 	}
@@ -56,11 +54,5 @@ public class StoryInListResponse extends BaseResource{
 	}
 	public void setLastEntry(EntryResponse lastEntry) {
 		this.lastEntry = lastEntry;
-	}
-	public String getSelfLink() {
-		return selfLink;
-	}
-	public void setSelfLink(String selfLink) {
-		this.selfLink = selfLink;
 	}
 }
