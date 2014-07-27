@@ -10,18 +10,19 @@ coAuthorControllers.controller('mainController', [
             $http.defaults.headers.common['Authorization'] = $cookies.Authorization;
 
             $scope.storyFilter = null;
-            $scope.modalContent = 'viewStory';
-            
+            $scope.modalContent = null;
             $scope.currStory = null;
             
             // - put this in the main.html somewhere
             getTopViewStories();
 
-            $scope.getStory = function(storyId) {
+            $scope.showGetStoryModal = function(storyId) {
+                $scope.modalContent = 'modalLoading';
                 $("#modal").modal();
                 
                 Story.getStory({type: storyId}, function(res) {
                     $scope.currStory = res;
+                    $scope.modalContent = 'viewStory';
                 });
             };
             
@@ -29,12 +30,21 @@ coAuthorControllers.controller('mainController', [
                 $scope.storyFilter = v;
             };
 
-            $scope.loadNewStorySchema = function loadNewStorySchemaFn() {
+            $scope.showNewStoryModal = function loadNewStorySchemaFn() {
+                $scope.modalContent = 'modalLoading';
+                $("#modal").modal();
+                
                 Schemas.getSchemaForCreate(function(res) {
                     $scope.storySchemaForCreate = res;
                     $scope.storySchemaForCreateDisplay = getSchemaDisplay(res);
-
-                    bindCharsRemaining($scope.storySchemaForCreate['entry'].maxLength, '#newStoryCharsRemaining', '#newStoryTextarea');
+                    
+                    $scope.modalContent = 'newStory';
+                    
+                    $scope.$watch('modalContent', function(newVal, oldValue){
+                        if (newVal === 'newStory') {
+                            bindCharsRemaining($scope.storySchemaForCreate['entry'].maxLength, '#newStoryCharsRemaining', '#newStoryTextarea');
+                        }
+                    });
                 });
             };
 
@@ -45,7 +55,7 @@ coAuthorControllers.controller('mainController', [
                     getTopViewStories();
                 });
             }
-
+            
             function getTopViewStories() {
                 Story.getTopViewStories(function(res) {
                     $scope.stories = res;
