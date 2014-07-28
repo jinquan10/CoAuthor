@@ -16,10 +16,6 @@ coAuthorControllers.controller('mainController', [
             // - put this in the main.html somewhere
             getTopViewStories();
 
-            $scope.initTooltips = function(){
-                $('.tooltips').tooltip();
-            }
-            
             $scope.showGetStoryModal = function(storyId) {
                 $scope.modalContent = 'modalLoading';
                 $("#modal").modal();

@@ -78,26 +78,34 @@
         <div class="modal-content" ng-switch-default>
             <form name="newStoryForm">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-                    </button>
-                    <ng-form class="center" name="newStoryTitleNgForm"> <input class="input-title form-control text-center" ng-model="storyForCreateModel['title']"
-                        maxlength="{{storySchemaForCreate['title'].maxLength}}" ng-required="storySchemaForCreate['title'].required" placeholder="{{storySchemaForCreate['title'].hintText}}" /> </ng-form>
+                    <div class="row">
+                        <div class="col-md-3 col-xs-3"></div>
+                        <div class="col-md-6 col-xs-6">
+                            <ng-form name="newStoryTitleNgForm"> <input name="newStoryTitleInput" class="no-border form-control text-center" placeholder="{{storySchemaForCreate['title'].hintText}}"
+                                maxlength="{{storySchemaForCreate['title'].maxLength}}" ng-required="storySchemaForCreate['title'].required" ng-model="storyForCreateModel['title']" /> </ng-form>
+                            <div ng-show="newStoryTitleNgForm.newStoryTitleInput.$invalid" style="color: red">Enter a title</div>
+                        </div>
+                        <div class="col-md-3 col-xs-3"></div>
+                    </div>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body underscore">
                     <div>
                         <ng-form class="center" name="newStoryEntryNgForm"> <textarea id="newStoryTextarea" ng-model="storyForCreateModel['entry']"
                             ng-required="storySchemaForCreate['entry'].required" maxlength="{{storySchemaForCreate['entry'].maxLength}}" placeholder="{{storySchemaForCreate['entry'].hintText}}"
-                            ng-minlength="{{storySchemaForCreate['entry'].minLength}}" class="form-control input-entry" rows="3"></textarea>
+                            ng-minlength="{{storySchemaForCreate['entry'].minLength}}" class="no-border form-control input-entry" rows="3"></textarea>
                         <div id="newStoryCharsRequired" class="char-required"></div>
                         <div id="newStoryCharsRemaining" class="char-remaining"></div>
                         </ng-form>
                     </div>
                 </div>
             </form>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button ng-disabled="newStoryForm.$invalid" ng-click="createStory();" type="button" class="btn btn-primary">Create!</button>
+            <div class="row" style="margin: 0; padding: 15px">
+                <div class="col-md-6 col-xs-6 text-left">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+                <div class="col-md-6 col-xs-6 text-right">
+                    <button ng-disabled="newStoryForm.$invalid" ng-click="createStory();" type="button" class="btn btn-primary">Create!</button>
+                </div>
             </div>
         </div>
         <div class="modal-content" ng-switch-when="viewStory">

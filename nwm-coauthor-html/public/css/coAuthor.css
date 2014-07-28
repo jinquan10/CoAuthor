@@ -22,16 +22,8 @@
 	/* 	src: url('Dion.ttf') format('truetype'); */
 }
 
-.input-title[class*="input-title"] {
-	width: 400px;
-}
-
 .input-entry[class*="input-entry"] {
 	width: 500px;
-}
-
-.input-entry[class*="input-entry"],.input-title[class*="input-title"] {
-	border: 0;
 }
 
 .modal-content {
@@ -41,7 +33,6 @@
 .char-remaining {
 	font-size: small;
 	font-style: italic;
-	color: red;
 	float: right;
 	display: block;
 }
@@ -264,4 +255,5 @@ body {
 }
 
 .tooltips {
+	z-index: 2000 !important;
 }
