@@ -12,7 +12,7 @@
                 <div class="col-md-7 col-xs-7 text-right no-padding">
                     <div class="navbar-btn" ng-switch on="storyFilter">
                         <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" ng-switch-default>
-                            <span class="glyphicon glyphicon-filter"></span> <span>Filter Stories </span><span class="caret"></span>
+                            <span class="glyphicon glyphicon-eye-open"></span> <span>Stories by Most Views </span><span class="caret"></span>
                         </button>
                         <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" ng-switch-when="views">
                             <span class="glyphicon glyphicon-eye-open"></span> <span>Stories by Most Views </span><span class="caret"></span>
@@ -81,15 +81,15 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <ng-form class="center" name="newStoryTitleNgForm"> <input data-toggle="tooltip" data-placement="left" title="You can change this later."
-                        class="input-title form-control text-center tooltips" ng-model="storyForCreateModel['title']" maxlength="{{storySchemaForCreate['title'].maxLength}}"
-                        ng-required="storySchemaForCreate['title'].required" placeholder="{{storySchemaForCreate['title'].hintText}}" /> </ng-form>
+                    <ng-form class="center" name="newStoryTitleNgForm"> <input class="input-title form-control text-center" ng-model="storyForCreateModel['title']"
+                        maxlength="{{storySchemaForCreate['title'].maxLength}}" ng-required="storySchemaForCreate['title'].required" placeholder="{{storySchemaForCreate['title'].hintText}}" /> </ng-form>
                 </div>
                 <div class="modal-body">
                     <div>
                         <ng-form class="center" name="newStoryEntryNgForm"> <textarea id="newStoryTextarea" ng-model="storyForCreateModel['entry']"
                             ng-required="storySchemaForCreate['entry'].required" maxlength="{{storySchemaForCreate['entry'].maxLength}}" placeholder="{{storySchemaForCreate['entry'].hintText}}"
-                            class="form-control input-entry tooltips" rows="3"></textarea>
+                            ng-minlength="{{storySchemaForCreate['entry'].minLength}}" class="form-control input-entry" rows="3"></textarea>
+                        <div id="newStoryCharsRequired" class="char-required"></div>
                         <div id="newStoryCharsRemaining" class="char-remaining"></div>
                         </ng-form>
                     </div>
@@ -101,8 +101,12 @@
             </div>
         </div>
         <div class="modal-content" ng-switch-when="viewStory">
-            <div class="modal-header">{{currStory.title}}</div>
-            <div class="modal-body"></div>
+            <div class="modal-header title">{{currStory.title}}</div>
+            <div class="modal-body">
+                <div ng-repeat="entry in currStory.entries">
+                    <span class="entry">{{entry.entry}}</span>
+                </div>
+            </div>
             <div class="modal-footer"></div>
         </div>
         <div class="modal-content" ng-switch-when="modalLoading">

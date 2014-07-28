@@ -16,6 +16,10 @@ coAuthorControllers.controller('mainController', [
             // - put this in the main.html somewhere
             getTopViewStories();
 
+            $scope.initTooltips = function(){
+                $('.tooltips').tooltip();
+            }
+            
             $scope.showGetStoryModal = function(storyId) {
                 $scope.modalContent = 'modalLoading';
                 $("#modal").modal();
@@ -43,6 +47,7 @@ coAuthorControllers.controller('mainController', [
                     $scope.$watch('modalContent', function(newVal, oldValue){
                         if (newVal === 'newStory') {
                             bindCharsRemaining($scope.storySchemaForCreate['entry'].maxLength, '#newStoryCharsRemaining', '#newStoryTextarea');
+                            bindCharsRequired($scope.storySchemaForCreate['entry'].minLength, '#newStoryCharsRequired', '#newStoryTextarea');
                         }
                     });
                 });
@@ -50,7 +55,7 @@ coAuthorControllers.controller('mainController', [
 
             $scope.createStory = function createStoryFn() {
                 Story.create($scope.storyForCreateModel, function(res) {
-                    $('#newStoryModal').modal('hide');
+                    $('#modal').modal('hide');
                     $scope.storyForCreateModel = {};
                     getTopViewStories();
                 });

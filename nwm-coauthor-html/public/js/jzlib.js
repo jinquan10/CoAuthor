@@ -39,3 +39,19 @@ function bindCharsRemaining(characterLimit, messageElement, sourceText) {
         $(messageElement).html(charactersRemaining + " characters remaining.");
     });
 }
+
+function bindCharsRequired(characterLimit, messageElement, sourceText) {
+    $(messageElement).html(characterLimit + " characters required.");
+
+    $(sourceText).bind('keyup', function() {
+        var charactersUsed = $(this).val().length;
+
+        if (charactersUsed < characterLimit - 1) {
+            $(messageElement).html(characterLimit - charactersUsed + " characters required.");
+        } else if (charactersUsed < characterLimit) {
+            $(messageElement).html(characterLimit - charactersUsed + " character required.");
+        } else {
+            $(messageElement).html("");
+        }
+    });
+}

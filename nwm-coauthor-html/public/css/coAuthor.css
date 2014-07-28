@@ -46,6 +46,14 @@
 	display: block;
 }
 
+.char-required {
+    font-size: small;
+    font-style: italic;
+    color: red;
+    float: left;
+    display: block;
+}
+
 .no-border {
 	border: 0;
 }
@@ -245,4 +253,15 @@ body {
     transform: scale(1.0);
     -webkit-transform: scale(1.0);
   }
+}
+
+.entry {
+	cursor: default;
+}
+
+.entry:hover {
+    font-weight: bold;	
+}
+
+.tooltips {
 }

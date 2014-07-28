@@ -15,7 +15,7 @@ public class NewStory extends BaseResource{
 	private String title;
 	
 	@RequiredField
-	@MinLength(1)
+	@MinLength(10)
 	@MaxLength(1000)
 	@HintText("Start the story here:")
 	private String entry;
