@@ -257,3 +257,12 @@ body {
 .tooltips {
 	z-index: 2000 !important;
 }
+
+.pad-left {
+	padding-left: 10px;
+}
+
+.entry-contender {
+    font-style: italic;
+    font-weight: bold;	
+}

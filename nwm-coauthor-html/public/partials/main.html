@@ -53,6 +53,10 @@
                             <div class="list-group-item pointer no-border text-center">
                                 <span class="glyphicon glyphicon-eye-open text-right"></span> <span>View Stories</span>
                             </div>
+                            
+                            <div class="list-group-item pointer no-border text-center">
+                                <span class="glyphicon glyphicon-eye-open text-right"></span> <span>Click on a story to view</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -81,8 +85,9 @@
                     <div class="row">
                         <div class="col-md-3 col-xs-3"></div>
                         <div class="col-md-6 col-xs-6">
-                            <ng-form name="newStoryTitleNgForm"> <input name="newStoryTitleInput" class="no-border form-control text-center" placeholder="{{storySchemaForCreate['title'].hintText}}"
-                                maxlength="{{storySchemaForCreate['title'].maxLength}}" ng-required="storySchemaForCreate['title'].required" ng-model="storyForCreateModel['title']" /> </ng-form>
+                            <ng-form name="newStoryTitleNgForm"> <input name="newStoryTitleInput" class="no-border form-control text-center"
+                                placeholder="{{storySchemaForCreate['title'].hintText}}" maxlength="{{storySchemaForCreate['title'].maxLength}}" ng-required="storySchemaForCreate['title'].required"
+                                ng-model="storyForCreateModel['title']" /> </ng-form>
                             <div ng-show="newStoryTitleNgForm.newStoryTitleInput.$invalid" style="color: red">Enter a title</div>
                         </div>
                         <div class="col-md-3 col-xs-3"></div>
@@ -115,7 +120,22 @@
                     <span class="entry">{{entry.entry}}</span>
                 </div>
             </div>
-            <div class="modal-footer"></div>
+            <div class="modal-body underscore">
+                <div ng-repeat="entry in currStory.entries">
+                    <textarea ng-model="storyForCreateModel['entry']" ng-required="storySchemaForCreate['entry'].required" maxlength="{{storySchemaForCreate['entry'].maxLength}}"
+                        placeholder="{{storySchemaForCreate['entry'].hintText}}" ng-minlength="{{storySchemaForCreate['entry'].minLength}}" class="no-border form-control input-entry" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default no-padding no-border">
+                        <div class="pad-left entry-contender" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">And there she goes...</div>
+                        <div id="collapseOne" class="panel-collapse collapse in">
+                            <div class="panel-body">And there she goes to the supermarket.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="modal-content" ng-switch-when="modalLoading">
             <div class="spinner">
