@@ -17,7 +17,6 @@ coAuthorControllers.controller('mainController', [
             getTopViewStories();
 
             $scope.showGetStoryModal = function(storyId) {
-                $("body").css("padding-right", "0")
                 $scope.modalContent = 'modalLoading';
                 $("#modal").modal();
                 
