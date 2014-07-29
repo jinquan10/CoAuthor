@@ -74,6 +74,8 @@
 body {
 	padding-top: 60px;
 	background-color: #F8F8F8;
+	overflow: auto;
+	padding-right: 0 !important;
 }
 
 .float-left {
@@ -265,4 +267,9 @@ body {
 .entry-contender {
     font-style: italic;
     font-weight: bold;	
+}
+
+
+.modal-open  {
+	overflow: auto;
 }
