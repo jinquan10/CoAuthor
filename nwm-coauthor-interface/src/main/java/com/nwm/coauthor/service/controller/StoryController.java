@@ -21,18 +21,20 @@ import com.nwm.coauthor.exception.UserIsNotLeaderException;
 import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.exception.VersioningException;
 import com.nwm.coauthor.service.resource.request.ChangeTitleRequest;
+import com.nwm.coauthor.service.resource.request.EntryRequest;
 import com.nwm.coauthor.service.resource.request.NewEntryRequest;
 import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
-import com.nwm.coauthor.service.resource.request.NewStory;
+import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.StoryInListResponse;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 public interface StoryController {
 
-    public void createStory(Long timeZoneOffsetMinutes, String coToken, NewStory createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException;
+    public void createStory(Long timeZoneOffsetMinutes, String coToken, NewStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException;
     ResponseEntity<List<StoryInListResponse>> getTopViewStories();
     ResponseEntity<StoryResponse> getStory(String id);
+    void entryRequest(Long timeZoneOffsetMinutes, String coToken, EntryRequest entry);
     
     
     

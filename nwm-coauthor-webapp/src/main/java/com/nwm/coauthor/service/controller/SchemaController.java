@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.nwm.coauthor.service.resource.request.NewStory;
+import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 import com.nwm.coauthor.service.util.JsonSchemaUtil;
 
 @Controller
@@ -22,7 +22,7 @@ public class SchemaController extends BaseControllerImpl {
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.GET, value = "/new-story")
     public ResponseEntity<Map<String, Object>> getNewStorySchema() throws Exception {
-        Map<String, Object> schema = jsonSchemaUtil.outputSchema(NewStory.class);
+        Map<String, Object> schema = jsonSchemaUtil.outputSchema(NewStoryRequest.class);
         return new ResponseEntity<Map<String, Object>>(schema, HttpStatus.OK);
     }
 }
