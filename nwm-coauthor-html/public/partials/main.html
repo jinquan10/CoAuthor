@@ -53,7 +53,6 @@
                             <div class="list-group-item pointer no-border text-center">
                                 <span class="glyphicon glyphicon-eye-open text-right"></span> <span>View Stories</span>
                             </div>
-                            
                             <div class="list-group-item pointer no-border text-center">
                                 <span class="glyphicon glyphicon-eye-open text-right"></span> <span>Click on a story to view</span>
                             </div>
@@ -115,9 +114,11 @@
         </div>
         <div class="modal-content" ng-switch-when="viewStory">
             <div class="modal-header title">{{currStory.title}}</div>
-            <div class="modal-body">
+            <div class="modal-body story-body">
                 <div ng-repeat="entry in currStory.entries">
-                    <span class="entry">{{entry.entry}}</span>
+                    <div class="entry">
+                        <span>{{entry.entry}}</span>
+                    </div>
                 </div>
             </div>
             <div class="modal-body underscore">
@@ -130,7 +131,7 @@
                 <div class="panel-group" id="accordion">
                     <div class="panel panel-default no-padding no-border">
                         <div class="pad-left entry-contender" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">And there she goes...</div>
-                        <div id="collapseOne" class="panel-collapse collapse in">
+                        <div id="collapseOne" class="panel-collapse collapse in story-body">
                             <div class="panel-body">And there she goes to the supermarket.</div>
                         </div>
                     </div>
