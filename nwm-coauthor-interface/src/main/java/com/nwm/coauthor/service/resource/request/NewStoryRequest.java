@@ -6,7 +6,7 @@ import com.nwm.coauthor.service.util.MaxLength;
 import com.nwm.coauthor.service.util.MinLength;
 import com.nwm.coauthor.service.util.RequiredField;
 
-public class NewStory extends BaseResource{
+public class NewStoryRequest extends BaseResource{
 	
 	@RequiredField
 	@MinLength(1)

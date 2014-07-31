@@ -19,6 +19,7 @@ import com.nwm.coauthor.Constants;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.model.TotalCharsModel;
 import com.nwm.coauthor.service.model.UpdateStoryForNewEntryModel;
+import com.nwm.coauthor.service.resource.request.EntryRequest;
 import com.nwm.coauthor.service.resource.response.StoryInListResponse;
 import com.nwm.coauthor.service.resource.response.StoryResponse;
 
@@ -27,12 +28,12 @@ public class StoryDAOImpl {
     @Autowired
     @Qualifier("mongoTemplate")
     private MongoTemplate mongoTemplate;
-
+    
     public void createStory(StoryModel storyModel) {
         mongoTemplate.insert(storyModel);
     }
-
-    public Integer getTotalChars(String storyId){
+    
+    public Integer getTotalChars(String storyId) {
         Query q = new Query(where("storyId").is(storyId));
         
         q.fields().include("currEntryCharCount");
@@ -42,19 +43,19 @@ public class StoryDAOImpl {
         return model.getCurrEntryCharCount();
     }
     
-	public List<StoryInListResponse> getMyStories(String fbId) {
-		Query q = new Query();
-		Criteria c = new Criteria();
-		c.orOperator(where("leaderFbId").is(fbId), where("fbFriends").is(fbId));
-		q.addCriteria(c);
-		
-		return mongoTemplate.find(q, StoryInListResponse.class, "storyModel");
-	}
-
+    public List<StoryInListResponse> getMyStories(String fbId) {
+        Query q = new Query();
+        Criteria c = new Criteria();
+        c.orOperator(where("leaderFbId").is(fbId), where("fbFriends").is(fbId));
+        q.addCriteria(c);
+        
+        return mongoTemplate.find(q, StoryInListResponse.class, "storyModel");
+    }
+    
     public StoryResponse getStory(String id) {
         return mongoTemplate.findById(id, StoryResponse.class, Constants.STORY_COLLECTION);
     }
-
+    
     public WriteResult updateStoryForAddingEntry(UpdateStoryForNewEntryModel model) {
         Query q = new Query(where("storyId").is(model.getStoryId()));
         
@@ -66,54 +67,59 @@ public class StoryDAOImpl {
         
         return mongoTemplate.updateFirst(q, u, StoryModel.class);
     }
-
+    
     public StoryInListResponse likeStory(String storyId) {
         Query query = new Query();
         query.addCriteria(where("storyId").is(storyId));
-
+        
         Update update = new Update();
         update.inc("likes", 1);
-
+        
         return mongoTemplate.findAndModify(query, update, FindAndModifyOptions.options().returnNew(true), StoryInListResponse.class, "storyModel");
     }
     
-//    public List<PrivateStoryResponse> getStoriesByFbId(String fbId) {
-//        Criteria c = new Criteria();
-//        c.orOperator(where("leaderFbId").is(fbId), where("fbFriends").is(fbId));
-//
-//        Query q = new Query();
-//        q.fields().slice("entries", 1);
-//        q.addCriteria(c);
-//
-//        return mongoTemplate.find(q, PrivateStoryResponse.class, "storyModel");
-//    }
-//
-//    public WriteResult addEntry(String fbId, AddEntryModel request) {
-//        Criteria c = new Criteria();
-//        Criteria orC = new Criteria();
-//
-//        c.andOperator(where("_id").is(request.getStoryId()), where("lastFriendEntry").ne(fbId), where("numCharacters").gte(request.getEntry().getEntry().length()),
-//                where("version").is(request.getVersion()), orC.orOperator(where("fbFriends").is(fbId), where("leaderFbId").is(fbId)));
-//
-//        Update update = new Update();
-//        update.push("entries", request.getEntry());
-//        update.inc("version", 1);
-//        update.set("lastFriendEntry", fbId);
-//
-//        Query q = new Query();
-//        q.addCriteria(c);
-//
-//        return mongoTemplate.updateFirst(q, update, StoryModel.class);
-//    }
-//
-//    public PrivateStoryResponse getPrivateStory(ObjectId storyId) {
-//        Query q = new Query(where("_id").is(storyId));
-//
-//        return mongoTemplate.findOne(q, PrivateStoryResponse.class, "storyModel");
-//    }
-//
-
-//
+    // public List<PrivateStoryResponse> getStoriesByFbId(String fbId) {
+    // Criteria c = new Criteria();
+    // c.orOperator(where("leaderFbId").is(fbId), where("fbFriends").is(fbId));
+    //
+    // Query q = new Query();
+    // q.fields().slice("entries", 1);
+    // q.addCriteria(c);
+    //
+    // return mongoTemplate.find(q, PrivateStoryResponse.class, "storyModel");
+    // }
+    //
+    // public WriteResult addEntry(String fbId, AddEntryModel request) {
+    // Criteria c = new Criteria();
+    // Criteria orC = new Criteria();
+    //
+    // c.andOperator(where("_id").is(request.getStoryId()),
+    // where("lastFriendEntry").ne(fbId),
+    // where("numCharacters").gte(request.getEntry().getEntry().length()),
+    // where("version").is(request.getVersion()),
+    // orC.orOperator(where("fbFriends").is(fbId),
+    // where("leaderFbId").is(fbId)));
+    //
+    // Update update = new Update();
+    // update.push("entries", request.getEntry());
+    // update.inc("version", 1);
+    // update.set("lastFriendEntry", fbId);
+    //
+    // Query q = new Query();
+    // q.addCriteria(c);
+    //
+    // return mongoTemplate.updateFirst(q, update, StoryModel.class);
+    // }
+    //
+    // public PrivateStoryResponse getPrivateStory(ObjectId storyId) {
+    // Query q = new Query(where("_id").is(storyId));
+    //
+    // return mongoTemplate.findOne(q, PrivateStoryResponse.class,
+    // "storyModel");
+    // }
+    //
+    
+    //
     public WriteResult publishStory(String fbId, String storyId, Long now) {
         Criteria criteria = new Criteria();
         criteria.andOperator(where("leaderFbId").is(fbId), where("storyId").is(storyId), where("title").ne(null), where("title").ne(""));
@@ -126,7 +132,7 @@ public class StoryDAOImpl {
         
         return mongoTemplate.updateFirst(query, update, StoryModel.class);
     }
-
+    
     public WriteResult changeStoryTitle(String fbId, String storyId, String title, Long now) {
         Criteria criteria = new Criteria();
         criteria.andOperator(where("storyId").is(storyId), where("leaderFbId").is(fbId), where("isPublished").is(false));
@@ -137,7 +143,7 @@ public class StoryDAOImpl {
         
         return mongoTemplate.updateFirst(new Query(criteria), update, StoryModel.class);
     }
-
+    
     public StoryInListResponse newFriends(String fbId, String storyId, List<String> newFriends) {
         Query q = new Query();
         
@@ -155,11 +161,38 @@ public class StoryDAOImpl {
         
         return mongoTemplate.findAndModify(q, update, FindAndModifyOptions.options().returnNew(true), StoryInListResponse.class, "storyModel");
     }
-
-	public List<StoryInListResponse> getTopViewStories(Integer topViewCount) {
-		Query query = new Query();
-		query.limit(topViewCount);
-		
-		return mongoTemplate.find(query, StoryInListResponse.class, Constants.STORY_COLLECTION);
-	}
+    
+    public List<StoryInListResponse> getTopViewStories(Integer topViewCount) {
+        Query query = new Query();
+        query.limit(topViewCount);
+        
+        return mongoTemplate.find(query, StoryInListResponse.class, Constants.STORY_COLLECTION);
+    }
+    
+    public void startNextEntryTimer(String storyId, Long nextEntryAvailableAt) {
+        Query q = new Query();
+        
+        Criteria c = new Criteria();
+        c.where("id").is(storyId);
+        
+        Criteria c2 = new Criteria();
+        c2.where("nextEntryAvailableAt").exists(false);
+        
+        q.addCriteria(c).addCriteria(c2);
+        
+        Update u = new Update();
+        u.set("nextEntryAvailableAt", nextEntryAvailableAt);
+        
+        mongoTemplate.updateFirst(q, u, Constants.STORY_COLLECTION);
+    }
+    
+    public void queueNextEntry(EntryRequest entry) {
+        Query q = new Query();
+        
+        Criteria c = new Criteria();
+        c.where("id").is(entry.getStoryId());
+        
+        Update u = new Update();
+        u.push("potentialEntries", entry);
+    }
 }

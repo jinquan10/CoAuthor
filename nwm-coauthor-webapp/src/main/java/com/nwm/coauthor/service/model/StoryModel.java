@@ -8,7 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.nwm.coauthor.Constants;
-import com.nwm.coauthor.service.resource.request.NewStory;
+import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 
 @Document(collection = Constants.STORY_COLLECTION)
 public class StoryModel extends BaseModel {
@@ -25,7 +25,7 @@ public class StoryModel extends BaseModel {
     private EntryModel firstEntry;
     private EntryModel lastEntry;
 
-    public static StoryModel fromNewStory(Long timeZoneOffsetMinutes, String coToken, String createdByDisplayName, NewStory request){
+    public static StoryModel fromNewStory(Long timeZoneOffsetMinutes, String coToken, String createdByDisplayName, NewStoryRequest request){
     	Long now = DateTime.now().getMillis();
 
     	EntryModel entry = entryFromNewStory(timeZoneOffsetMinutes, coToken, createdByDisplayName, request.getEntry(), now);
