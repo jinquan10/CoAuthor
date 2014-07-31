@@ -12,7 +12,8 @@ public class Constants {
 	public static final String TOP_VIEW_STORIES_PATH = "/stories/top-view-stories";
 	public static final String CREATE_STORY_PATH = "/stories";
 	public static final String GET_STORY_PATH = "/stories/{id}";
-    public static final Long NEXT_ENTRY_DURATION = 3600000L;
+	public static final String ENTRY_REQUEST_PATH = "/stories/{storyId}/entries";
+    public static final Long NEXT_ENTRY_DURATION = 3600000L; // 1 hour in millis
 	
 	@Value("${service.url}")
 	public String serviceUrl;

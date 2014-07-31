@@ -53,8 +53,6 @@
                             <div class="list-group-item pointer no-border text-center">
                                 <span class="glyphicon glyphicon-eye-open text-right"></span> <span>View Stories</span>
                             </div>
-
-
                             <div class="list-group-item pointer no-border text-center">
                                 <span class="glyphicon glyphicon-eye-open text-right"></span> <span>Click on a story to view</span>
                             </div>
@@ -123,31 +121,29 @@
                     </div>
                 </div>
             </div>
+            <div class="modal-body underscore">{{currStory.nextEntryAvailableAt}}</div>
+            <!-- Potential Entries -->
             <div class="modal-body underscore">
-                <div class="panel-group" id="accordion">
-                    <div class="panel panel-default no-padding no-border" ng-repeat="potentialEntry in currStory.potentialEntries">
-                        <div class="pad-left entry-contender" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">First words of the entry</div>
-                        <div id="collapseOne" class="panel-collapse collapse">
-                            <div class="panel-body">The entry's entry</div>
+                <div class="panel-group" id="potentialEntriesAccordion">
+                    <div class="panel panel-default no-padding no-border" ng-repeat="potentialEntry in currStory.potentialEntries | orderBy:'votes':reverse">
+                        <div class="pad-left entry-contender" data-toggle="collapse" data-parent="#potentialEntriesAccordion" href="#{{potentialEntry.id}}">{{potentialEntry.entry}}</div>
+                        <span class="text-right">{{potentialEntry.votes}}</span>
+                        <div id="{{potentialEntry.id}}" class="panel-collapse collapse story-body">
+                            <div class="panel-body">{{potentialEntry.entry}}</div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-body">
-                <div ng-repeat="entry in currStory.entries">
-                    <textarea ng-model="storyForCreateModel['entry']" ng-required="storySchemaForCreate['entry'].required" maxlength="{{storySchemaForCreate['entry'].maxLength}}"
-                        placeholder="{{storySchemaForCreate['entry'].hintText}}" ng-minlength="{{storySchemaForCreate['entry'].minLength}}" class="no-border form-control input-entry" rows="3"></textarea>
-                </div>
+                <form name="entryRequestForm">
+                    <textarea id="entryRequestTextArea" ng-model="entryRequestModel['entry']" ng-required="entryRequestSchema['entry'].required" maxlength="{{entryRequestSchema['entry'].maxLength}}"
+                        placeholder="{{entryRequestSchema['entry'].hintText}}" ng-minlength="{{entryRequestSchema['entry'].minLength}}" class="no-border form-control input-entry" rows="3"></textarea>
+                    <div id="entryRequestCharsRequired" class="char-required"></div>
+                    <div id="entryRequestCharsRemaining" class="char-remaining"></div>
+                </form>
             </div>
-            <div class="modal-body">
-                <div class="panel-group" id="accordion">
-                    <div class="panel panel-default no-padding no-border">
-                        <div class="pad-left entry-contender" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">And there she goes...</div>
-                        <div id="collapseOne" class="panel-collapse collapse in story-body">
-                            <div class="panel-body">And there she goes to the supermarket.</div>
-                        </div>
-                    </div>
-                </div>
+            <div class="modal-footer">
+                <button ng-disabled="entryRequestForm.$invalid" ng-click="requestEntry();" type="button" class="btn btn-primary">Submit</button>
             </div>
         </div>
         <div class="modal-content" ng-switch-when="modalLoading">

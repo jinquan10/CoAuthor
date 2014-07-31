@@ -2,6 +2,7 @@ package com.nwm.coauthor.service.manager;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -274,6 +275,7 @@ public class StoryManagerImpl {
             // - fetch the user's name
         }
         
+        entry.setId(UUID.randomUUID().toString());
         entry.setCreatedByDisplayName(createdByDisplayName);
         entry.setCreatedById(coToken);
         entry.setCreatedOn(now);
@@ -281,6 +283,6 @@ public class StoryManagerImpl {
         entry.setTimeZoneOffsetMinutes(timeZoneOffsetMinutes);
         
         storyDAO.startNextEntryTimer(storyId, now + Constants.NEXT_ENTRY_DURATION);
-        storyDAO.queueNextEntry(entry);
+        storyDAO.queueNextEntry(storyId, entry);
     }
 }

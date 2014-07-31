@@ -16,6 +16,12 @@ coAuthorServices.factory('Schemas', [
                     params : {
                         type : 'new-story'
                     }
+                },
+                getSchemaForEntryRequest : {
+                    method : 'GET',
+                    params : {
+                        type : 'request-entry'
+                    }
                 }
             });
         }
@@ -35,7 +41,17 @@ coAuthorServices.factory('Story', [
                     isArray : true
                 },
                 getStory : {
-                    methid : 'GET'
+                    method : 'GET'
+                }
+            });
+        }
+]);
+
+coAuthorServices.factory('Entry', [
+        '$resource', function($resource) {
+            return $resource(host + '/stories/:storyId/entries', {}, {
+                requestEntry : {
+                    method : 'POST'
                 }
             });
         }

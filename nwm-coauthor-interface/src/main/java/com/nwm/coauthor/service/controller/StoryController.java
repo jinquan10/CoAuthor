@@ -34,8 +34,7 @@ public interface StoryController {
     public void createStory(Long timeZoneOffsetMinutes, String coToken, NewStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException;
     ResponseEntity<List<StoryInListResponse>> getTopViewStories();
     ResponseEntity<StoryResponse> getStory(String id);
-    void entryRequest(Long timeZoneOffsetMinutes, String coToken, EntryRequest entry);
-    
+    void entryRequest(Long timeZoneOffsetMinutes, String coToken, String storyId, EntryRequest entry);    
     
     
     
@@ -69,6 +68,7 @@ public interface StoryController {
     // get public stories by # of comments
     // get public stories by longest
     //	public void comment(String coToken, String storyId, CommentRequest request);
+	
 	
 
 }

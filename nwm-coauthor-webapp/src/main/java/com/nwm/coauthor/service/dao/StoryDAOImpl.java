@@ -5,6 +5,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 import java.util.Date;
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
@@ -173,12 +174,9 @@ public class StoryDAOImpl {
         Query q = new Query();
         
         Criteria c = new Criteria();
-        c.where("id").is(storyId);
+        c.andOperator(Criteria.where("_id").is(new ObjectId(storyId)), Criteria.where("nextEntryAvailableAt").exists(false));
         
-        Criteria c2 = new Criteria();
-        c2.where("nextEntryAvailableAt").exists(false);
-        
-        q.addCriteria(c).addCriteria(c2);
+        q.addCriteria(c);
         
         Update u = new Update();
         u.set("nextEntryAvailableAt", nextEntryAvailableAt);
@@ -186,13 +184,14 @@ public class StoryDAOImpl {
         mongoTemplate.updateFirst(q, u, Constants.STORY_COLLECTION);
     }
     
-    public void queueNextEntry(EntryRequest entry) {
+    public void queueNextEntry(String storyId, EntryRequest entry) {
         Query q = new Query();
         
-        Criteria c = new Criteria();
-        c.where("id").is(entry.getStoryId());
+        q.addCriteria(Criteria.where("_id").is(new ObjectId(storyId)));
         
         Update u = new Update();
         u.push("potentialEntries", entry);
+        
+        mongoTemplate.updateFirst(q, u, Constants.STORY_COLLECTION);
     }
 }
