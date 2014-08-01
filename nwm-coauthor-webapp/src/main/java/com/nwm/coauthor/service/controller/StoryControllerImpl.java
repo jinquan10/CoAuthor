@@ -81,6 +81,13 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     
     @Override
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @RequestMapping(value = Constants.INCREMENT_STORY_VIEWS_PATH, method = RequestMethod.POST)
+    public void incrementStoryViews(@PathVariable String id) {
+        storyManager.incrementStoryViews(id);
+    }
+    
+    @Override
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @RequestMapping(value = Constants.ENTRY_REQUEST_PATH, method = RequestMethod.POST, consumes = "application/json")
     public void entryRequest(@RequestHeader("TimeZoneOffsetMinutes") Long timeZoneOffsetMinutes, @RequestHeader(required = false, value = "Authorization") String coToken, @PathVariable String storyId, @RequestBody EntryRequest entry) {
         storyManager.entryRequest(timeZoneOffsetMinutes, coToken, entry, storyId);

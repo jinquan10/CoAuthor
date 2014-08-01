@@ -194,4 +194,14 @@ public class StoryDAOImpl {
         
         mongoTemplate.updateFirst(q, u, Constants.STORY_COLLECTION);
     }
+
+    public void incrementStoryViews(String id) {
+        Query q = new Query();
+        q.addCriteria(Criteria.where("_id").is(new ObjectId(id)));
+        
+        Update u = new Update();
+        u.inc("views", 1);
+        
+        mongoTemplate.updateFirst(q, u, Constants.STORY_COLLECTION);
+    }
 }

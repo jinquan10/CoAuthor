@@ -47,7 +47,7 @@
         <div class="col-md-3 col-xs-3">
             <div class="panel-group co-nav">
                 <div class="panel panel-default no-border">
-                    <div class="title underscore text-center">CoAuthor</div>
+                    <div class="title underscore text-center">C</div>
                     <div class="panel-body">
                         <div class="list-group">
                             <div class="list-group-item pointer no-border text-center">
@@ -78,6 +78,7 @@
 </div>
 <div id="modal" class="modal fade" tabindex="-1">
     <div class="modal-dialog" ng-switch on="modalContent">
+        <!-- New Story -->
         <div class="modal-content" ng-switch-default>
             <form name="newStoryForm">
                 <div class="modal-header">
@@ -94,9 +95,9 @@
                 </div>
                 <div class="modal-body underscore">
                     <div>
-                        <ng-form class="center" name="newStoryEntryNgForm"> <textarea id="newStoryTextarea" ng-model="storyForCreateModel['entry']"
+                        <ng-form class="center" name="newStoryEntryNgForm"> <textarea id="newStoryTextarea" ng-model="storyForCreateModel['entry']" class="text-area no-border form-control"
                             ng-required="storySchemaForCreate['entry'].required" maxlength="{{storySchemaForCreate['entry'].maxLength}}" placeholder="{{storySchemaForCreate['entry'].hintText}}"
-                            ng-minlength="{{storySchemaForCreate['entry'].minLength}}" class="no-border form-control input-entry" rows="3"></textarea>
+                            ng-minlength="{{storySchemaForCreate['entry'].minLength}}" class="no-border form-control input-entry" rows="5"></textarea>
                         <div id="newStoryCharsRequired" class="char-required"></div>
                         <div id="newStoryCharsRemaining" class="char-remaining"></div>
                         </ng-form>
@@ -115,15 +116,17 @@
         <div class="modal-content" ng-switch-when="viewStory">
             <div class="modal-header title">{{currStory.title}}</div>
             <div class="modal-body story-body">
+                <div class="text-right">
+                    <span>{{currStory.nextEntryAvailableAt}}</span>
+                </div>
                 <div ng-repeat="entry in currStory.entries">
                     <div class="entry">
                         <span>{{entry.entry}}</span>
                     </div>
                 </div>
             </div>
-            <div class="modal-body underscore">{{currStory.nextEntryAvailableAt}}</div>
             <!-- Potential Entries -->
-            <div class="modal-body underscore">
+            <div class="modal-body">
                 <div class="panel-group" id="potentialEntriesAccordion">
                     <div class="panel panel-default no-padding no-border" ng-repeat="potentialEntry in currStory.potentialEntries | orderBy:'votes':reverse">
                         <div class="pad-left entry-contender" data-toggle="collapse" data-parent="#potentialEntriesAccordion" href="#{{potentialEntry.id}}">{{potentialEntry.entry}}</div>
@@ -135,9 +138,9 @@
                 </div>
             </div>
             <div class="modal-body">
-                <form name="entryRequestForm">
+                <form name="entryRequestForm" class="center">
                     <textarea id="entryRequestTextArea" ng-model="entryRequestModel['entry']" ng-required="entryRequestSchema['entry'].required" maxlength="{{entryRequestSchema['entry'].maxLength}}"
-                        placeholder="{{entryRequestSchema['entry'].hintText}}" ng-minlength="{{entryRequestSchema['entry'].minLength}}" class="no-border form-control input-entry" rows="3"></textarea>
+                        placeholder="{{entryRequestSchema['entry'].hintText}}" ng-minlength="{{entryRequestSchema['entry'].minLength}}" class="text-area no-border form-control" rows="5"></textarea>
                     <div id="entryRequestCharsRequired" class="char-required"></div>
                     <div id="entryRequestCharsRemaining" class="char-remaining"></div>
                 </form>

@@ -285,4 +285,8 @@ public class StoryManagerImpl {
         storyDAO.startNextEntryTimer(storyId, now + Constants.NEXT_ENTRY_DURATION);
         storyDAO.queueNextEntry(storyId, entry);
     }
+
+    public void incrementStoryViews(String id) {
+        storyDAO.incrementStoryViews(id);
+    }
 }
