@@ -1,7 +1,7 @@
 var coAuthorControllers = angular.module('coAuthorControllers', []);
 
 coAuthorControllers.controller('mainController', [
-        '$cookies', '$scope', '$routeParams', '$http', 'Schemas', 'Story', 'Entry', function($cookies, $scope, $routeParams, $http, Schemas, Story, Entry) {
+        '$cookies', '$scope', '$routeParams', '$http', 'Schemas', 'Story', 'StoryOperation', function($cookies, $scope, $routeParams, $http, Schemas, Story, StoryOperation) {
 
             $scope.storyForCreateModel = {};
             $scope.entryRequestModel = {};
@@ -21,7 +21,7 @@ coAuthorControllers.controller('mainController', [
             $scope.requestEntry = function() {
                 var storyId = $scope.currStory.id;
                 
-                Entry.requestEntry({storyId: storyId}, $scope.entryRequestModel, function(res){
+                StoryOperation.requestEntry({id: storyId}, $scope.entryRequestModel, function(res){
                     Story.getStory({type: storyId}, function(res) {
                         $scope.currStory = res;
                     });
@@ -31,6 +31,8 @@ coAuthorControllers.controller('mainController', [
             $scope.showGetStoryModal = function(storyId) {
                 $scope.modalContent = 'modalLoading';
                 $("#modal").modal();
+                
+                StoryOperation.incrementViews({id: storyId}, null);
                 
                 Story.getStory({type: storyId}, function(res) {
                     $scope.currStory = res;

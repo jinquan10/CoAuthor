@@ -29,7 +29,6 @@ public class AppConfig {
     @Bean
     public MongoTemplate mongoTemplate(MongoCredentials mongoCredentials) throws Exception {
         MongoTemplate template = new MongoTemplate(new Mongo(mongoCredentials.getHost(), mongoCredentials.getPort()), mongoCredentials.getName(), mongoCredentials.getUserCredentials());
-        // template.setWriteConcern(WriteConcern.SAFE);
 
         return template;
     }

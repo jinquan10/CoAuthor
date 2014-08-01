@@ -8,6 +8,7 @@ import java.util.List;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -165,7 +166,7 @@ public class StoryDAOImpl {
     
     public List<StoryInListResponse> getTopViewStories(Integer topViewCount) {
         Query query = new Query();
-        query.limit(topViewCount);
+        query.with(new Sort(Sort.Direction.DESC, "views"));
         
         return mongoTemplate.find(query, StoryInListResponse.class, Constants.STORY_COLLECTION);
     }

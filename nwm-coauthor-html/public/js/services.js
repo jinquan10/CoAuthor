@@ -47,11 +47,20 @@ coAuthorServices.factory('Story', [
         }
 ]);
 
-coAuthorServices.factory('Entry', [
+coAuthorServices.factory('StoryOperation', [
         '$resource', function($resource) {
-            return $resource(host + '/stories/:storyId/entries', {}, {
+            return $resource(host + '/stories/:id/:op', {}, {
                 requestEntry : {
-                    method : 'POST'
+                    method : 'POST',
+                    params : {
+                        op: 'entries'
+                    }
+                },
+                incrementViews : {
+                    method : 'POST',
+                    params : {
+                        op: 'views'
+                    }
                 }
             });
         }

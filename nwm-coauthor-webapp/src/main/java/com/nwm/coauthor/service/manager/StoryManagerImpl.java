@@ -24,7 +24,6 @@ import com.nwm.coauthor.exception.UnpublishedStoryLikedException;
 import com.nwm.coauthor.exception.UserIsNotLeaderException;
 import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.exception.VersioningException;
-import com.nwm.coauthor.service.dao.CommentDAOImpl;
 import com.nwm.coauthor.service.dao.EntryDAOImpl;
 import com.nwm.coauthor.service.dao.StoryDAOImpl;
 import com.nwm.coauthor.service.dao.UserDAOImpl;
@@ -44,12 +43,7 @@ public class StoryManagerImpl {
     @Autowired
     private UserDAOImpl userDAO;
     @Autowired
-    private CommentDAOImpl commentDAO;
-    @Autowired
     private EntryDAOImpl entryDAO;
-    
-    @Autowired
-    private Constants constants;
     
     int numCharToGet = 1000;
     

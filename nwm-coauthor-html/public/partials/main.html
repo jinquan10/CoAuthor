@@ -63,7 +63,8 @@
         </div>
         <div class="col-md-6 col-xs-6">
             <div class="panel-group story-body">
-                <div ng-repeat="story in stories | orderBy:'views':reverse" class="panel panel-default pointer no-border" ng-click="showGetStoryModal(story.id)">
+                <!-- Stories -->
+                <div ng-repeat="story in stories" class="panel panel-default pointer no-border" ng-click="showGetStoryModal(story.id)">
                     <div class="title underscore">{{story.title}}</div>
                     <div>
                         <div class="panel-body">{{story.firstEntry.entry}}</div>

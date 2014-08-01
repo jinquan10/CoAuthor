@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.IndexDirection;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.nwm.coauthor.Constants;
@@ -16,6 +18,7 @@ public class StoryModel extends BaseModel {
 	private String id;
     private String title;
 
+    @Indexed(direction = IndexDirection.DESCENDING, background = true)
     private Integer views;
     private Integer charCount;
     private Integer stars;
