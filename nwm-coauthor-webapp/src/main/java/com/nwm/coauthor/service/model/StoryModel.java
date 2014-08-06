@@ -22,12 +22,16 @@ public class StoryModel extends BaseModel {
     private Integer views;
     private Integer charCount;
     private Integer stars;
+    private Integer entriesCount;
     
     private List<EntryModel> entries;
     
     private EntryModel firstEntry;
     private EntryModel lastEntry;
 
+    private Long nextEntryAvailableAt;
+    private List<PotentialEntryModel> potentialEntries;
+    
     public static StoryModel fromNewStory(Long timeZoneOffsetMinutes, String coToken, String createdByDisplayName, NewStoryRequest request){
     	Long now = DateTime.now().getMillis();
 
@@ -43,7 +47,7 @@ public class StoryModel extends BaseModel {
     	storyModel.setCreatedOn(now);
     	storyModel.setLastUpdated(now);
     	storyModel.setTimeZoneOffsetMinutes(timeZoneOffsetMinutes);
-    	
+    	storyModel.setEntriesCount(1);
     	storyModel.setTitle(request.getTitle());
     	storyModel.setViews(1);
     	storyModel.setCharCount(request.getEntry().length());
@@ -129,4 +133,27 @@ public class StoryModel extends BaseModel {
 	public void setLastEntry(EntryModel lastEntry) {
 		this.lastEntry = lastEntry;
 	}
+
+    public Long getNextEntryAvailableAt() {
+        return nextEntryAvailableAt;
+    }
+
+    public void setNextEntryAvailableAt(Long nextEntryAvailableAt) {
+        this.nextEntryAvailableAt = nextEntryAvailableAt;
+    }
+    public Integer getEntriesCount() {
+        return entriesCount;
+    }
+
+    public void setEntriesCount(Integer entriesCount) {
+        this.entriesCount = entriesCount;
+    }
+
+    public List<PotentialEntryModel> getPotentialEntries() {
+        return potentialEntries;
+    }
+
+    public void setPotentialEntries(List<PotentialEntryModel> potentialEntries) {
+        this.potentialEntries = potentialEntries;
+    }
 }

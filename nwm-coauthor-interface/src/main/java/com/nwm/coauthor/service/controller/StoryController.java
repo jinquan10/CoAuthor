@@ -36,6 +36,7 @@ public interface StoryController {
     ResponseEntity<StoryResponse> getStory(String id);
     void entryRequest(Long timeZoneOffsetMinutes, String coToken, String storyId, EntryRequest entry);    
     void incrementStoryViews(String id);    
+    void voteForEntry(String coToken, String storyId, String entryId);
     
     
     

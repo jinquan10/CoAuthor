@@ -53,13 +53,26 @@ coAuthorServices.factory('StoryOperation', [
                 requestEntry : {
                     method : 'POST',
                     params : {
-                        op: 'entries'
+                        op : 'entries'
                     }
                 },
                 incrementViews : {
                     method : 'POST',
                     params : {
-                        op: 'views'
+                        op : 'views'
+                    }
+                }
+            });
+        }
+]);
+
+coAuthorServices.factory('EntryOperation', [
+        '$resource', function($resource) {
+            return $resource(host + '/stories/:storyId/entries/:entryId/:op', {}, {
+                vote : {
+                    method: 'POST',
+                    params : {
+                        op : 'vote'
                     }
                 }
             });

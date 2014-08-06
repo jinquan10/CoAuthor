@@ -1,7 +1,7 @@
 var coAuthorControllers = angular.module('coAuthorControllers', []);
 
 coAuthorControllers.controller('mainController', [
-        '$cookies', '$scope', '$routeParams', '$http', 'Schemas', 'Story', 'StoryOperation', function($cookies, $scope, $routeParams, $http, Schemas, Story, StoryOperation) {
+        '$interval', '$cookies', '$scope', '$routeParams', '$http', 'Schemas', 'Story', 'StoryOperation', 'EntryOperation', function($interval, $cookies, $scope, $routeParams, $http, Schemas, Story, StoryOperation, EntryOperation) {
 
             $scope.storyForCreateModel = {};
             $scope.entryRequestModel = {};
@@ -28,10 +28,21 @@ coAuthorControllers.controller('mainController', [
                         type : storyId
                     }, function(res) {
                         $scope.currStory = res;
+                        $(".wrapper").dotdotdot();
                     });
                 });
             };
 
+            $scope.voteForEntry = function(storyID, entryID) {
+                EntryOperation.vote({storyId: storyID, entryId: entryID}, null, function(res){
+                    Story.getStory({
+                        type : storyID
+                    }, function(res) {
+                        $scope.currStory = res;
+                    });
+                });
+            }
+            
             $scope.showGetStoryModal = function(storyId, index) {
                 $scope.currStoryIndex = index;
 
@@ -47,6 +58,14 @@ coAuthorControllers.controller('mainController', [
                 }, function(res) {
                     $scope.currStory = res;
                     $scope.modalContent = 'viewStory';
+
+                    $scope.currStoryCountdown = countdown(null, $scope.currStory.nextEntryAvailableAt, countdown.MINUTES|countdown.SECONDS, 0).toString();
+                    
+                    $interval(function() {
+                        $scope.currStoryCountdown = countdown(null, $scope.currStory.nextEntryAvailableAt, countdown.MINUTES|countdown.SECONDS, 0).toString();
+                    }, 1000);
+                    
+                    $("#test").dotdotdot({});
                 });
 
                 if ($scope.entryRequestSchemaDisplay == null) {
@@ -114,7 +133,6 @@ coAuthorControllers.controller('mainController', [
             function getTopViewStories() {
                 Story.getTopViewStories(function(res) {
                     $scope.stories = res;
-                    $('.tooltips').tooltip();
                 });
             }
 

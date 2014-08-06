@@ -9,6 +9,7 @@ public class StoryInListResponse extends BaseResource{
     private Integer views;
     private Integer charCount;
     private Integer stars;
+    private Integer entriesCount;
     
     private EntryResponse firstEntry;
     private EntryResponse lastEntry;
@@ -55,4 +56,10 @@ public class StoryInListResponse extends BaseResource{
 	public void setLastEntry(EntryResponse lastEntry) {
 		this.lastEntry = lastEntry;
 	}
+    public Integer getEntriesCount() {
+        return entriesCount;
+    }
+    public void setEntriesCount(Integer entriesCount) {
+        this.entriesCount = entriesCount;
+    }
 }

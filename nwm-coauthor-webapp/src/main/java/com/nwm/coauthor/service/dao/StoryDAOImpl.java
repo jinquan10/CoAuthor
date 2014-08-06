@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.mongodb.WriteResult;
 import com.nwm.coauthor.Constants;
+import com.nwm.coauthor.service.model.EntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.model.TotalCharsModel;
 import com.nwm.coauthor.service.model.UpdateStoryForNewEntryModel;
@@ -185,13 +186,14 @@ public class StoryDAOImpl {
         mongoTemplate.updateFirst(q, u, Constants.STORY_COLLECTION);
     }
     
-    public void queueNextEntry(String storyId, EntryRequest entry) {
+    public void queueNextEntry(String storyId, EntryModel entry) {
         Query q = new Query();
         
         q.addCriteria(Criteria.where("_id").is(new ObjectId(storyId)));
         
         Update u = new Update();
         u.push("potentialEntries", entry);
+        u.inc("potentialEntriesCount", 1);
         
         mongoTemplate.updateFirst(q, u, Constants.STORY_COLLECTION);
     }
@@ -202,6 +204,17 @@ public class StoryDAOImpl {
         
         Update u = new Update();
         u.inc("views", 1);
+        
+        mongoTemplate.updateFirst(q, u, Constants.STORY_COLLECTION);
+    }
+
+    public void voteForEntry(String coToken, String storyId, String entryId) {
+        Query q = new Query();
+        q.addCriteria(Criteria.where("_id").is(new ObjectId(storyId)).and("potentialEntries._id").is(entryId));
+        
+        Update u = new Update();
+        u.push("potentialEntries.$.votedAuthors", coToken);
+        u.inc("potentialEntries.$.votes", 1);
         
         mongoTemplate.updateFirst(q, u, Constants.STORY_COLLECTION);
     }

@@ -27,6 +27,8 @@ import com.nwm.coauthor.exception.VersioningException;
 import com.nwm.coauthor.service.dao.EntryDAOImpl;
 import com.nwm.coauthor.service.dao.StoryDAOImpl;
 import com.nwm.coauthor.service.dao.UserDAOImpl;
+import com.nwm.coauthor.service.model.EntryModel;
+import com.nwm.coauthor.service.model.PotentialEntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.resource.request.EntryRequest;
 import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
@@ -269,18 +271,26 @@ public class StoryManagerImpl {
             // - fetch the user's name
         }
         
-        entry.setId(UUID.randomUUID().toString());
-        entry.setCreatedByDisplayName(createdByDisplayName);
-        entry.setCreatedById(coToken);
-        entry.setCreatedOn(now);
-        entry.setLastUpdated(now);
-        entry.setTimeZoneOffsetMinutes(timeZoneOffsetMinutes);
+        PotentialEntryModel e = new PotentialEntryModel();
+        
+        e.setVotes(0);
+        e.setEntry(entry.getEntry());
+        e.setId(UUID.randomUUID().toString());
+        e.setCreatedByDisplayName(createdByDisplayName);
+        e.setCreatedById(coToken);
+        e.setCreatedOn(now);
+        e.setLastUpdated(now);
+        e.setTimeZoneOffsetMinutes(timeZoneOffsetMinutes);
         
         storyDAO.startNextEntryTimer(storyId, now + Constants.NEXT_ENTRY_DURATION);
-        storyDAO.queueNextEntry(storyId, entry);
+        storyDAO.queueNextEntry(storyId, e);
     }
-
+    
     public void incrementStoryViews(String id) {
         storyDAO.incrementStoryViews(id);
+    }
+
+    public void voteForEntry(String coToken, String storyId, String entryId) {
+        storyDAO.voteForEntry(coToken, storyId, entryId);
     }
 }

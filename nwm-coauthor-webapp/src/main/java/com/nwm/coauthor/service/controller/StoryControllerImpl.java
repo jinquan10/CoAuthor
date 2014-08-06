@@ -93,6 +93,13 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
         storyManager.entryRequest(timeZoneOffsetMinutes, coToken, entry, storyId);
     }
     
+    @Override
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @RequestMapping(value = Constants.ENTRY_VOTE_PATH, method = RequestMethod.POST, consumes = "application/json")
+    public void voteForEntry(@RequestHeader(required = false, value = "Authorization") String coToken, @PathVariable String storyId, @PathVariable String entryId) {
+        storyManager.voteForEntry(coToken, storyId, entryId);
+    }
+    
     // @Override
     // @RequestMapping(value = "/mine", method = RequestMethod.GET)
     // public ResponseEntity<StoriesInListResponse>
