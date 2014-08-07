@@ -100,6 +100,13 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
         storyManager.voteForEntry(coToken, storyId, entryId);
     }
     
+    @Override
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @RequestMapping(value = Constants.PICK_NEXT_ENTRY_PATH, method = RequestMethod.POST, consumes = "application/json")
+    public void pickNextEntry(@PathVariable String storyId) {
+        storyManager.pickNextEntry(storyId);
+    }
+    
     // @Override
     // @RequestMapping(value = "/mine", method = RequestMethod.GET)
     // public ResponseEntity<StoriesInListResponse>

@@ -5,7 +5,6 @@ import com.nwm.coauthor.service.util.HintText;
 import com.nwm.coauthor.service.util.MaxLength;
 import com.nwm.coauthor.service.util.MinLength;
 import com.nwm.coauthor.service.util.RequiredField;
-import com.nwm.coauthor.service.util.SchemaIgnore;
 
 public class EntryRequest extends BaseResource {
 	@RequiredField

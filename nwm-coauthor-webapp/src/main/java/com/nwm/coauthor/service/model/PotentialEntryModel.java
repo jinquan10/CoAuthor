@@ -1,14 +1,11 @@
 package com.nwm.coauthor.service.model;
 
-import java.util.List;
-
-import org.springframework.data.mongodb.core.index.Indexed;
+import java.util.Set;
 
 public class PotentialEntryModel extends EntryModel {
     private Integer votes;
     
-    @Indexed(unique = true)
-    private List<String> votedAuthors;
+    private Set<String> votedAuthors;
 
     public Integer getVotes() {
         return votes;
@@ -18,11 +15,11 @@ public class PotentialEntryModel extends EntryModel {
         this.votes = votes;
     }
 
-    public List<String> getVotedAuthors() {
+    public Set<String> getVotedAuthors() {
         return votedAuthors;
     }
 
-    public void setVotedAuthors(List<String> votedAuthors) {
+    public void setVotedAuthors(Set<String> votedAuthors) {
         this.votedAuthors = votedAuthors;
     }
 }

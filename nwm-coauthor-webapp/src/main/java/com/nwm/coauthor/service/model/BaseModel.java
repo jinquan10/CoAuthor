@@ -33,16 +33,16 @@ public class BaseModel {
 	public void setLastUpdated(Long lastUpdated) {
 		this.lastUpdated = lastUpdated;
 	}
-	public Long getTimeZoneOffsetMinutes() {
-		return timeZoneOffsetMinutes;
-	}
-	public void setTimeZoneOffsetMinutes(Long timeZoneOffsetMinutes) {
-		this.timeZoneOffsetMinutes = timeZoneOffsetMinutes;
-	}
 	public String getCreatedById() {
 		return createdById;
 	}
 	public void setCreatedById(String createdById) {
 		this.createdById = createdById;
 	}
+    public Long getTimeZoneOffsetMinutes() {
+        return timeZoneOffsetMinutes;
+    }
+    public void setTimeZoneOffsetMinutes(Long timeZoneOffsetMinutes) {
+        this.timeZoneOffsetMinutes = timeZoneOffsetMinutes;
+    }
 }

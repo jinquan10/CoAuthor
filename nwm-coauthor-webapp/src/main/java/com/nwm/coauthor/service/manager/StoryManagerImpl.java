@@ -293,4 +293,32 @@ public class StoryManagerImpl {
     public void voteForEntry(String coToken, String storyId, String entryId) {
         storyDAO.voteForEntry(coToken, storyId, entryId);
     }
+
+    public void pickNextEntry(String storyId) {
+        StoryModel s = storyDAO.getStoryInternal(storyId);
+        
+        Long expirationTime = s.getNextEntryAvailableAt();
+        Long now = new Date().getTime();
+        
+        if (now < expirationTime) { // - prevent hacks
+            return;
+        }
+        
+        int max = 0;
+        PotentialEntryModel entry = null;
+        
+        for (PotentialEntryModel pEntry : s.getPotentialEntries()) {
+            if (pEntry.getVotes() > max) {
+                entry = pEntry;
+            }
+        }
+        
+        if (max == 0) {
+            int randomEntryIndex = (int)(Math.random() * s.getPotentialEntries().size());
+            entry = s.getPotentialEntries().get(randomEntryIndex);
+        }
+        
+        EntryModel pickedEntry = (EntryModel)entry;
+        storyDAO.assignNextEntry(storyId, pickedEntry);
+    }
 }

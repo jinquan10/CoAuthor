@@ -37,6 +37,7 @@ public interface StoryController {
     void entryRequest(Long timeZoneOffsetMinutes, String coToken, String storyId, EntryRequest entry);    
     void incrementStoryViews(String id);    
     void voteForEntry(String coToken, String storyId, String entryId);
+    void pickNextEntry(String storyId);
     
     
     

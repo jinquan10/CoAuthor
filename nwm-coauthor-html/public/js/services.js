@@ -59,7 +59,7 @@ coAuthorServices.factory('StoryOperation', [
                 incrementViews : {
                     method : 'POST',
                     params : {
-                        op : 'views'
+                        op : 'increment-views'
                     }
                 }
             });

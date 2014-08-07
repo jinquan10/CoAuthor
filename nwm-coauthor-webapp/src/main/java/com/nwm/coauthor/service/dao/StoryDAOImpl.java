@@ -210,11 +210,34 @@ public class StoryDAOImpl {
 
     public void voteForEntry(String coToken, String storyId, String entryId) {
         Query q = new Query();
-        q.addCriteria(Criteria.where("_id").is(new ObjectId(storyId)).and("potentialEntries._id").is(entryId));
+        q.addCriteria(
+                Criteria.where("_id").is(new ObjectId(storyId))
+                .and("potentialEntries._id").is(entryId)
+                .and("potentialEntries.votedAuthors").nin(coToken));
         
         Update u = new Update();
-        u.push("potentialEntries.$.votedAuthors", coToken);
+        u.addToSet("potentialEntries.$.votedAuthors", coToken);
         u.inc("potentialEntries.$.votes", 1);
+        
+        mongoTemplate.updateFirst(q, u, Constants.STORY_COLLECTION);
+    }
+
+    public StoryModel getStoryInternal(String storyId) {
+        return mongoTemplate.findById(storyId, StoryModel.class, Constants.STORY_COLLECTION);        
+    }
+
+    public void assignNextEntry(String storyId, EntryModel pickedEntry) {
+        Query q = new Query();
+        q.addCriteria(Criteria.where("_id").is(new ObjectId(storyId)));
+        
+        Update u = new Update();
+        u.unset("potentialEntries");
+        u.unset("nextEntryAvailableAt");
+        u.inc("entriesCount", 1);
+        u.set("potentialEntriesCount", 0);
+        u.set("lastEntry", pickedEntry);
+        u.set("lastUpdated", new Date().getTime());
+        u.push("entries", pickedEntry);
         
         mongoTemplate.updateFirst(q, u, Constants.STORY_COLLECTION);
     }
