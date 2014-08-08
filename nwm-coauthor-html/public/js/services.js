@@ -61,6 +61,12 @@ coAuthorServices.factory('StoryOperation', [
                     params : {
                         op : 'increment-views'
                     }
+                },
+                pickEntry : {
+                    method : 'POST',
+                    params : {
+                        op : 'pick-entry'
+                    }
                 }
             });
         }

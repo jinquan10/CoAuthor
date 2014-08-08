@@ -253,7 +253,7 @@ body {
 }
 
 .entry:hover {
-    font-weight: bold;	
+    text-decoration: underline;	
 }
 
 .tooltips {

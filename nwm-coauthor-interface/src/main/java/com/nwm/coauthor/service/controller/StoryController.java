@@ -34,10 +34,10 @@ public interface StoryController {
     public void createStory(Long timeZoneOffsetMinutes, String coToken, NewStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException;
     ResponseEntity<List<StoryInListResponse>> getTopViewStories();
     ResponseEntity<StoryResponse> getStory(String id);
-    void entryRequest(Long timeZoneOffsetMinutes, String coToken, String storyId, EntryRequest entry);    
+    ResponseEntity<StoryResponse> entryRequest(Long timeZoneOffsetMinutes, String coToken, String storyId, EntryRequest entry);    
     void incrementStoryViews(String id);    
-    void voteForEntry(String coToken, String storyId, String entryId);
-    void pickNextEntry(String storyId);
+    ResponseEntity<StoryResponse> voteForEntry(String coToken, String storyId, String entryId);
+    ResponseEntity<StoryResponse> pickEntry(String storyId);
     
     
     

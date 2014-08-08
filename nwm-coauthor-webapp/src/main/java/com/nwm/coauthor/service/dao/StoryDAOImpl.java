@@ -197,7 +197,7 @@ public class StoryDAOImpl {
         
         mongoTemplate.updateFirst(q, u, Constants.STORY_COLLECTION);
     }
-
+    
     public void incrementStoryViews(String id) {
         Query q = new Query();
         q.addCriteria(Criteria.where("_id").is(new ObjectId(id)));
@@ -207,13 +207,11 @@ public class StoryDAOImpl {
         
         mongoTemplate.updateFirst(q, u, Constants.STORY_COLLECTION);
     }
-
+    
     public void voteForEntry(String coToken, String storyId, String entryId) {
         Query q = new Query();
-        q.addCriteria(
-                Criteria.where("_id").is(new ObjectId(storyId))
-                .and("potentialEntries._id").is(entryId)
-                .and("potentialEntries.votedAuthors").nin(coToken));
+        q.addCriteria(Criteria.where("_id").is(new ObjectId(storyId)).and("potentialEntries._id").is(entryId));
+        q.addCriteria(new Criteria().orOperator(Criteria.where("potentialEntries.votedAuthors").nin(coToken), Criteria.where("potentialEntries.votedAuthors").exists(false)));
         
         Update u = new Update();
         u.addToSet("potentialEntries.$.votedAuthors", coToken);
@@ -221,12 +219,12 @@ public class StoryDAOImpl {
         
         mongoTemplate.updateFirst(q, u, Constants.STORY_COLLECTION);
     }
-
+    
     public StoryModel getStoryInternal(String storyId) {
-        return mongoTemplate.findById(storyId, StoryModel.class, Constants.STORY_COLLECTION);        
+        return mongoTemplate.findById(storyId, StoryModel.class, Constants.STORY_COLLECTION);
     }
-
-    public void assignNextEntry(String storyId, EntryModel pickedEntry) {
+    
+    public void assignEntry(String storyId, EntryModel pickedEntry) {
         Query q = new Query();
         q.addCriteria(Criteria.where("_id").is(new ObjectId(storyId)));
         

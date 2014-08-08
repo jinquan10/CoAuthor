@@ -87,24 +87,27 @@ public class StoryControllerImpl extends BaseControllerImpl implements StoryCont
     }
     
     @Override
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @ResponseStatus(value = HttpStatus.OK)
     @RequestMapping(value = Constants.ENTRY_REQUEST_PATH, method = RequestMethod.POST, consumes = "application/json")
-    public void entryRequest(@RequestHeader("TimeZoneOffsetMinutes") Long timeZoneOffsetMinutes, @RequestHeader(required = false, value = "Authorization") String coToken, @PathVariable String storyId, @RequestBody EntryRequest entry) {
+    public ResponseEntity<StoryResponse> entryRequest(@RequestHeader("TimeZoneOffsetMinutes") Long timeZoneOffsetMinutes, @RequestHeader(required = false, value = "Authorization") String coToken, @PathVariable String storyId, @RequestBody EntryRequest entry) {
         storyManager.entryRequest(timeZoneOffsetMinutes, coToken, entry, storyId);
+        return getStory(storyId);
     }
     
     @Override
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @ResponseStatus(value = HttpStatus.OK)
     @RequestMapping(value = Constants.ENTRY_VOTE_PATH, method = RequestMethod.POST, consumes = "application/json")
-    public void voteForEntry(@RequestHeader(required = false, value = "Authorization") String coToken, @PathVariable String storyId, @PathVariable String entryId) {
+    public ResponseEntity<StoryResponse> voteForEntry(@RequestHeader(required = false, value = "Authorization") String coToken, @PathVariable String storyId, @PathVariable String entryId) {
         storyManager.voteForEntry(coToken, storyId, entryId);
+        return getStory(storyId);
     }
     
     @Override
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    @RequestMapping(value = Constants.PICK_NEXT_ENTRY_PATH, method = RequestMethod.POST, consumes = "application/json")
-    public void pickNextEntry(@PathVariable String storyId) {
-        storyManager.pickNextEntry(storyId);
+    @ResponseStatus(value = HttpStatus.OK)
+    @RequestMapping(value = Constants.PICK_ENTRY_PATH, method = RequestMethod.POST, consumes = "application/json")
+    public ResponseEntity<StoryResponse> pickEntry(@PathVariable String storyId) {
+        storyManager.pickEntry(storyId);
+        return getStory(storyId);
     }
     
     // @Override

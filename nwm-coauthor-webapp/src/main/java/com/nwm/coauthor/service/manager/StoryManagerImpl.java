@@ -294,13 +294,13 @@ public class StoryManagerImpl {
         storyDAO.voteForEntry(coToken, storyId, entryId);
     }
 
-    public void pickNextEntry(String storyId) {
+    public void pickEntry(String storyId) {
         StoryModel s = storyDAO.getStoryInternal(storyId);
         
         Long expirationTime = s.getNextEntryAvailableAt();
         Long now = new Date().getTime();
         
-        if (now < expirationTime) { // - prevent hacks
+        if (now + Constants.EXPIRATION_PADDING < expirationTime) { // - prevent hacks
             return;
         }
         
@@ -310,6 +310,7 @@ public class StoryManagerImpl {
         for (PotentialEntryModel pEntry : s.getPotentialEntries()) {
             if (pEntry.getVotes() > max) {
                 entry = pEntry;
+                max = pEntry.getVotes();
             }
         }
         
@@ -319,6 +320,6 @@ public class StoryManagerImpl {
         }
         
         EntryModel pickedEntry = (EntryModel)entry;
-        storyDAO.assignNextEntry(storyId, pickedEntry);
+        storyDAO.assignEntry(storyId, pickedEntry);
     }
 }

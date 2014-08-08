@@ -1,7 +1,8 @@
 var coAuthorControllers = angular.module('coAuthorControllers', []);
 
 coAuthorControllers.controller('mainController', [
-        '$interval', '$cookies', '$scope', '$routeParams', '$http', 'Schemas', 'Story', 'StoryOperation', 'EntryOperation', function($interval, $cookies, $scope, $routeParams, $http, Schemas, Story, StoryOperation, EntryOperation) {
+        '$interval', '$cookies', '$scope', '$routeParams', '$http', 'Schemas', 'Story', 'StoryOperation', 'EntryOperation',
+        function($interval, $cookies, $scope, $routeParams, $http, Schemas, Story, StoryOperation, EntryOperation) {
 
             $scope.storyForCreateModel = {};
             $scope.entryRequestModel = {};
@@ -18,23 +19,51 @@ coAuthorControllers.controller('mainController', [
             // - put this in the main.html somewhere
             getTopViewStories();
 
+            $scope.countDownPotentialEntries = function() {
+                if ($scope.currStory.nextEntryAvailableAt != undefined) {
+                    $scope.currStoryCountdown = countdown(null, $scope.currStory.nextEntryAvailableAt, countdown.MINUTES | countdown.SECONDS, 0).toString();
+                    $scope.pickEntryCounter = $interval(function() {
+                        if (new Date().getTime() > $scope.currStory.nextEntryAvailableAt) {
+                            $interval.cancel($scope.pickEntryCounter);
+                            $scope.pickEntry($scope.currStory.id);
+                        }
+
+                        $scope.currStoryCountdown = countdown(null, $scope.currStory.nextEntryAvailableAt, countdown.MINUTES | countdown.SECONDS, 0).toString();
+                    }, 1000);
+                } else {
+                    if (new Date().getTime() > $scope.currStory.nextEntryAvailableAt) {
+                        $interval.cancel($scope.pickEntryCounter);
+                        $scope.pickEntry($scope.currStory.id);
+                    }
+                }
+            }
+
+            $scope.pickEntry = function(storyId) {
+                StoryOperation.pickEntry({
+                    id : storyId
+                }, null, function(res) {
+                    $scope.currStory = res;
+                });
+            }
+
             $scope.requestEntry = function() {
                 var storyId = $scope.currStory.id;
 
                 StoryOperation.requestEntry({
                     id : storyId
                 }, $scope.entryRequestModel, function(res) {
-                    Story.getStory({
-                        type : storyId
-                    }, function(res) {
-                        $scope.currStory = res;
-                        $(".wrapper").dotdotdot();
-                    });
+                    $scope.entryRequestModel.entry = null;
+                    $scope.currStory = res;
+                    $scope.countDownPotentialEntries();
+                    setRequestEntryValidation();
                 });
             };
 
             $scope.voteForEntry = function(storyID, entryID) {
-                EntryOperation.vote({storyId: storyID, entryId: entryID}, null, function(res){
+                EntryOperation.vote({
+                    storyId : storyID,
+                    entryId : entryID
+                }, null, function(res) {
                     Story.getStory({
                         type : storyID
                     }, function(res) {
@@ -42,7 +71,7 @@ coAuthorControllers.controller('mainController', [
                     });
                 });
             }
-            
+
             $scope.showGetStoryModal = function(storyId, index) {
                 $scope.currStoryIndex = index;
 
@@ -59,13 +88,7 @@ coAuthorControllers.controller('mainController', [
                     $scope.currStory = res;
                     $scope.modalContent = 'viewStory';
 
-                    $scope.currStoryCountdown = countdown(null, $scope.currStory.nextEntryAvailableAt, countdown.MINUTES|countdown.SECONDS, 0).toString();
-                    
-                    $interval(function() {
-                        $scope.currStoryCountdown = countdown(null, $scope.currStory.nextEntryAvailableAt, countdown.MINUTES|countdown.SECONDS, 0).toString();
-                    }, 1000);
-                    
-                    $("#test").dotdotdot({});
+                    $scope.countDownPotentialEntries();
                 });
 
                 if ($scope.entryRequestSchemaDisplay == null) {

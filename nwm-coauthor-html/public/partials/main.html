@@ -122,13 +122,11 @@
             <div class="wrapper modal-header title">{{currStory.title}}</div>
             <div class="modal-body story-body">
                 <div class="text-right">
-                    <span class="glyphicon glyphicon-pencil"></span><span> {{currStory.entriesCount}} </span> <span class="glyphicon glyphicon-eye-open"></span><span>
+                    <span class="glyphicon glyphicon-pencil"></span><span> {{stories[currStoryIndex].entriesCount}} </span> <span class="glyphicon glyphicon-eye-open"></span><span>
                         {{stories[currStoryIndex].views}} </span>
                 </div>
-                <div ng-repeat="entry in currStory.entries">
-                    <div class="entry">
-                        <span>{{entry.entry}}</span>
-                    </div>
+                <div>
+                    <pre ng-repeat="entry in currStory.entries" class="entry">{{entry.entry}}</pre>
                 </div>
             </div>
             <!-- Potential Entries -->
