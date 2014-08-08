@@ -125,8 +125,8 @@
                     <span class="glyphicon glyphicon-pencil"></span><span> {{stories[currStoryIndex].entriesCount}} </span> <span class="glyphicon glyphicon-eye-open"></span><span>
                         {{stories[currStoryIndex].views}} </span>
                 </div>
-                <div>
-                    <pre ng-repeat="entry in currStory.entries" class="entry">{{entry.entry}}</pre>
+                <div class="coauthor">
+                    <pre><span ng-repeat="entry in currStory.entries" class="entry">{{entry.entry}}</span></pre>
                 </div>
             </div>
             <!-- Potential Entries -->
