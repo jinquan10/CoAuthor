@@ -62,7 +62,7 @@
             </div>
         </div>
         <div class="col-md-6 col-xs-6">
-            <div class="panel-group story-body">
+            <div class="panel-group stories">
                 <!-- Stories -->
                 <div ng-repeat="story in stories" class="panel panel-default pointer highlight no-border" ng-click="showGetStoryModal(story.id, $index)">
                     <div class="title underscore">{{story.title}}</div>
@@ -118,6 +118,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- View Story -->
         <div class="modal-content" ng-switch-when="viewStory">
             <div class="wrapper modal-header title">{{currStory.title}}</div>
             <div class="modal-body story-body">
@@ -126,13 +128,12 @@
                         {{stories[currStoryIndex].views}} </span>
                 </div>
                 <div class="coauthor">
-                    <pre><span ng-repeat="entry in currStory.entries" class="entry">{{entry.entry}}</span>&nbsp&nbsp</pre>
+                    <pre>
+                        <span ng-repeat="entry in currStory.entries" class="entry">{{entry.entry}}</span>&nbsp&nbsp</pre>
                 </div>
             </div>
             <!-- Potential Entries -->
             <div class="modal-body">
-                <span class="countdown">{{currStoryCountdown}}</span>
-
                 <div class="panel-group" id="potentialEntriesAccordion">
                     <div class="panel panel-default no-padding no-border" ng-repeat="potentialEntry in currStory.potentialEntries | orderBy:'votes':reverse">
                         <div class="underscore row pointer highlight pad-left entry-contender" data-toggle="collapse" data-parent="#potentialEntriesAccordion" href="#{{potentialEntry.id}}">
@@ -155,13 +156,21 @@
             <div class="modal-body">
                 <form name="entryRequestForm" class="center">
                     <textarea id="entryRequestTextArea" ng-model="entryRequestModel['entry']" ng-required="entryRequestSchema['entry'].required" maxlength="{{entryRequestSchema['entry'].maxLength}}"
-                        placeholder="{{entryRequestSchema['entry'].hintText}}" ng-minlength="{{entryRequestSchema['entry'].minLength}}" class="text-area no-border form-control" rows="5"></textarea>
+                        placeholder="{{entryRequestSchema['entry'].hintText}}" ng-minlength="{{entryRequestSchema['entry'].minLength}}" class="text-area no-border form-control" rows="6"></textarea>
                     <div id="entryRequestCharsRequired" class="char-required"></div>
                     <div id="entryRequestCharsRemaining" class="char-remaining"></div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button ng-disabled="entryRequestForm.$invalid" ng-click="requestEntry();" type="button" class="btn btn-primary">Submit</button>
+                <div class="row">
+                    <div class="col-md-6 col-xs-6 text-left" style="padding-left: 15px">
+                        <span class="countdown">{{currStoryCountdown}}</span>
+                    </div>
+
+                    <div class="col-md-6 col-xs-6 text-right" style="padding-right: 15px">
+                        <button ng-disabled="entryRequestForm.$invalid" ng-click="requestEntry();" type="button" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="modal-content" ng-switch-when="modalLoading">

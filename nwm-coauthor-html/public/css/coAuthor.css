@@ -52,8 +52,25 @@
 	padding: 10px;
 }
 
+.stories {
+	word-wrap: break-word;
+}
+
 .story-body {
 	word-wrap: break-word;
+	max-height: 400px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.potential-entries {
+	max-height: 120px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding-left: 5px;
+	padding-right: 5px;
 }
 
 #topNav.affix {
