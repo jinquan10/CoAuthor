@@ -19,6 +19,12 @@ coAuthorControllers.controller('mainController', [
             // - put this in the main.html somewhere
             getTopViewStories();
 
+            $scope.clickedTextArea = function() {
+                $("#storyBody").animate({
+                    scrollTop : $(window).scrollTop() + $(window).height()
+                }, 0);
+            }
+
             $scope.countDownPotentialEntries = function() {
                 if ($scope.currStory.nextEntryAvailableAt != undefined) {
                     $scope.currStoryCountdown = countdown(null, $scope.currStory.nextEntryAvailableAt, countdown.MINUTES | countdown.SECONDS, 0).toString();
@@ -43,6 +49,9 @@ coAuthorControllers.controller('mainController', [
                     id : storyId
                 }, null, function(res) {
                     $scope.currStory = res;
+                    $("#storyBody").animate({
+                        scrollTop : $(window).scrollTop() + $(window).height()
+                    }, 0);
                 });
             }
 
@@ -165,6 +174,16 @@ coAuthorControllers.controller('mainController', [
                 } else {
                     return "col-md-12";
                 }
+            }
+            
+            $scope.initStoryTextArea = function() {
+                $('#entryRequestTextArea').keyup(function(){
+                    $('#nextEntry').text($('#entryRequestTextArea').val());
+                    
+                    $("#storyBody").animate({
+                        scrollTop : $(window).scrollTop() + $(window).height()
+                    }, 0);
+                });
             }
         }
 ]);

@@ -122,18 +122,17 @@
         <!-- View Story -->
         <div class="modal-content" ng-switch-when="viewStory">
             <div class="wrapper modal-header title">{{currStory.title}}</div>
-            <div class="modal-body story-body">
+            <div id="storyBody" class="modal-body story-body">
                 <div class="text-right">
                     <span class="glyphicon glyphicon-pencil"></span><span> {{stories[currStoryIndex].entriesCount}} </span> <span class="glyphicon glyphicon-eye-open"></span><span>
                         {{stories[currStoryIndex].views}} </span>
                 </div>
                 <div class="coauthor">
-                    <pre>
-                        <span ng-repeat="entry in currStory.entries" class="entry">{{entry.entry}}</span>&nbsp&nbsp</pre>
+                    <pre><span ng-repeat="entry in currStory.entries"><span class="entry">{{entry.entry}}</span>&nbsp</span><span id="nextEntry" class="entry"></span><span id="nextEntryCursor" class="glyphicon glyphicon-pencil"></span></pre>
                 </div>
             </div>
             <!-- Potential Entries -->
-            <div class="modal-body">
+            <div class="modal-body potential-entries">
                 <div class="panel-group" id="potentialEntriesAccordion">
                     <div class="panel panel-default no-padding no-border" ng-repeat="potentialEntry in currStory.potentialEntries | orderBy:'votes':reverse">
                         <div class="underscore row pointer highlight pad-left entry-contender" data-toggle="collapse" data-parent="#potentialEntriesAccordion" href="#{{potentialEntry.id}}">
@@ -155,8 +154,8 @@
             </div>
             <div class="modal-body">
                 <form name="entryRequestForm" class="center">
-                    <textarea id="entryRequestTextArea" ng-model="entryRequestModel['entry']" ng-required="entryRequestSchema['entry'].required" maxlength="{{entryRequestSchema['entry'].maxLength}}"
-                        placeholder="{{entryRequestSchema['entry'].hintText}}" ng-minlength="{{entryRequestSchema['entry'].minLength}}" class="text-area no-border form-control" rows="6"></textarea>
+                    <textarea ng-init="initStoryTextArea();" ng-click="clickedTextArea();" id="entryRequestTextArea" ng-model="entryRequestModel['entry']" ng-required="entryRequestSchema['entry'].required" maxlength="{{entryRequestSchema['entry'].maxLength}}"
+                        placeholder="{{entryRequestSchema['entry'].hintText}}" ng-minlength="{{entryRequestSchema['entry'].minLength}}" class="text-area no-border form-control" rows="1"></textarea>
                     <div id="entryRequestCharsRequired" class="char-required"></div>
                     <div id="entryRequestCharsRemaining" class="char-remaining"></div>
                 </form>

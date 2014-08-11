@@ -500,3 +500,7 @@ pre {
 	word-wrap: break-word;
 	writing-mode: lr-tb;
 }
+
+.cursor {
+      color: red;
+}
