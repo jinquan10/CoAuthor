@@ -16,6 +16,9 @@ coAuthorControllers.controller('mainController', [
             $scope.modalContent = null;
             $scope.currStory = null;
 
+            var cursorInterval = null;
+            var cursorInited = false;
+            
             // - put this in the main.html somewhere
             getTopViewStories();
 
@@ -58,6 +61,8 @@ coAuthorControllers.controller('mainController', [
             $scope.requestEntry = function() {
                 var storyId = $scope.currStory.id;
 
+                $("#nextEntry").text("");
+                
                 StoryOperation.requestEntry({
                     id : storyId
                 }, $scope.entryRequestModel, function(res) {
@@ -175,15 +180,27 @@ coAuthorControllers.controller('mainController', [
                     return "col-md-12";
                 }
             }
-            
+
             $scope.initStoryTextArea = function() {
-                $('#entryRequestTextArea').keyup(function(){
+                $('#entryRequestTextArea').keyup(function() {
                     $('#nextEntry').text($('#entryRequestTextArea').val());
-                    
+
                     $("#storyBody").animate({
                         scrollTop : $(window).scrollTop() + $(window).height()
                     }, 0);
                 });
+            }
+
+            $scope.initCursor = function() {
+                if (cursorInterval == null) {
+                    cursorInterval = $interval(function() {
+                        if ($("#nextEntryCursor").is(":visible")) {
+                            $("#nextEntryCursor").hide();
+                        } else {
+                            $("#nextEntryCursor").show();
+                        }
+                    }, 500);
+                }
             }
         }
 ]);

@@ -128,7 +128,7 @@
                         {{stories[currStoryIndex].views}} </span>
                 </div>
                 <div class="coauthor">
-                    <pre><span ng-repeat="entry in currStory.entries"><span class="entry">{{entry.entry}}</span>&nbsp</span><span id="nextEntry" class="entry"></span><span id="nextEntryCursor" class="glyphicon glyphicon-pencil"></span></pre>
+                    <pre><span ng-repeat="entry in currStory.entries"><span class="entry">{{entry.entry}}</span>&nbsp</span><span id="nextEntry" class="entry"></span><span id="nextEntryCursor" ng-init="initCursor()" class="glyphicon glyphicon-pencil"></span></pre>
                 </div>
             </div>
             <!-- Potential Entries -->
