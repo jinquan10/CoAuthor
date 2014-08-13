@@ -1,8 +1,8 @@
 var coAuthorControllers = angular.module('coAuthorControllers', []);
 
 coAuthorControllers.controller('mainController', [
-        '$interval', '$cookies', '$scope', '$routeParams', '$http', 'Schemas', 'Story', 'StoryOperation', 'EntryOperation',
-        function($interval, $cookies, $scope, $routeParams, $http, Schemas, Story, StoryOperation, EntryOperation) {
+        '$interval', '$cookies', '$scope', '$routeParams', '$http', 'Schemas', 'Story', 'StoryOperation', 'EntryOperation', 'PraisesOperation',
+        function($interval, $cookies, $scope, $routeParams, $http, Schemas, Story, StoryOperation, EntryOperation, PraisesOperation) {
 
             $scope.storyForCreateModel = {};
             $scope.entryRequestModel = {};
@@ -18,9 +18,27 @@ coAuthorControllers.controller('mainController', [
 
             var cursorInterval = null;
             var cursorInited = false;
-            
+
             // - put this in the main.html somewhere
             getTopViewStories();
+            getPraisesSchema();
+
+            $scope.praisesSchema = null;
+
+            function getPraisesSchema() {
+                Schemas.getPraises(function(res) {
+                    $scope.praisesSchema = res;
+                });
+            }
+
+            $scope.incrementPraise = function(key) {
+                PraisesOperation.increment({
+                    id : $scope.currStory.id,
+                    praise : key
+                }, function(res) {
+                    $scope.currStory['praises'] = res;
+                });
+            }
 
             $scope.clickedTextArea = function() {
                 $("#storyBody").animate({
@@ -62,7 +80,7 @@ coAuthorControllers.controller('mainController', [
                 var storyId = $scope.currStory.id;
 
                 $("#nextEntry").text("");
-                
+
                 StoryOperation.requestEntry({
                     id : storyId
                 }, $scope.entryRequestModel, function(res) {

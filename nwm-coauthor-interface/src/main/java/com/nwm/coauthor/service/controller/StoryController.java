@@ -27,17 +27,16 @@ import com.nwm.coauthor.service.resource.request.NewFriendsRequest;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 import com.nwm.coauthor.service.resource.response.EntriesResponse;
 import com.nwm.coauthor.service.resource.response.StoryInListResponse;
-import com.nwm.coauthor.service.resource.response.StoryResponse;
 
 public interface StoryController {
 
     public void createStory(Long timeZoneOffsetMinutes, String coToken, NewStoryRequest createStoryRequest) throws SomethingWentWrongException, AuthenticationUnauthorizedException, BadRequestException;
     ResponseEntity<List<StoryInListResponse>> getTopViewStories();
-    ResponseEntity<StoryResponse> getStory(String id);
-    ResponseEntity<StoryResponse> entryRequest(Long timeZoneOffsetMinutes, String coToken, String storyId, EntryRequest entry);    
-    void incrementStoryViews(String id);    
-    ResponseEntity<StoryResponse> voteForEntry(String coToken, String storyId, String entryId);
-    ResponseEntity<StoryResponse> pickEntry(String storyId);
+//    ResponseEntity<StoryResponse> getStory(String id);
+//    ResponseEntity<StoryResponse> entryRequest(Long timeZoneOffsetMinutes, String coToken, String storyId, EntryRequest entry);    
+//    void incrementStoryViews(String id);    
+//    ResponseEntity<StoryResponse> voteForEntry(String coToken, String storyId, String entryId);
+//    ResponseEntity<StoryResponse> pickEntry(String storyId);
     
     
     

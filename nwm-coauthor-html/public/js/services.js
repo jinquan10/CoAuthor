@@ -22,6 +22,12 @@ coAuthorServices.factory('Schemas', [
                     params : {
                         type : 'request-entry'
                     }
+                },
+                getPraises : {
+                    method : 'GET',
+                    params : {
+                        type : 'praises'
+                    }
                 }
             });
         }
@@ -72,11 +78,21 @@ coAuthorServices.factory('StoryOperation', [
         }
 ]);
 
+coAuthorServices.factory('PraisesOperation', [
+        '$resource', function($resource) {
+            return $resource(host + '/stories/:id/increment-praises/:praise', {}, {
+                increment : {
+                    method : 'POST'
+                },
+            });
+        }
+]);
+
 coAuthorServices.factory('EntryOperation', [
         '$resource', function($resource) {
             return $resource(host + '/stories/:storyId/entries/:entryId/:op', {}, {
                 vote : {
-                    method: 'POST',
+                    method : 'POST',
                     params : {
                         op : 'vote'
                     }

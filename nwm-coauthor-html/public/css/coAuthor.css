@@ -504,3 +504,7 @@ pre {
 .cursor {
       color: red;
 }
+
+.glyphicon-pencil {
+      color: highlight;
+}

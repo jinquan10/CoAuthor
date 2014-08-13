@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.nwm.coauthor.Constants;
+import com.nwm.coauthor.Praises;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 
 @Document(collection = Constants.STORY_COLLECTION)
@@ -20,6 +21,10 @@ public class StoryModel extends BaseModel {
 
     @Indexed(direction = IndexDirection.DESCENDING, background = true)
     private Integer views;
+    
+    @Indexed(background = true)
+    private String genre;
+
     private Integer charCount;
     private Integer stars;
     private Integer entriesCount;
@@ -31,6 +36,8 @@ public class StoryModel extends BaseModel {
 
     private Long nextEntryAvailableAt;
     private List<PotentialEntryModel> potentialEntries;
+    
+    private Praises praises;
     
     public static StoryModel fromNewStory(Long timeZoneOffsetMinutes, String coToken, String createdByDisplayName, NewStoryRequest request){
     	Long now = DateTime.now().getMillis();
@@ -155,5 +162,21 @@ public class StoryModel extends BaseModel {
 
     public void setPotentialEntries(List<PotentialEntryModel> potentialEntries) {
         this.potentialEntries = potentialEntries;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public Praises getPraises() {
+        return praises;
+    }
+
+    public void setPraises(Praises praises) {
+        this.praises = praises;
     }
 }

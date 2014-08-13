@@ -34,7 +34,7 @@ public enum JsonType {
             return number;
         }
 
-        if (field.getType().getPackage().getName().contains("espn")) {
+        if (field.getType().getPackage().getName().contains("nwm")) {
             return OBJECT;
         }
 

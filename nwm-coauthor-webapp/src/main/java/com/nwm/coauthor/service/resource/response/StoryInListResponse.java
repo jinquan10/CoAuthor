@@ -1,5 +1,6 @@
 package com.nwm.coauthor.service.resource.response;
 
+import com.nwm.coauthor.Praises;
 import com.nwm.coauthor.service.resource.BaseResource;
 
 public class StoryInListResponse extends BaseResource{
@@ -13,6 +14,8 @@ public class StoryInListResponse extends BaseResource{
     
     private EntryResponse firstEntry;
     private EntryResponse lastEntry;
+    
+    private Praises praises;
     
 	public String getId() {
 		return id;

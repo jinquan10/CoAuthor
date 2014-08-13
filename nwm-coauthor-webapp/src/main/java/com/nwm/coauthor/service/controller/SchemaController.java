@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nwm.coauthor.Praises;
 import com.nwm.coauthor.service.resource.request.EntryRequest;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 import com.nwm.coauthor.service.util.JsonSchemaUtil;
@@ -31,6 +32,13 @@ public class SchemaController extends BaseControllerImpl {
 	@RequestMapping(method = RequestMethod.GET, value = "/request-entry")
     public ResponseEntity<Map<String, Object>> getEntryRequestSchema() throws Exception {
         Map<String, Object> schema = jsonSchemaUtil.outputSchema(EntryRequest.class);
+        return new ResponseEntity<Map<String, Object>>(schema, HttpStatus.OK);
+    }
+	
+	@ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/praises")
+    public ResponseEntity<Map<String, Object>> getGenresSchema() throws Exception {
+        Map<String, Object> schema = jsonSchemaUtil.outputSchema(Praises.class);
         return new ResponseEntity<Map<String, Object>>(schema, HttpStatus.OK);
     }
 }
