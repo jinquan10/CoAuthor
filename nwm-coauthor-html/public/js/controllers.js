@@ -85,6 +85,7 @@ coAuthorControllers.controller('mainController', [
                     id : storyId
                 }, $scope.entryRequestModel, function(res) {
                     $scope.entryRequestModel.entry = null;
+                    $('#entryRequestTextArea').val("");
                     $scope.currStory = res;
                     $scope.countDownPotentialEntries();
                     setRequestEntryValidation();
@@ -138,6 +139,7 @@ coAuthorControllers.controller('mainController', [
             function setRequestEntryValidation() {
                 $scope.$watch('modalContent', function(newVal, oldValue) {
                     if (newVal === 'viewStory') {
+                        $("#storyBody").css("max-height", window.screen.height - 600);
                         bindCharsRemaining($scope.entryRequestSchema['entry'].maxLength, '#entryRequestCharsRemaining', '#entryRequestTextArea');
                         bindCharsRequired($scope.entryRequestSchema['entry'].minLength, '#entryRequestCharsRequired', '#entryRequestTextArea');
                     }
@@ -200,8 +202,19 @@ coAuthorControllers.controller('mainController', [
             }
 
             $scope.initStoryTextArea = function() {
+                $("#submitEntryButton").prop("disabled", true);
+
                 $('#entryRequestTextArea').keyup(function() {
-                    $('#nextEntry').text($('#entryRequestTextArea').val());
+                    var text = $('#entryRequestTextArea').val();
+
+                    if (text.length >= $scope.entryRequestSchema['entry'].minLength) {
+                        $("#submitEntryButton").prop("disabled", false);
+                    } else {
+                        $("#submitEntryButton").prop("disabled", true);
+                    }
+
+                    $('#nextEntry').text(text);
+                    $scope.entryRequestModel['entry'] = text;
 
                     $("#storyBody").animate({
                         scrollTop : $(window).scrollTop() + $(window).height()
@@ -219,6 +232,14 @@ coAuthorControllers.controller('mainController', [
                         }
                     }, 500);
                 }
+            }
+            
+            $scope.ellipse = function(text, len) {
+                if (text.length > len) {
+                    return text.substring(0, len - 1) + "...";
+                }
+
+                return text;
             }
         }
 ]);
