@@ -1,5 +1,6 @@
 package com.nwm.coauthor;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -12,6 +13,11 @@ public class Praise {
     @JsonIgnore
     @Indexed(background = true)
     private Set<String> authors;
+    
+    public Praise() {
+        this.count = 0;
+        this.authors = new HashSet<String>();
+    }
     
     public Set<String> getAuthors() {
         return authors;

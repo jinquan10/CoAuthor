@@ -60,6 +60,7 @@ public class StoryModel extends BaseModel {
     	storyModel.setCharCount(request.getEntry().length());
     	storyModel.setEntries(theEntries);
     	storyModel.setFirstEntry(entry);
+    	storyModel.setPraises(new Praises());
     	
         return storyModel;
     }

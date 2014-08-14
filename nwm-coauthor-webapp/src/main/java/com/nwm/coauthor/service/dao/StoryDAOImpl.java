@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.mongodb.WriteResult;
 import com.nwm.coauthor.Constants;
+import com.nwm.coauthor.Praises;
 import com.nwm.coauthor.service.model.EntryModel;
 import com.nwm.coauthor.service.model.StoryModel;
 import com.nwm.coauthor.service.model.TotalCharsModel;
@@ -238,5 +239,29 @@ public class StoryDAOImpl {
         u.push("entries", pickedEntry);
         
         mongoTemplate.updateFirst(q, u, Constants.STORY_COLLECTION);
+    }
+
+    public void incrementPraise(String coToken, String storyId, String praise) {
+        String dbPraise = "praises." + praise;
+        String authors = dbPraise + ".authors";
+        
+        Query q = new Query();
+        q.addCriteria(Criteria.where("_id").is(new ObjectId(storyId)));
+        q.addCriteria(Criteria.where(authors).nin(coToken));
+        
+        Update u = new Update();
+        u.inc(dbPraise + ".count", 1);
+        u.push(authors, coToken);
+        
+        mongoTemplate.updateFirst(q, u, Constants.STORY_COLLECTION);
+    }
+    
+    public Praises getPraises(String storyId) {
+        Query q = new Query();
+        q.addCriteria(Criteria.where("_id").is(new ObjectId(storyId)));
+        q.fields().include("praises");
+        
+        StoryModel story = mongoTemplate.findOne(q, StoryModel.class);
+        return story.getPraises();
     }
 }

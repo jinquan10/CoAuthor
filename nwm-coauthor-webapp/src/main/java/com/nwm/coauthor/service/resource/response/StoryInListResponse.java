@@ -15,7 +15,7 @@ public class StoryInListResponse extends BaseResource{
     private EntryResponse firstEntry;
     private EntryResponse lastEntry;
     
-    private Praises praises;
+    private Praises praises = new Praises();
     
 	public String getId() {
 		return id;
@@ -64,5 +64,11 @@ public class StoryInListResponse extends BaseResource{
     }
     public void setEntriesCount(Integer entriesCount) {
         this.entriesCount = entriesCount;
+    }
+    public Praises getPraises() {
+        return praises;
+    }
+    public void setPraises(Praises praises) {
+        this.praises = praises;
     }
 }

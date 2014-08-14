@@ -11,6 +11,7 @@ public class Constants {
 	public static final String GET_STORY_PATH = "/stories/{id}";
 	public static final String INCREMENT_STORY_VIEWS_PATH = "/stories/{id}/increment-views";
 	public static final String PICK_ENTRY_PATH = "/stories/{storyId}/pick-entry";
+	public static final String INCREMENT_PRAISE = "/stories/{storyId}/increment-praise/{praise}";
 	
 	public static final String ENTRY_REQUEST_PATH = "/stories/{storyId}/entries";
 	public static final String ENTRY_VOTE_PATH = "/stories/{storyId}/entries/{entryId}/vote";

@@ -120,13 +120,23 @@
         <div class="modal-content" ng-switch-when="viewStory">
             <div class="wrapper modal-header title">{{currStory.title}}</div>
             <div id="storyBody" class="modal-body story-body">
-                <div class="text-right">
-                    <span class="glyphicon glyphicon-pencil"></span><span> {{stories[currStoryIndex].entriesCount}} </span> <span class="glyphicon glyphicon-eye-open"></span><span>
-                        {{stories[currStoryIndex].views}} </span>
+                <div class="row">
+                    <div class="col-md-8 col-xs-8 text-left">
+                        <span ng-click="incrementPraise(key)" ng-repeat="(key, praise) in praisesSchema">&nbsp<span class="pointer label label-primary">{{praise.displayName}}</span><span
+                            class="pointer label label-info">{{currStory['praises'][key].count}}</span></span></span>
+                    </div>
+
+                    <div class="col-md-4 col-xs-4 text-left">
+                        <div class="text-right">
+                            <span class="glyphicon glyphicon-pencil"></span><span> {{stories[currStoryIndex].entriesCount}} </span> <span class="glyphicon glyphicon-eye-open"></span><span>
+                                {{stories[currStoryIndex].views}} </span>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="coauthor">
-                    <pre> <span ng-repeat="entry in currStory.entries"><span class="entry">{{entry.entry}}</span>&nbsp</span><span id="nextEntry" class="entry"></span><span id="nextEntryCursor"
-                            ng-init="initCursor()" class="glyphicon glyphicon-pencil"></span>
+                    <pre> <span ng-repeat="entry in currStory.entries"><span class="entry">{{entry.entry}}</span>&nbsp</span><span id="nextEntry" class="entry"></span><span id="nextEntryCursor" ng-init="initCursor()"
+                            class="glyphicon glyphicon-pencil"></span>
                     </pre>
                 </div>
             </div>
@@ -162,15 +172,11 @@
             </div>
             <div class="modal-footer">
                 <div class="row">
-                    <div class="col-md-2 col-xs-2 text-left" style="padding-left: 15px">
+                    <div class="col-md-6 col-xs-6 text-left" style="padding-left: 15px">
                         <span class="countdown">{{currStoryCountdown}}</span>
                     </div>
 
-                    <div class="col-md-8 col-xs-8 text-right">
-                        <span ng-click="incrementPraise(key)" class="pointer" ng-repeat="(key, praise) on praisesSchema"><span class="glyphicon glyphicon-plus"></span><span>{{praise.displayName}} {{currStory['praises'][key].count}}</span></span>
-                    </div>
-
-                    <div class="col-md-2 col-xs-2 text-right" style="padding-right: 15px">
+                    <div class="col-md-6 col-xs-6 text-right" style="padding-right: 15px">
                         <button ng-disabled="entryRequestForm.$invalid" ng-click="requestEntry();" type="button" class="btn btn-primary">Submit</button>
                     </div>
                 </div>

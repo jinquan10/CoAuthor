@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.nwm.coauthor.Constants;
+import com.nwm.coauthor.Praises;
 import com.nwm.coauthor.exception.AlreadyAMemberException;
 import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.AlreadyPublishedException;
@@ -67,7 +68,6 @@ public class StoryControllerImpl extends BaseControllerImpl {
         storyManager.createStory(timeZoneOffsetMinutes, coToken, createStoryRequest);
     }
     
-    
     @RequestMapping(value = Constants.TOP_VIEW_STORIES_PATH, method = RequestMethod.GET)
     public ResponseEntity<List<StoryInListResponse>> getTopViewStories() {
         return new ResponseEntity<List<StoryInListResponse>>(storyManager.getTopViewStories(), HttpStatus.OK);
@@ -78,7 +78,6 @@ public class StoryControllerImpl extends BaseControllerImpl {
     public ResponseEntity<StoryResponse> getStory(@PathVariable String id) {
         return new ResponseEntity<StoryResponse>(storyManager.getStory(id), HttpStatus.OK);
     }
-    
     
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @RequestMapping(value = Constants.INCREMENT_STORY_VIEWS_PATH, method = RequestMethod.POST)
@@ -102,13 +101,18 @@ public class StoryControllerImpl extends BaseControllerImpl {
         return getStory(storyId);
     }
     
-    
     @ResponseStatus(value = HttpStatus.OK)
     @RequestMapping(value = Constants.PICK_ENTRY_PATH, method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<StoryResponse> pickEntry(@PathVariable String storyId) {
         storyManager.pickEntry(storyId);
         return getStory(storyId);
     }
+    
+    @ResponseStatus(value = HttpStatus.OK)
+    @RequestMapping(value = Constants.INCREMENT_PRAISE, method = RequestMethod.POST, consumes = "application/json")
+    public ResponseEntity<Praises> incrementPraise(@RequestHeader(required = false, value = "Authorization") String coToken, @PathVariable String storyId, @PathVariable String praise) {
+        return new ResponseEntity<Praises>(storyManager.incrementPraise(coToken, storyId, praise), HttpStatus.OK);
+    }    
     
     // @Override
     // @RequestMapping(value = "/mine", method = RequestMethod.GET)

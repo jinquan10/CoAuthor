@@ -11,6 +11,7 @@ import org.springframework.util.StringUtils;
 
 import com.mongodb.WriteResult;
 import com.nwm.coauthor.Constants;
+import com.nwm.coauthor.Praises;
 import com.nwm.coauthor.exception.AlreadyAMemberException;
 import com.nwm.coauthor.exception.AlreadyLikedException;
 import com.nwm.coauthor.exception.AlreadyPublishedException;
@@ -321,5 +322,10 @@ public class StoryManagerImpl {
         
         EntryModel pickedEntry = (EntryModel)entry;
         storyDAO.assignEntry(storyId, pickedEntry);
+    }
+
+    public Praises incrementPraise(String coToken, String storyId, String praise) {
+        storyDAO.incrementPraise(coToken, storyId, praise);
+        return storyDAO.getPraises(storyId);
     }
 }

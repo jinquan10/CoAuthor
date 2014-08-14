@@ -35,7 +35,7 @@ coAuthorControllers.controller('mainController', [
                 PraisesOperation.increment({
                     id : $scope.currStory.id,
                     praise : key
-                }, function(res) {
+                }, null, function(res) {
                     $scope.currStory['praises'] = res;
                 });
             }

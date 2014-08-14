@@ -508,3 +508,7 @@ pre {
 .glyphicon-pencil {
       color: highlight;
 }
+
+.label-primary:hover {
+      background-color: blue;
+}

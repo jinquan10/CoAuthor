@@ -80,7 +80,7 @@ coAuthorServices.factory('StoryOperation', [
 
 coAuthorServices.factory('PraisesOperation', [
         '$resource', function($resource) {
-            return $resource(host + '/stories/:id/increment-praises/:praise', {}, {
+            return $resource(host + '/stories/:id/increment-praise/:praise', {}, {
                 increment : {
                     method : 'POST'
                 },
