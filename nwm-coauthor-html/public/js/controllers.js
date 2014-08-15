@@ -41,6 +41,8 @@ coAuthorControllers.controller('mainController', [
             }
 
             $scope.clickedTextArea = function() {
+                resetPotentialEntriesState();
+                
                 $("#storyBody").animate({
                     scrollTop : $(window).scrollTop() + $(window).height()
                 }, 0);
@@ -233,13 +235,46 @@ coAuthorControllers.controller('mainController', [
                     }, 500);
                 }
             }
-            
+
             $scope.ellipse = function(text, len) {
                 if (text.length > len) {
                     return text.substring(0, len - 1) + "...";
                 }
 
                 return text;
+            }
+
+            var peekEntryIndex = null;
+
+            $scope.peekPotentialEntry = function(index) {
+                if (peekEntryIndex == null || peekEntryIndex != index) {
+                    if ($('#nextEntry').hasClass("peek-entry")) {
+                        $('#nextEntry').text($scope.currStory.potentialEntries[index].entry);
+                    } else {
+                        $('#nextEntry').text($scope.currStory.potentialEntries[index].entry).addClass("peek-entry");
+                    }
+
+                    peekEntryIndex = index;
+
+                    $("#storyBody").animate({
+                        scrollTop : $(window).scrollTop() + $(window).height()
+                    }, 0);
+                    
+                    $('.potential-entry-clicked').removeClass("potential-entry-clicked");
+                    $('#nextEntry').removeClass("next-entry");
+                    $('#potentialEntry' + index).addClass("potential-entry-clicked");
+                } else {
+                    resetPotentialEntriesState();
+                }
+            }
+            
+            function resetPotentialEntriesState(){
+                $('#nextEntry').addClass("next-entry");
+                $('#nextEntry').removeClass("peek-entry");
+                $('#nextEntry').text($('#entryRequestTextArea').val());
+                $('.potential-entry-clicked').removeClass("potential-entry-clicked");
+                
+                peekEntryIndex = null;
             }
         }
 ]);

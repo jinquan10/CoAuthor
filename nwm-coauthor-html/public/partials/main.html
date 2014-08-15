@@ -134,16 +134,22 @@
             <div id="storyBody" class="modal-body story-body">
                 <div class="coauthor">
                     <pre>
-<span ng-repeat="entry in currStory.entries"><span class="entry">{{entry.entry}}</span>&nbsp</span><span id="nextEntry" class="entry"></span><span id="nextEntryCursor" ng-init="initCursor()"
-                            class="glyphicon glyphicon-pencil"></span>
+<span ng-repeat="entry in currStory.entries"><span class="entry">{{entry.entry}}</span>&nbsp</span><span id="nextEntry" class="entry next-entry"></span><span id="nextEntryCursor"
+                            ng-init="initCursor()" class="glyphicon glyphicon-pencil"></span>
                     </pre>
                 </div>
             </div>
+
+            <div>
+                <span>Next Entries</span>
+            </div>
+
             <!-- Potential Entries -->
             <div class="modal-body potential-entries">
                 <div class="panel-group" id="potentialEntriesAccordion">
-                    <div class="panel panel-default no-padding no-border" ng-repeat="potentialEntry in currStory.potentialEntries | orderBy:'votes':reverse">
-                        <div class="underscore row pointer highlight pad-left entry-contender">
+                    <div id="potentialEntry{{$index}}" ng-click="peekPotentialEntry($index)" class="potential-entry no-padding no-border"
+                        ng-repeat="potentialEntry in currStory.potentialEntries | orderBy:'votes':reverse">
+                        <div class="underscore row pointer pad-left entry-contender">
                             <div class="col-md-6 col-xs-6 text-left" style="padding-left: 15px">
                                 <span>{{ellipse(potentialEntry.entry, 35)}}</span>
                             </div>
@@ -165,8 +171,7 @@
             <div class="modal-footer">
                 <div class="row">
                     <div class="col-md-10 col-xs-10 text-left" style="padding-left: 15px">
-                        <span class="countdown">{{currStoryCountdown}}</span> <span ng-click="incrementPraise(key)" ng-repeat="(key, praise) in praisesSchema">&nbsp<span
-                            class="pointer label label-primary">{{praise.displayName}}</span><span class="pointer label label-info black-text">{{currStory['praises'][key].count}}</span></span></span>
+                        
                     </div>
 
                     <div class="col-md-2 col-xs-2 text-right" style="padding-right: 15px">

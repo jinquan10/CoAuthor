@@ -15,8 +15,8 @@ public class Constants {
 	
 	public static final String ENTRY_REQUEST_PATH = "/stories/{storyId}/entries";
 	public static final String ENTRY_VOTE_PATH = "/stories/{storyId}/entries/{entryId}/vote";
-//    public static final Long NEXT_ENTRY_DURATION = 3600000L; // 1 hour in millis
-	public static final Long NEXT_ENTRY_DURATION = 10000L; // 1 hour in millis
+    public static final Long NEXT_ENTRY_DURATION = 3600000L; // 1 hour in millis
+//	public static final Long NEXT_ENTRY_DURATION = 10000L; // 1 hour in millis
     
 	public static final Long EXPIRATION_PADDING = 5000L; // 5 seconds
 }

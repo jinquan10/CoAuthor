@@ -510,7 +510,7 @@ pre {
 }
 
 .glyphicon-pencil {
-      color: highlight;
+      color: orange;
 }
 
 .label-primary:hover {
@@ -519,4 +519,24 @@ pre {
 
 .black-text {
       color: black;
+}
+
+.peek-entry {
+      color: blue;
+}
+
+.potential-entry {
+      color: blue;
+}
+
+.potential-entry:hover {
+      background-color: yellow;
+}
+
+.potential-entry-clicked {
+      background-color: yellow;
+}
+
+.next-entry {
+      color: green;
 }
