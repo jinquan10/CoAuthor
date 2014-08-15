@@ -236,11 +236,13 @@ coAuthorControllers.controller('mainController', [
                 }
             }
 
-            $scope.ellipse = function(text, len) {
+            $scope.ellipse = function(text, len, defaultTo) {
                 if (text.length > len) {
                     return text.substring(0, len - 1) + "...";
+                } else if (defaultTo) {
+                    return text + "...";
                 }
-
+                
                 return text;
             }
 
@@ -265,6 +267,10 @@ coAuthorControllers.controller('mainController', [
                     $('#potentialEntry' + index).addClass("potential-entry-clicked");
                 } else {
                     resetPotentialEntriesState();
+                    
+                    $("#storyBody").animate({
+                        scrollTop : $(window).scrollTop() + $(window).height()
+                    }, 0);
                 }
             }
             

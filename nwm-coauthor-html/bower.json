@@ -13,7 +13,8 @@
     "angular-route": "~1.2.x",
     "angular-resource": "~1.2.x",
     "angular-cookies": "~1.2.x",
-    "bootstrap": "~3.x"
+    "bootstrap": "~3.x",
+    "font-awesome": "4.1.0"
   },
   "license": "MIT",
   "private": true,

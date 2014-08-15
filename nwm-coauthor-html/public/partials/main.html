@@ -115,14 +115,12 @@
                 </div>
             </div>
         </div>
-
         <!-- View Story -->
         <div class="modal-content" ng-switch-when="viewStory">
             <div class="modal-header">
                 <div class="title">{{ellipse(currStory.title, 45)}}</div>
                 <div class="row" style="word-wrap: break-word;">
                     <div class="col-md-8 col-xs-8 text-left"></div>
-
                     <div class="col-md-4 col-xs-4 text-left">
                         <div class="text-right">
                             <span class="glyphicon glyphicon-pencil"></span><span> {{stories[currStoryIndex].entriesCount}} </span> <span class="glyphicon glyphicon-eye-open"></span><span>
@@ -139,11 +137,9 @@
                     </pre>
                 </div>
             </div>
-
             <div>
-                <span>Next Entries</span>
+                <span>Click to preview the next entries</span>
             </div>
-
             <!-- Potential Entries -->
             <div class="modal-body potential-entries">
                 <div class="panel-group" id="potentialEntriesAccordion">
@@ -151,10 +147,10 @@
                         ng-repeat="potentialEntry in currStory.potentialEntries | orderBy:'votes':reverse">
                         <div class="underscore row pointer pad-left entry-contender">
                             <div class="col-md-6 col-xs-6 text-left" style="padding-left: 15px">
-                                <span>{{ellipse(potentialEntry.entry, 35)}}</span>
+                                <span>{{ellipse(potentialEntry.entry, 35, true)}}</span>
                             </div>
                             <div class="col-md-6 col-xs-6 text-right" style="padding-right: 15px">
-                                <span class="underline" ng-click="voteForEntry(currStory.id, potentialEntry.id)">Vote</span>&nbsp;<span class="glyphicon glyphicon-star text-right">{{potentialEntry.votes}}</span>
+                                <span class="label label-primary" ng-click="voteForEntry(currStory.id, potentialEntry.id)"><i class="fa fa-arrow-up"></i>&nbsp;{{potentialEntry.votes}}</span>
                             </div>
                         </div>
                     </div>
@@ -171,9 +167,9 @@
             <div class="modal-footer">
                 <div class="row">
                     <div class="col-md-10 col-xs-10 text-left" style="padding-left: 15px">
-                        
+                        <span class="countdown">{{currStoryCountdown}}</span> <span ng-click="incrementPraise(key)" ng-repeat="(key, praise) in praisesSchema">&nbsp<span
+                            class="pointer label label-primary">{{praise.displayName}}</span><span class="pointer label label-info black-text">{{currStory['praises'][key].count}}</span></span></span>
                     </div>
-
                     <div class="col-md-2 col-xs-2 text-right" style="padding-right: 15px">
                         <button id="submitEntryButton" ng-click="requestEntry();" type="button" class="btn btn-primary">Submit</button>
                     </div>
