@@ -246,17 +246,17 @@ coAuthorControllers.controller('mainController', [
                 return text;
             }
 
-            var peekEntryIndex = null;
+            var peekEntryId = null;
 
-            $scope.peekPotentialEntry = function(index) {
-                if (peekEntryIndex == null || peekEntryIndex != index) {
+            $scope.peekPotentialEntry = function(peekEntry) {
+                if (peekEntryId == null || peekEntryId != peekEntry.id) {
                     if ($('#nextEntry').hasClass("peek-entry")) {
-                        $('#nextEntry').text($scope.currStory.potentialEntries[index].entry);
+                        $('#nextEntry').text(peekEntry.entry);
                     } else {
-                        $('#nextEntry').text($scope.currStory.potentialEntries[index].entry).addClass("peek-entry");
+                        $('#nextEntry').text(peekEntry.entry).addClass("peek-entry");
                     }
 
-                    peekEntryIndex = index;
+                    peekEntryId = peekEntry.id;
 
                     $("#storyBody").animate({
                         scrollTop : $(window).scrollTop() + $(window).height()
@@ -264,7 +264,7 @@ coAuthorControllers.controller('mainController', [
                     
                     $('.potential-entry-clicked').removeClass("potential-entry-clicked");
                     $('#nextEntry').removeClass("next-entry");
-                    $('#potentialEntry' + index).addClass("potential-entry-clicked");
+                    $('#potentialEntry' + peekEntryId).addClass("potential-entry-clicked");
                 } else {
                     resetPotentialEntriesState();
                     
@@ -280,7 +280,7 @@ coAuthorControllers.controller('mainController', [
                 $('#nextEntry').text($('#entryRequestTextArea').val());
                 $('.potential-entry-clicked').removeClass("potential-entry-clicked");
                 
-                peekEntryIndex = null;
+                peekEntryId = null;
             }
         }
 ]);
