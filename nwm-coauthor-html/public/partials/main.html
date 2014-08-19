@@ -78,7 +78,7 @@
         </div>
     </div>
 </div>
-<div id="modal" class="modal fade" tabindex="-1">
+<div id="modal" class="modal fade" tabindex="-1" ng-init="initModal();">
     <div class="modal-dialog" ng-switch on="modalContent">
         <!-- New Story -->
         <div class="modal-content" ng-switch-default>
@@ -133,7 +133,7 @@
                 <div class="coauthor">
                     <pre>
 <span ng-repeat="entry in currStory.entries"><span class="entry">{{entry.entry}}</span>&nbsp</span><span id="nextEntry" class="entry next-entry"></span><span id="nextEntryCursor"
-                            ng-init="initCursor()" class="glyphicon glyphicon-pencil"></span>
+                            class="glyphicon glyphicon-pencil"></span>
                     </pre>
                 </div>
             </div>
@@ -143,7 +143,7 @@
             <!-- Potential Entries -->
             <div class="modal-body potential-entries" style="padding-top: 0">
                 <div class="panel-group" id="potentialEntriesAccordion">
-                    <div id="potentialEntry{{potentialEntry.id}}" ng-repeat="potentialEntry in currStory.potentialEntries | orderBy:'votes'" ng-click="peekPotentialEntry(potentialEntry)"
+                    <div id="potentialEntry{{potentialEntry.id}}" ng-repeat="potentialEntry in currStory.potentialEntries" ng-click="peekPotentialEntry(potentialEntry)"
                         class="potential-entry no-padding no-border">
                         <div class="underscore row pointer pad-left entry-contender">
                             <div class="col-md-6 col-xs-6 text-left" style="padding-left: 15px">

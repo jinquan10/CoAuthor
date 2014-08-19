@@ -48,21 +48,31 @@ coAuthorControllers.controller('mainController', [
                 }, 0);
             }
 
-            $scope.countDownPotentialEntries = function() {
-                if ($scope.currStory.nextEntryAvailableAt != undefined) {
-                    $scope.currStoryCountdown = countdown(null, $scope.currStory.nextEntryAvailableAt, countdown.MINUTES | countdown.SECONDS, 0).toString();
-                    $scope.pickEntryCounter = $interval(function() {
+            $scope.countDownPotentialEntries = function(isShowStory) {
+                if (isShowStory) {
+                    if ($scope.currStory.nextEntryAvailableAt != undefined) {
                         if (new Date().getTime() > $scope.currStory.nextEntryAvailableAt) {
-                            $interval.cancel($scope.pickEntryCounter);
+                            $scope.pickEntryCounter = null;    
                             $scope.pickEntry($scope.currStory.id);
                         }
+                    }
 
-                        $scope.currStoryCountdown = countdown(null, $scope.currStory.nextEntryAvailableAt, countdown.MINUTES | countdown.SECONDS, 0).toString();
-                    }, 1000);
-                } else {
-                    if (new Date().getTime() > $scope.currStory.nextEntryAvailableAt) {
-                        $interval.cancel($scope.pickEntryCounter);
-                        $scope.pickEntry($scope.currStory.id);
+                    $scope.modalContent = 'viewStory';
+                }
+
+                if ($scope.currStory.nextEntryAvailableAt != undefined) {
+                    $scope.currStoryCountdown = countdown(null, $scope.currStory.nextEntryAvailableAt, countdown.MINUTES | countdown.SECONDS, 0).toString();
+
+                    if ($scope.pickEntryCounter == null) {
+                        $scope.pickEntryCounter = $interval(function() {
+                            if (new Date().getTime() > $scope.currStory.nextEntryAvailableAt) {
+                                $interval.cancel($scope.pickEntryCounter);
+                                $scope.pickEntryCounter = null;
+                                $scope.pickEntry($scope.currStory.id);
+                            }
+
+                            $scope.currStoryCountdown = countdown(null, $scope.currStory.nextEntryAvailableAt, countdown.MINUTES | countdown.SECONDS, 0).toString();
+                        }, 1000);
                     }
                 }
             }
@@ -123,9 +133,8 @@ coAuthorControllers.controller('mainController', [
                     type : storyId
                 }, function(res) {
                     $scope.currStory = res;
-                    $scope.modalContent = 'viewStory';
 
-                    $scope.countDownPotentialEntries();
+                    $scope.countDownPotentialEntries(true);
                 });
 
                 if ($scope.entryRequestSchemaDisplay == null) {
@@ -143,7 +152,8 @@ coAuthorControllers.controller('mainController', [
             function setRequestEntryValidation() {
                 $scope.$watch('modalContent', function(newVal, oldValue) {
                     if (newVal === 'viewStory') {
-                        $("#storyBody").css("max-height", window.screen.height - 600);
+//                        $("#storyBody").css("max-height", window.screen.height - 600);
+                        $("#storyBody").css("height", window.screen.height - 600);
                         bindCharsRemaining($scope.entryRequestSchema['entry'].maxLength, '#entryRequestCharsRemaining', '#entryRequestTextArea');
                         bindCharsRequired($scope.entryRequestSchema['entry'].minLength, '#entryRequestCharsRequired', '#entryRequestTextArea');
                     }
@@ -294,6 +304,13 @@ coAuthorControllers.controller('mainController', [
                 $('.potential-entry-clicked').removeClass("potential-entry-clicked");
 
                 peekEntryId = null;
+            }
+
+            $scope.initModal = function() {
+                $('#modal').on('hide.bs.modal', function(e) {
+                    $interval.cancel($scope.pickEntryCounter);
+                    $scope.pickEntryCounter = null;
+                });
             }
         }
 ]);
