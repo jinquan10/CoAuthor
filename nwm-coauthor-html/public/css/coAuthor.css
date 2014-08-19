@@ -279,7 +279,6 @@ body {
 
 .entry-contender {
       font-style: italic;
-      font-weight: bold;
 }
 
 .modal-open {
@@ -529,11 +528,13 @@ pre {
 }
 
 .potential-entry:hover {
-      background-color: yellow;
+      font-weight: bold;
+      color: blue;
 }
 
 .potential-entry-clicked {
-      background-color: yellow;
+      font-weight: bold;
+      color: blue;
 }
 
 .next-entry {

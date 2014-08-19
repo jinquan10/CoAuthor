@@ -42,7 +42,7 @@ coAuthorControllers.controller('mainController', [
 
             $scope.clickedTextArea = function() {
                 resetPotentialEntriesState();
-                
+
                 $("#storyBody").animate({
                     scrollTop : $(window).scrollTop() + $(window).height()
                 }, 0);
@@ -82,6 +82,8 @@ coAuthorControllers.controller('mainController', [
                 var storyId = $scope.currStory.id;
 
                 $("#nextEntry").text("");
+
+                $("#submitEntryButton").prop("disabled", true);
 
                 StoryOperation.requestEntry({
                     id : storyId
@@ -207,21 +209,32 @@ coAuthorControllers.controller('mainController', [
                 $("#submitEntryButton").prop("disabled", true);
 
                 $('#entryRequestTextArea').keyup(function() {
-                    var text = $('#entryRequestTextArea').val();
-
-                    if (text.length >= $scope.entryRequestSchema['entry'].minLength) {
-                        $("#submitEntryButton").prop("disabled", false);
-                    } else {
-                        $("#submitEntryButton").prop("disabled", true);
-                    }
-
-                    $('#nextEntry').text(text);
-                    $scope.entryRequestModel['entry'] = text;
-
-                    $("#storyBody").animate({
-                        scrollTop : $(window).scrollTop() + $(window).height()
-                    }, 0);
+                    $scope.submitStoryCallback();
                 });
+            }
+
+            $scope.submitStoryCallback = function() {
+                var text = $('#entryRequestTextArea').val();
+
+                if ($scope.entryRequestSchemaDisplay == null) {
+                    Schemas.getSchemaForEntryRequest(function(res) {
+                        $scope.entryRequestSchema = res;
+                        $scope.entryRequestSchemaDisplay = getSchemaDisplay(res);
+                    });
+                }
+
+                if (text.length >= $scope.entryRequestSchema['entry'].minLength) {
+                    $("#submitEntryButton").prop("disabled", false);
+                } else {
+                    $("#submitEntryButton").prop("disabled", true);
+                }
+
+                $('#nextEntry').text(text);
+                $scope.entryRequestModel['entry'] = text;
+
+                $("#storyBody").animate({
+                    scrollTop : $(window).scrollTop() + $(window).height()
+                }, 0);
             }
 
             $scope.initCursor = function() {
@@ -242,7 +255,7 @@ coAuthorControllers.controller('mainController', [
                 } else if (defaultTo) {
                     return text + "...";
                 }
-                
+
                 return text;
             }
 
@@ -261,25 +274,25 @@ coAuthorControllers.controller('mainController', [
                     $("#storyBody").animate({
                         scrollTop : $(window).scrollTop() + $(window).height()
                     }, 0);
-                    
+
                     $('.potential-entry-clicked').removeClass("potential-entry-clicked");
                     $('#nextEntry').removeClass("next-entry");
                     $('#potentialEntry' + peekEntryId).addClass("potential-entry-clicked");
                 } else {
                     resetPotentialEntriesState();
-                    
+
                     $("#storyBody").animate({
                         scrollTop : $(window).scrollTop() + $(window).height()
                     }, 0);
                 }
             }
-            
-            function resetPotentialEntriesState(){
+
+            function resetPotentialEntriesState() {
                 $('#nextEntry').addClass("next-entry");
                 $('#nextEntry').removeClass("peek-entry");
                 $('#nextEntry').text($('#entryRequestTextArea').val());
                 $('.potential-entry-clicked').removeClass("potential-entry-clicked");
-                
+
                 peekEntryId = null;
             }
         }

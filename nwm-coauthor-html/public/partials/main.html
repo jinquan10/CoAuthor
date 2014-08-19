@@ -137,17 +137,17 @@
                     </pre>
                 </div>
             </div>
+            <div style="color: grey; border-bottom: 1px solid #e5e5e5" ng-show="currStory.potentialEntries != null">
+                &nbsp;&nbsp;<i class="fa fa-clock-o"></i>&nbsp;<span>{{currStoryCountdown}}</span>
+            </div>
             <!-- Potential Entries -->
-            <div class="modal-body potential-entries">
+            <div class="modal-body potential-entries" style="padding-top: 0">
                 <div class="panel-group" id="potentialEntriesAccordion">
-                    <div ng-show="currStory.potentialEntries != null">
-                        <span>Click to preview the next entries</span>
-                    </div>
                     <div id="potentialEntry{{potentialEntry.id}}" ng-repeat="potentialEntry in currStory.potentialEntries | orderBy:'votes'" ng-click="peekPotentialEntry(potentialEntry)"
                         class="potential-entry no-padding no-border">
                         <div class="underscore row pointer pad-left entry-contender">
                             <div class="col-md-6 col-xs-6 text-left" style="padding-left: 15px">
-                                <span>{{ellipse(potentialEntry.entry, 35, true)}}</span>
+                                <span>{{ellipse(potentialEntry.entry, 55, true)}}</span>
                             </div>
                             <div class="col-md-6 col-xs-6 text-right" style="padding-right: 15px">
                                 <span class="label label-primary" ng-click="voteForEntry(currStory.id, potentialEntry.id)"><i class="fa fa-arrow-up"></i>&nbsp;{{potentialEntry.votes}}</span>
@@ -167,8 +167,8 @@
             <div class="modal-footer">
                 <div class="row">
                     <div class="col-md-10 col-xs-10 text-left" style="padding-left: 15px">
-                        <span class="countdown">{{currStoryCountdown}}</span> <span ng-click="incrementPraise(key)" ng-repeat="(key, praise) in praisesSchema">&nbsp<span
-                            class="pointer label label-primary">{{praise.displayName}}</span><span class="pointer label label-info black-text">{{currStory['praises'][key].count}}</span></span></span>
+                        <span ng-click="incrementPraise(key)" ng-repeat="(key, praise) in praisesSchema">&nbsp<span class="pointer label label-primary">{{praise.displayName}}</span><span
+                            class="pointer label label-info black-text">{{currStory['praises'][key].count}}</span></span></span>
                     </div>
                     <div class="col-md-2 col-xs-2 text-right" style="padding-right: 15px">
                         <button id="submitEntryButton" ng-click="requestEntry();" type="button" class="btn btn-primary">Submit</button>
