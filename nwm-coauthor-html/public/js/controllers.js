@@ -54,7 +54,7 @@ coAuthorControllers.controller('mainController', [
                 resetPotentialEntriesState();
 
                 $("#storyBody").animate({
-                    scrollTop : $(window).scrollTop() + $(window).height()
+                    scrollTop : $(window).scrollTop() + $(window).height() + 10000
                 }, 0);
             }
 
@@ -93,7 +93,7 @@ coAuthorControllers.controller('mainController', [
                 }, null, function(res) {
                     $scope.currStory = res;
                     $("#storyBody").animate({
-                        scrollTop : $(window).scrollTop() + $(window).height()
+                        scrollTop : $(window).scrollTop() + $(window).height() + 10000
                     }, 0);
                 });
             }
@@ -256,11 +256,15 @@ coAuthorControllers.controller('mainController', [
                     $("#submitEntryButton").prop("disabled", true);
                 }
 
+                if (text.length > $scope.entryRequestSchema['entry'].maxLength) {
+                    $('#entryRequestTextArea').val(text.substring(0, $scope.entryRequestSchema['entry'].maxLength));
+                }
+                
                 $('#nextEntry').text(text);
                 $scope.entryRequestModel['entry'] = text;
 
                 $("#storyBody").animate({
-                    scrollTop : $(window).scrollTop() + $(window).height()
+                    scrollTop : $(window).scrollTop() + $(window).height() + 10000
                 }, 0);
             }
 
@@ -299,7 +303,7 @@ coAuthorControllers.controller('mainController', [
                     peekEntryId = peekEntry.id;
 
                     $("#storyBody").animate({
-                        scrollTop : $(window).scrollTop() + $(window).height()
+                        scrollTop : $(window).scrollTop() + $(window).height() + 10000
                     }, 0);
 
                     $('.potential-entry-clicked').removeClass("potential-entry-clicked");
@@ -309,7 +313,7 @@ coAuthorControllers.controller('mainController', [
                     resetPotentialEntriesState();
 
                     $("#storyBody").animate({
-                        scrollTop : $(window).scrollTop() + $(window).height()
+                        scrollTop : $(window).scrollTop() + $(window).height() + 10000
                     }, 0);
                 }
             }
