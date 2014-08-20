@@ -19,16 +19,17 @@ coAuthorControllers.controller('mainController', [
             var cursorInterval = null;
             var cursorInited = false;
 
-            // - put this in the main.html somewhere
-            getTopViewStories();
             getPraisesSchema();
 
             $scope.praisesSchema = null;
 
             function getPraisesSchema() {
-                Schemas.getPraises(function(res) {
-                    $scope.praisesSchema = res;
-                });
+                if ($scope.praisesSchema == null) {
+                    Schemas.getPraises(function(res) {
+                        $scope.praisesSchema = res;
+                        getTopViewStories();
+                    });
+                }
             }
 
             $scope.incrementPraise = function(key) {
@@ -52,7 +53,7 @@ coAuthorControllers.controller('mainController', [
                 if (isShowStory) {
                     if ($scope.currStory.nextEntryAvailableAt != undefined) {
                         if (new Date().getTime() > $scope.currStory.nextEntryAvailableAt) {
-                            $scope.pickEntryCounter = null;    
+                            $scope.pickEntryCounter = null;
                             $scope.pickEntry($scope.currStory.id);
                         }
                     }
@@ -152,7 +153,8 @@ coAuthorControllers.controller('mainController', [
             function setRequestEntryValidation() {
                 $scope.$watch('modalContent', function(newVal, oldValue) {
                     if (newVal === 'viewStory') {
-//                        $("#storyBody").css("max-height", window.screen.height - 600);
+                        // $("#storyBody").css("max-height",
+                        // window.screen.height - 600);
                         $("#storyBody").css("height", window.screen.height - 600);
                         bindCharsRemaining($scope.entryRequestSchema['entry'].maxLength, '#entryRequestCharsRemaining', '#entryRequestTextArea');
                         bindCharsRequired($scope.entryRequestSchema['entry'].minLength, '#entryRequestCharsRequired', '#entryRequestTextArea');
@@ -203,6 +205,10 @@ coAuthorControllers.controller('mainController', [
 
             function getTopViewStories() {
                 Story.getTopViewStories(function(res) {
+                    for (var i = 0; i < res.length; i++) {
+                        res[i].praises = topNPraises(3, res[i]);
+                    }
+
                     $scope.stories = res;
                 });
             }
@@ -311,6 +317,36 @@ coAuthorControllers.controller('mainController', [
                     $interval.cancel($scope.pickEntryCounter);
                     $scope.pickEntryCounter = null;
                 });
+            }
+
+            function topNPraises(n, story) {
+                var schema = $scope.praisesSchema;
+
+                var praises = [];
+
+                for ( var key in schema) {
+                    if (key.indexOf("$") > -1) {
+                        continue;
+                    }
+
+                    var obj = {};
+                    obj['displayName'] = schema[key].displayName;
+                    obj['count'] = story.praises[key].count;
+
+                    praises.push(obj);
+                }
+
+                praises.sort(function(a, b) {
+                    return b.count - a.count;
+                });
+
+                var topNPraises = [];
+
+                for (var i = 0; i < n; i++) {
+                    topNPraises.push(praises[i]);
+                }
+
+                return topNPraises;
             }
         }
 ]);

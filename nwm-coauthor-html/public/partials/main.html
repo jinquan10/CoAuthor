@@ -10,18 +10,9 @@
                     </div>
                 </div>
                 <div class="col-md-7 col-xs-7 text-right no-padding">
-                    <div class="navbar-btn" ng-switch on="storyFilter">
-                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" ng-switch-default>
-                            <span class="glyphicon glyphicon-eye-open"></span> <span>Stories by Most Views </span><span class="caret"></span>
-                        </button>
-                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" ng-switch-when="views">
-                            <span class="glyphicon glyphicon-eye-open"></span> <span>Stories by Most Views </span><span class="caret"></span>
-                        </button>
-                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" ng-switch-when="stars">
-                            <span class="glyphicon glyphicon-star-empty"></span> <span>Stories by Most Stars </span><span class="caret"></span>
-                        </button>
-                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" ng-switch-when="users">
-                            <span class="glyphicon glyphicon-user"></span> <span>Stories by Most Users </span><span class="caret"></span>
+                    <div class="navbar-btn">
+                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-filter"></i>&nbsp;<span>Filters</span>&nbsp;<span class="caret"></span>
                         </button>
                         <div class="dropdown-menu dropdown-menu-right no-border list-group" role="menu">
                             <div ng-click="selectedStoryFilter('views');" class="list-group-item filter-item no-border">
@@ -63,9 +54,15 @@
                 <!-- Stories -->
                 <div ng-repeat="story in stories" class="panel panel-default pointer highlight no-border" ng-click="showGetStoryModal(story.id, $index)">
                     <div class="title underscore">{{ellipse(story.title, 35)}}</div>
-                    <div class="text-right">
-                        <span ng-show="story.entriesCount > 0" class="glyphicon glyphicon-pencil"></span><span ng-show="story.entriesCount > 0"> {{story.entriesCount}} </span> <span
-                            class="glyphicon glyphicon-eye-open"></span><span> {{story.views}} </span>
+
+                    <div class="row">
+                        <div class="col-md-9 col-xs-9 text-left">
+                            <span ng-repeat="praise in story.praises">&nbsp<span class="label label-primary">{{praise.displayName}}</span><span class="label label-info black-text">{{praise.count}}</span></span></span>
+                        </div>
+                        <div class="col-md-3 col-xs-3 text-right">
+                            <span ng-show="story.entriesCount > 0" class="glyphicon glyphicon-pencil"></span><span ng-show="story.entriesCount > 0"> {{story.entriesCount}} </span> <span
+                                class="glyphicon glyphicon-eye-open"></span><span> {{story.views}} </span>
+                        </div>
                     </div>
                     <div>
                         <div class="panel-body">{{story.firstEntry.entry}}</div>
@@ -150,7 +147,7 @@
                                 <span>{{ellipse(potentialEntry.entry, 55, true)}}</span>
                             </div>
                             <div class="col-md-6 col-xs-6 text-right" style="padding-right: 15px">
-                                <span class="label label-primary" ng-click="voteForEntry(currStory.id, potentialEntry.id)"><i class="fa fa-arrow-up"></i>&nbsp;{{potentialEntry.votes}}</span>
+                                <span class="label label-primary label-blue" ng-click="voteForEntry(currStory.id, potentialEntry.id)"><i class="fa fa-arrow-up"></i>&nbsp;{{potentialEntry.votes}}</span>
                             </div>
                         </div>
                     </div>
@@ -167,7 +164,7 @@
             <div class="modal-footer">
                 <div class="row">
                     <div class="col-md-10 col-xs-10 text-left" style="padding-left: 15px">
-                        <span ng-click="incrementPraise(key)" ng-repeat="(key, praise) in praisesSchema">&nbsp<span class="pointer label label-primary">{{praise.displayName}}</span><span
+                        <span ng-click="incrementPraise(key)" ng-repeat="(key, praise) in praisesSchema">&nbsp<span class="pointer label label-primary label-blue">{{praise.displayName}}</span><span
                             class="pointer label label-info black-text">{{currStory['praises'][key].count}}</span></span></span>
                     </div>
                     <div class="col-md-2 col-xs-2 text-right" style="padding-right: 15px">
