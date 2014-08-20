@@ -22,7 +22,8 @@ coAuthorControllers.controller('mainController', [
             getPraisesSchema();
 
             $scope.praisesSchema = null;
-
+            $scope.praiseNumber = 3;
+            
             function getPraisesSchema() {
                 if ($scope.praisesSchema == null) {
                     Schemas.getPraises(function(res) {
@@ -37,7 +38,15 @@ coAuthorControllers.controller('mainController', [
                     id : $scope.currStory.id,
                     praise : key
                 }, null, function(res) {
-                    $scope.currStory['praises'] = res;
+                    $scope.currStory = res;
+                    
+                    var stories = $scope.stories;
+                    
+                    for (var i = 0; i < stories.length; i++) {
+                        if(stories[i].id == res.id) {
+                            stories[i].praises = topNPraises($scope.praiseNumber, res); 
+                        }
+                    }
                 });
             }
 
@@ -206,13 +215,15 @@ coAuthorControllers.controller('mainController', [
             function getTopViewStories() {
                 Story.getTopViewStories(function(res) {
                     for (var i = 0; i < res.length; i++) {
-                        res[i].praises = topNPraises(3, res[i]);
+                        res[i].praises = topNPraises($scope.praiseNumber, res[i]);
                     }
 
                     $scope.stories = res;
                 });
             }
 
+            
+            
             $scope.getPublicStoryClass = function() {
                 if ($scope.loggedIn) {
                     return "col-md-6";

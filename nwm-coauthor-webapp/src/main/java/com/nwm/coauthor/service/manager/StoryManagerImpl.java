@@ -324,8 +324,8 @@ public class StoryManagerImpl {
         storyDAO.assignEntry(storyId, pickedEntry);
     }
 
-    public Praises incrementPraise(String coToken, String storyId, String praise) {
+    public StoryResponse incrementPraise(String coToken, String storyId, String praise) {
         storyDAO.incrementPraise(coToken, storyId, praise);
-        return storyDAO.getPraises(storyId);
+        return storyDAO.getStory(storyId);
     }
 }

@@ -110,8 +110,8 @@ public class StoryControllerImpl extends BaseControllerImpl {
     
     @ResponseStatus(value = HttpStatus.OK)
     @RequestMapping(value = Constants.INCREMENT_PRAISE, method = RequestMethod.POST, consumes = "application/json")
-    public ResponseEntity<Praises> incrementPraise(@RequestHeader(required = false, value = "Authorization") String coToken, @PathVariable String storyId, @PathVariable String praise) {
-        return new ResponseEntity<Praises>(storyManager.incrementPraise(coToken, storyId, praise), HttpStatus.OK);
+    public ResponseEntity<StoryResponse> incrementPraise(@RequestHeader(required = false, value = "Authorization") String coToken, @PathVariable String storyId, @PathVariable String praise) {
+        return new ResponseEntity<StoryResponse>(storyManager.incrementPraise(coToken, storyId, praise), HttpStatus.OK);
     }    
     
     // @Override
