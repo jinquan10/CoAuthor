@@ -268,11 +268,6 @@ body {
       text-decoration: underline;
 }
 
-.tooltips {
-      /* 	z-index: 2000 !important; */
-      
-}
-
 .pad-left {
       padding-left: 10px;
 }
@@ -525,6 +520,7 @@ pre {
 }
 
 .potential-entry {
+      
 }
 
 .potential-entry:hover {
@@ -539,4 +535,15 @@ pre {
 
 .next-entry {
       color: green;
+}
+
+.tooltip-entry {
+      display: none;
+}
+
+.tooltip-entry-hovered {
+      background: red;
+      z-index: 10000;
+      display: block;
+      position: fixed;
 }

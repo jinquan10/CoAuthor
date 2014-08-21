@@ -23,7 +23,7 @@ coAuthorControllers.controller('mainController', [
 
             $scope.praisesSchema = null;
             $scope.praiseNumber = 3;
-            
+
             function getPraisesSchema() {
                 if ($scope.praisesSchema == null) {
                     Schemas.getPraises(function(res) {
@@ -39,12 +39,12 @@ coAuthorControllers.controller('mainController', [
                     praise : key
                 }, null, function(res) {
                     $scope.currStory = res;
-                    
+
                     var stories = $scope.stories;
-                    
+
                     for (var i = 0; i < stories.length; i++) {
-                        if(stories[i].id == res.id) {
-                            stories[i].praises = topNPraises($scope.praiseNumber, res); 
+                        if (stories[i].id == res.id) {
+                            stories[i].praises = topNPraises($scope.praiseNumber, res);
                         }
                     }
                 });
@@ -143,7 +143,6 @@ coAuthorControllers.controller('mainController', [
                     type : storyId
                 }, function(res) {
                     $scope.currStory = res;
-
                     $scope.countDownPotentialEntries(true);
                 });
 
@@ -171,6 +170,21 @@ coAuthorControllers.controller('mainController', [
                 });
             }
             ;
+
+            $scope.initEntries = function() {
+                var tooltipSpan = document.getElementById('tooltip-entry');
+
+                window.onmousemove = function(e) {
+                    if (!$scope.storyEntryHoveredFlag) {
+                        return;
+                    }
+                    
+                    var x = (e.pageX) + 10 + 'px', y = (e.pageY) + 5 + 'px';
+
+                    tooltipSpan.style.left = x;
+                    tooltipSpan.style.top = y;
+                };
+            }
 
             function setNewStoryValidation() {
                 $scope.$watch('modalContent', function(newVal, oldValue) {
@@ -222,8 +236,6 @@ coAuthorControllers.controller('mainController', [
                 });
             }
 
-            
-            
             $scope.getPublicStoryClass = function() {
                 if ($scope.loggedIn) {
                     return "col-md-6";
@@ -259,7 +271,7 @@ coAuthorControllers.controller('mainController', [
                 if (text.length > $scope.entryRequestSchema['entry'].maxLength) {
                     $('#entryRequestTextArea').val(text.substring(0, $scope.entryRequestSchema['entry'].maxLength));
                 }
-                
+
                 $('#nextEntry').text(text);
                 $scope.entryRequestModel['entry'] = text;
 
@@ -362,6 +374,23 @@ coAuthorControllers.controller('mainController', [
                 }
 
                 return topNPraises;
+            }
+
+            $scope.storyEntryHovered = function(entry) {
+                $scope.storyEntryHoveredFlag = true;
+                
+                $("#tooltip-entry").addClass("tooltip-entry-hovered");
+                $("#tooltip-entry").text("Author: " + entry.createdByDisplayName);
+            }
+
+            $scope.storyEntryLeft = function(entry) {
+                $scope.storyEntryHoveredFlag = false;
+                
+                $("#tooltip-entry").removeClass("tooltip-entry-hovered");
+            }
+            
+            $scope.storyEntryClicked = function() {
+                $scope.toolTipEntryClicked = true;
             }
         }
 ]);

@@ -129,8 +129,8 @@
             <div id="storyBody" class="modal-body story-body">
                 <div class="coauthor">
                     <pre>
-<span ng-repeat="entry in currStory.entries"><span class="entry">{{entry.entry}}</span>&nbsp</span><span id="nextEntry" class="entry next-entry"></span><span id="nextEntryCursor"
-                            class="glyphicon glyphicon-pencil"></span>
+<span ng-repeat="entry in currStory.entries"><span class="entry" ng-click="storyEntryClicked()" ng-mouseenter="storyEntryHovered(entry)" ng-mouseleave="storyEntryLeft(entry)">{{entry.entry}}</span>&nbsp</span><span id="nextEntry"
+                            class="entry next-entry"></span><span id="nextEntryCursor" class="glyphicon glyphicon-pencil"></span>
                     </pre>
                 </div>
             </div>
@@ -197,3 +197,5 @@
         </div>
     </div>
 </div>
+
+<span id="tooltip-entry" class="tooltip-entry" ng-init="initEntries()"></span>
