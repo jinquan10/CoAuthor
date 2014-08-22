@@ -132,8 +132,8 @@
                                 </span>
                             
                                 <input ng-model="nativeAuthModel[value.name]" class="form-control input-field"
-                                ng-required="nativeAuthSchema[value.name].required" ng-maxlength="nativeAuthSchema[value.name].maxLength" placeholder="{{nativeAuthSchema[value.name].hintText}}"
-                                ng-minlength="nativeAuthSchema[value.name].minLength"></input>
+                                ng-required="nativeAuthSchema[value.name].required" ng-maxlength="{{nativeAuthSchema[value.name].maxLength}}" placeholder="{{nativeAuthSchema[value.name].hintText}}"
+                                ng-minlength="{{nativeAuthSchema[value.name].minLength}}"></input>
                             </div>
                         </ng-form>
                     </div>
@@ -144,7 +144,7 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
                 <div class="col-md-6 col-xs-6 text-right">
-                    <button ng-disabled="authForm.$invalid" ng-click="createAccount();" type="button" class="btn btn-primary">Create!</button>
+                    <button ng-disabled="authForm.$invalid" ng-click="createNativeAccount();" type="button" class="btn btn-primary">Create!</button>
                     <button ng-disabled="authForm.$invalid" ng-click="logIn();" type="button" class="btn btn-primary">Log in</button>
                 </div>
             </div>

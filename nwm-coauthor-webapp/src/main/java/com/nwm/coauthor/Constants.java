@@ -5,6 +5,7 @@ public class Constants {
 	public static final String ANONYMOUS_USER = "Anonymous";
 	public static final Integer TOP_VIEW_STORIES_COUNT = 10;
 	public static final String STORY_COLLECTION = "story";
+	public static final String USER_COLLECTION = "user";
 
 	public static final String TOP_VIEW_STORIES_PATH = "/stories/top-view-stories";
 	public static final String CREATE_STORY_PATH = "/stories";
@@ -19,4 +20,6 @@ public class Constants {
 	public static final Long NEXT_ENTRY_DURATION = 10000L; // 5 seconds
     
 	public static final Long EXPIRATION_PADDING = 5000L; // 5 seconds
+    public static final String CREATE_NATIVE_USER_PATH = "/users/create-native";
+    public static final String LOGIN_NATIVE_PATH = "/users/login";
 }

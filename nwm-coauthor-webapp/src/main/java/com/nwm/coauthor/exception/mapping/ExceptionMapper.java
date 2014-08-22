@@ -20,6 +20,7 @@ import com.nwm.coauthor.exception.SomethingWentWrongException;
 import com.nwm.coauthor.exception.StoryNotPublishedYetException;
 import com.nwm.coauthor.exception.UnauthorizedException;
 import com.nwm.coauthor.exception.UnpublishedStoryLikedException;
+import com.nwm.coauthor.exception.UsernameExistsException;
 import com.nwm.coauthor.exception.UserIsNotLeaderException;
 import com.nwm.coauthor.exception.UserLikingOwnStoryException;
 import com.nwm.coauthor.exception.VersioningException;
@@ -30,6 +31,7 @@ public enum ExceptionMapper {
 	BAD_REQUEST_EXCEPTION(BadRequestException.class),
 	ADD_ENTRY_EXCEPTION(AddEntryException.class),
 	STORY_NOT_FOUND_EXCEPTION(StoryNotFoundException.class),
+	USERNAME_EXISTS_EXCEPTION(UsernameExistsException.class),
 	ALREADY_LIKED_EXCEPTION(AlreadyLikedException.class),
 	USER_LIKING_OWN_STORY_EXCEPTION(UserLikingOwnStoryException.class),
 	UNAUTHORIZED_EXCEPTION(UnauthorizedException.class),

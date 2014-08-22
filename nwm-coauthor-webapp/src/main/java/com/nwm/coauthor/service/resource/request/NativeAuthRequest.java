@@ -12,16 +12,16 @@ public class NativeAuthRequest {
     @DisplayOrder(1)
     @MinLength(3)
     @MaxLength(100)
-    @DisplayName("3 to 100 characters")
-    @HintText("Username")
+    @HintText("3 to 100 characters")
+    @DisplayName("Username")
     private String username;
     
     @RequiredField
     @DisplayOrder(2)
     @MinLength(4)
     @MaxLength(100)
-    @DisplayName("4 to 100 characters")
-    @HintText("Password")
+    @HintText("4 to 100 characters")
+    @DisplayName("Password")
     private String password;
 
     public String getUsername() {

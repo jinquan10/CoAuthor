@@ -1,11 +1,12 @@
 var coAuthorControllers = angular.module('coAuthorControllers', []);
 
 coAuthorControllers.controller('mainController', [
-        '$interval', '$cookies', '$scope', '$routeParams', '$http', 'Schemas', 'Story', 'StoryOperation', 'EntryOperation', 'PraisesOperation',
-        function($interval, $cookies, $scope, $routeParams, $http, Schemas, Story, StoryOperation, EntryOperation, PraisesOperation) {
+        '$interval', '$cookies', '$scope', '$routeParams', '$http', 'Schemas', 'Story', 'StoryOperation', 'EntryOperation', 'PraisesOperation', 'User'
+        function($interval, $cookies, $scope, $routeParams, $http, Schemas, Story, StoryOperation, EntryOperation, PraisesOperation, User) {
 
             $scope.storyForCreateModel = {};
             $scope.entryRequestModel = {};
+            $scope.nativeAuthModel = {};
 
             $scope.loggedIn = ($cookies.Authorization != undefined);
 
@@ -178,7 +179,7 @@ coAuthorControllers.controller('mainController', [
                     if (!$scope.storyEntryHoveredFlag) {
                         return;
                     }
-                    
+
                     var x = (e.pageX) + 10 + 'px', y = (e.pageY) + 5 + 'px';
 
                     tooltipSpan.style.left = x;
@@ -209,13 +210,13 @@ coAuthorControllers.controller('mainController', [
                         Schemas.authenticateNative(function(res) {
                             $scope.nativeAuthSchema = res;
                             $scope.nativeAuthSchemaForDisplay = getSchemaDisplay(res);
-                            
+
                             $scope.modalContent = 'authenticate';
                         });
                     } else {
-                        $scope.modalContent = 'authenticate';    
+                        $scope.modalContent = 'authenticate';
                     }
-                    
+
                     return;
                 }
 
@@ -393,19 +394,33 @@ coAuthorControllers.controller('mainController', [
 
             $scope.storyEntryHovered = function(entry) {
                 $scope.storyEntryHoveredFlag = true;
-                
+
                 $("#tooltip-entry").addClass("tooltip-entry-hovered");
                 $("#tooltip-entry").text("Author: " + entry.createdByDisplayName);
             }
 
             $scope.storyEntryLeft = function(entry) {
                 $scope.storyEntryHoveredFlag = false;
-                
+
                 $("#tooltip-entry").removeClass("tooltip-entry-hovered");
             }
-            
+
             $scope.storyEntryClicked = function() {
                 $scope.toolTipEntryClicked = true;
+            }
+
+            $scope.createNativeAccount = function() {
+                User.createNative($scope.nativeAuthModel, function(res) {
+                    $cookie.coToken = res.coToken;
+                    $('#modal').modal('hide');
+                });
+            }
+
+            $scope.logIn = function() {
+                User.logIn($scope.nativeAuthModel, function(res) {
+                    $cookie.coToken = res.coToken;
+                    $('#modal').modal('hide');
+                });
             }
         }
 ]);

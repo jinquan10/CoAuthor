@@ -106,3 +106,22 @@ coAuthorServices.factory('EntryOperation', [
             });
         }
 ]);
+
+coAuthorServices.factory('User', [
+        '$resource', function($resource) {
+            return $resource(host + '/users/:op', {}, {
+                createNative : {
+                    method : 'POST',
+                    params : {
+                        op : 'create-native'
+                    }
+                },
+                loginNative : {
+                    method : 'POST',
+                    params : {
+                        op : 'login'
+                    }
+                }
+            });
+        }
+]);

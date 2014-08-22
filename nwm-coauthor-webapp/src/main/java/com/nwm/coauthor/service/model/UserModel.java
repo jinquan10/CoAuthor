@@ -1,28 +1,35 @@
 package com.nwm.coauthor.service.model;
 
-import java.util.List;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-public class UserModel {
-    private String fbId;
+import com.nwm.coauthor.Constants;
+
+@Document(collection = Constants.USER_COLLECTION)
+public class UserModel extends BaseModel {
+    @Id
+    private String id;
+    
+    @Indexed(background = true)
     private String coToken;
-    private List<String> storyLikes;
-
+    
+    @Indexed(background = true)
+    private String username;
+    private String password;
+    
+    private Long lastLogin;
+    
     public UserModel() {
-
+        super();
+    }
+    
+    public String getId() {
+        return id;
     }
 
-    public UserModel(String fbId, String coToken) {
-        this.fbId = fbId;
-        this.coToken = coToken;
-        this.setStoryLikes(null);
-    }
-
-    public String getFbId() {
-        return fbId;
-    }
-
-    public void setFbId(String fbId) {
-        this.fbId = fbId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getCoToken() {
@@ -33,11 +40,27 @@ public class UserModel {
         this.coToken = coToken;
     }
 
-	public List<String> getStoryLikes() {
-		return storyLikes;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setStoryLikes(List<String> storyLikes) {
-		this.storyLikes = storyLikes;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Long getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Long lastLogin) {
+        this.lastLogin = lastLogin;
+    }
 }

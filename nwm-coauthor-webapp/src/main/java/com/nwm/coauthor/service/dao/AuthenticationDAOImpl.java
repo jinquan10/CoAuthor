@@ -8,8 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
+import com.nwm.coauthor.Constants;
+import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
+import com.nwm.coauthor.exception.UsernameExistsException;
 import com.nwm.coauthor.service.model.UserModel;
 
 @Component
@@ -28,5 +32,42 @@ public class AuthenticationDAOImpl {
         query.fields().include("fbId");
 
         return mongoTemplate.findOne(query, UserModel.class);
+    }
+
+    public void insertNativeUser(UserModel user) throws UsernameExistsException {
+        Query q = new Query();
+        q.addCriteria(where("username").is(user.getUsername()));
+        
+        boolean exists = mongoTemplate.exists(q, Constants.USER_COLLECTION);
+        
+        if (!exists) {
+            mongoTemplate.insert(user);
+        } else {
+            throw new UsernameExistsException();
+        }
+    }
+
+    public void loginNative(String username, String password, String coToken) throws AuthenticationUnauthorizedException {
+        Query q = new Query();
+        q.addCriteria(where("username").is(username).and("password").is(password));
+        
+        Update u = new Update();
+        u.set("coToken", coToken);
+        u.set("lastLogin", System.currentTimeMillis());
+        
+        if (mongoTemplate.updateFirst(q, u, Constants.USER_COLLECTION).getN() < 1) {
+            throw new AuthenticationUnauthorizedException();
+        }
+    }
+
+    public void authenticateNative(String coToken) throws AuthenticationUnauthorizedException {
+        Query q = new Query();
+        q.addCriteria(where("coToken").is(coToken));
+        
+        boolean exists = mongoTemplate.exists(q, Constants.USER_COLLECTION);
+        
+        if (!exists) {
+            throw new AuthenticationUnauthorizedException();
+        }
     }
 }
