@@ -547,3 +547,17 @@ pre {
       display: block;
       position: fixed;
 }
+
+.inline-block {
+      display: inline-block;
+}
+
+.field-name {
+      width: 200px;
+      text-align: center;
+}
+
+.input-field {
+      width: 500px !important;
+      text-align: left;
+}

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nwm.coauthor.Praises;
 import com.nwm.coauthor.service.resource.request.EntryRequest;
+import com.nwm.coauthor.service.resource.request.NativeAuthRequest;
 import com.nwm.coauthor.service.resource.request.NewStoryRequest;
 import com.nwm.coauthor.service.util.JsonSchemaUtil;
 
@@ -41,4 +42,11 @@ public class SchemaController extends BaseControllerImpl {
         Map<String, Object> schema = jsonSchemaUtil.outputSchema(Praises.class);
         return new ResponseEntity<Map<String, Object>>(schema, HttpStatus.OK);
     }
+	
+	@ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/native-auth")
+    public ResponseEntity<Map<String, Object>> getAccountCreation() throws Exception {
+        Map<String, Object> schema = jsonSchemaUtil.outputSchema(NativeAuthRequest.class);
+        return new ResponseEntity<Map<String, Object>>(schema, HttpStatus.OK);
+    }	
 }

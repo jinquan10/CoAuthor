@@ -204,6 +204,21 @@ coAuthorControllers.controller('mainController', [
                 $scope.modalContent = 'modalLoading';
                 $("#modal").modal();
 
+                if ($cookies.coToken == null) {
+                    if ($scope.nativeAuthSchema == null) {
+                        Schemas.authenticateNative(function(res) {
+                            $scope.nativeAuthSchema = res;
+                            $scope.nativeAuthSchemaForDisplay = getSchemaDisplay(res);
+                            
+                            $scope.modalContent = 'authenticate';
+                        });
+                    } else {
+                        $scope.modalContent = 'authenticate';    
+                    }
+                    
+                    return;
+                }
+
                 if ($scope.storySchemaForCreateDisplay == null) {
                     Schemas.getSchemaForCreate(function(res) {
                         $scope.storySchemaForCreate = res;

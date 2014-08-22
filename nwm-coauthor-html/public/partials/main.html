@@ -117,6 +117,38 @@
                 </div>
             </div>
         </div>
+        <!-- Authentication Modal -->
+        <div class="modal-content" ng-switch-when="authenticate">
+            <form name="authForm">
+                <div class="modal-header">
+                    <div class="title">Authenticate</div>
+                </div>
+                <div class="modal-body underscore">
+                    <div ng-repeat="(indx, value) in nativeAuthSchemaForDisplay | orderBy:'displayOrder'">
+                        <ng-form name="authFieldForm">
+                            <div class="input-group center">
+                                <span class="input-group-addon field-name">
+                                    {{nativeAuthSchema[value.name].displayName}}
+                                </span>
+                            
+                                <input ng-model="nativeAuthModel[value.name]" class="form-control input-field"
+                                ng-required="nativeAuthSchema[value.name].required" ng-maxlength="nativeAuthSchema[value.name].maxLength" placeholder="{{nativeAuthSchema[value.name].hintText}}"
+                                ng-minlength="nativeAuthSchema[value.name].minLength"></input>
+                            </div>
+                        </ng-form>
+                    </div>
+                </div>
+            </form>
+            <div class="row" style="margin: 0; padding: 15px">
+                <div class="col-md-6 col-xs-6 text-left">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+                <div class="col-md-6 col-xs-6 text-right">
+                    <button ng-disabled="authForm.$invalid" ng-click="createAccount();" type="button" class="btn btn-primary">Create!</button>
+                    <button ng-disabled="authForm.$invalid" ng-click="logIn();" type="button" class="btn btn-primary">Log in</button>
+                </div>
+            </div>
+        </div>
         <!-- View Story -->
         <div class="modal-content" ng-switch-when="viewStory">
             <div class="modal-header">

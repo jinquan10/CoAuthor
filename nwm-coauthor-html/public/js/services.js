@@ -28,6 +28,12 @@ coAuthorServices.factory('Schemas', [
                     params : {
                         type : 'praises'
                     }
+                },
+                authenticateNative : {
+                    method : 'GET',
+                    params : {
+                        type : 'native-auth'
+                    }
                 }
             });
         }
