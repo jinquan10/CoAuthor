@@ -124,6 +124,16 @@ public class JsonSchemaUtil {
 
             JsonSchemaField jsonField = new JsonSchemaField();
 
+            if(containsAnnotation(field, InputType.class)) {
+                jsonField.setInputType(field.getAnnotation(InputType.class).value());
+            } else {
+                jsonField.setInputIcon("text");
+            }
+            
+            if(containsAnnotation(field, InputIcon.class)) {
+                jsonField.setInputIcon(field.getAnnotation(InputIcon.class).value());
+            }
+            
             if(containsAnnotation(field, DisplayName.class)) {
                 jsonField.setDisplayName(field.getAnnotation(DisplayName.class).value());
             } else {

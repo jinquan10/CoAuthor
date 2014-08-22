@@ -116,7 +116,7 @@ coAuthorServices.factory('User', [
                         op : 'create-native'
                     }
                 },
-                loginNative : {
+                logIn : {
                     method : 'POST',
                     params : {
                         op : 'login'

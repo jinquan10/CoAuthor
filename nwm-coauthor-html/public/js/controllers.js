@@ -1,7 +1,7 @@
 var coAuthorControllers = angular.module('coAuthorControllers', []);
 
 coAuthorControllers.controller('mainController', [
-        '$interval', '$cookies', '$scope', '$routeParams', '$http', 'Schemas', 'Story', 'StoryOperation', 'EntryOperation', 'PraisesOperation', 'User'
+        '$interval', '$cookies', '$scope', '$routeParams', '$http', 'Schemas', 'Story', 'StoryOperation', 'EntryOperation', 'PraisesOperation', 'User',
         function($interval, $cookies, $scope, $routeParams, $http, Schemas, Story, StoryOperation, EntryOperation, PraisesOperation, User) {
 
             $scope.storyForCreateModel = {};
@@ -411,14 +411,14 @@ coAuthorControllers.controller('mainController', [
 
             $scope.createNativeAccount = function() {
                 User.createNative($scope.nativeAuthModel, function(res) {
-                    $cookie.coToken = res.coToken;
+                    $cookies.coToken = res.coToken;
                     $('#modal').modal('hide');
                 });
             }
 
             $scope.logIn = function() {
                 User.logIn($scope.nativeAuthModel, function(res) {
-                    $cookie.coToken = res.coToken;
+                    $cookies.coToken = res.coToken;
                     $('#modal').modal('hide');
                 });
             }

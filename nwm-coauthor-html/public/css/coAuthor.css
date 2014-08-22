@@ -560,4 +560,24 @@ pre {
 .input-field {
       width: 500px !important;
       text-align: left;
+      padding-left: 30px;
+}
+
+.input-icon {
+      position: absolute;
+      width: 26px;
+      height: 23px;
+      top: 10px;
+      left: 4px;
+      z-index: 100;
+      text-align: center;
+      color: grey;
+}
+
+.input-div {
+      position: relative;
+}
+
+.margin-bottom-5px {
+      margin-bottom: 5px;
 }

@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @JsonInclude(Include.NON_NULL)
 public class JsonSchemaField {
+    private String inputType;
+    private String inputIcon;
     private String displayName;
     private Integer displayOrder;
     private Boolean required;
@@ -91,5 +93,17 @@ public class JsonSchemaField {
     }
     public void setFormatErrorMessage(String formatErrorMessage) {
         this.formatErrorMessage = formatErrorMessage;
+    }
+    public String getInputIcon() {
+        return inputIcon;
+    }
+    public void setInputIcon(String inputIcon) {
+        this.inputIcon = inputIcon;
+    }
+    public String getInputType() {
+        return inputType;
+    }
+    public void setInputType(String inputType) {
+        this.inputType = inputType;
     }
 }

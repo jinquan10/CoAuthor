@@ -124,17 +124,20 @@
                     <div class="title">Authenticate</div>
                 </div>
                 <div class="modal-body underscore">
-                    <div ng-repeat="(indx, value) in nativeAuthSchemaForDisplay | orderBy:'displayOrder'">
+                    <div ng-repeat="(indx, value) in nativeAuthSchemaForDisplay | orderBy:'displayOrder'" class="margin-bottom-5px">
                         <ng-form name="authFieldForm">
-                            <div class="input-group center">
-                                <span class="input-group-addon field-name">
-                                    {{nativeAuthSchema[value.name].displayName}}
-                                </span>
-                            
-                                <input ng-model="nativeAuthModel[value.name]" class="form-control input-field"
-                                ng-required="nativeAuthSchema[value.name].required" ng-maxlength="{{nativeAuthSchema[value.name].maxLength}}" placeholder="{{nativeAuthSchema[value.name].hintText}}"
-                                ng-minlength="{{nativeAuthSchema[value.name].minLength}}"></input>
+                        <div class="input-group center">
+                            <!--                                 <span class="input-group-addon field-name"> -->
+                            <!--                                     {{nativeAuthSchema[value.name].displayName}} -->
+                            <!--                                 </span> -->
+
+                            <div class="input-div">
+                                <i class="{{nativeAuthSchema[value.name].inputIcon}} input-icon"></i>
+                                <input ng-model="nativeAuthModel[value.name]" class="form-control input-field" ng-required="nativeAuthSchema[value.name].required"
+                                    ng-maxlength="{{nativeAuthSchema[value.name].maxLength}}" placeholder="{{nativeAuthSchema[value.name].hintText}}"
+                                    ng-minlength="{{nativeAuthSchema[value.name].minLength}}" type="{{nativeAuthSchema[value.name].inputType}}"></input>
                             </div>
+                        </div>
                         </ng-form>
                     </div>
                 </div>
