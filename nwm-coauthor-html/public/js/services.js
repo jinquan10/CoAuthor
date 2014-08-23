@@ -121,6 +121,12 @@ coAuthorServices.factory('User', [
                     params : {
                         op : 'login'
                     }
+                },
+                logout : {
+                    method : 'POST',
+                    params : {
+                        op : 'logout'
+                    }
                 }
             });
         }

@@ -13,6 +13,7 @@ import com.nwm.coauthor.service.client.FacebookClientImpl;
 import com.nwm.coauthor.service.dao.AuthenticationDAOImpl;
 import com.nwm.coauthor.service.model.FBUser;
 import com.nwm.coauthor.service.model.UserModel;
+import com.nwm.coauthor.service.resource.request.LogoutRequest;
 import com.nwm.coauthor.service.resource.request.NativeAuthRequest;
 import com.nwm.coauthor.service.resource.response.AuthedResponse;
 import com.nwm.coauthor.util.Utils;
@@ -60,7 +61,7 @@ public class AuthenticationManagerImpl {
         
         authenticationDAO.insertNativeUser(model);
         
-        return new AuthedResponse(token);
+        return new AuthedResponse(token, creds.getUsername());
     }
 
     public AuthedResponse loginNative(NativeAuthRequest creds) throws AuthenticationUnauthorizedException, NoSuchAlgorithmException, UnsupportedEncodingException {
@@ -68,10 +69,14 @@ public class AuthenticationManagerImpl {
         
         authenticationDAO.loginNative(creds.getUsername(), Utils.encrypt(creds.getPassword()), Utils.encrypt(token));
         
-        return new AuthedResponse(token);
+        return new AuthedResponse(token, creds.getUsername());
     }
     
     public void authenticateNative(String coToken) throws AuthenticationUnauthorizedException, NoSuchAlgorithmException, UnsupportedEncodingException {
         authenticationDAO.authenticateNative(Utils.encrypt(coToken));
+    }
+
+    public void logout(LogoutRequest logoutReq) {
+        authenticationDAO.logout(logoutReq);
     }
 }

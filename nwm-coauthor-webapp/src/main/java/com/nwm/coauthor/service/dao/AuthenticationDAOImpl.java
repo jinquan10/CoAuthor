@@ -15,6 +15,7 @@ import com.nwm.coauthor.Constants;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.UsernameExistsException;
 import com.nwm.coauthor.service.model.UserModel;
+import com.nwm.coauthor.service.resource.request.LogoutRequest;
 
 @Component
 public class AuthenticationDAOImpl {
@@ -69,5 +70,15 @@ public class AuthenticationDAOImpl {
         if (!exists) {
             throw new AuthenticationUnauthorizedException();
         }
+    }
+
+    public void logout(LogoutRequest logoutReq) {
+        Query q = new Query();
+        q.addCriteria(where("coToken").is(logoutReq.getCoToken()));
+        
+        Update u = new Update();
+        u.unset("coToken");
+        
+        mongoTemplate.updateFirst(q, u, Constants.USER_COLLECTION);
     }
 }

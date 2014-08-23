@@ -1,17 +1,19 @@
 var coAuthorControllers = angular.module('coAuthorControllers', []);
 
 coAuthorControllers.controller('mainController', [
-        '$interval', '$cookies', '$scope', '$routeParams', '$http', 'Schemas', 'Story', 'StoryOperation', 'EntryOperation', 'PraisesOperation', 'User',
-        function($interval, $cookies, $scope, $routeParams, $http, Schemas, Story, StoryOperation, EntryOperation, PraisesOperation, User) {
+        '$interval', '$cookies', '$scope', '$routeParams', '$http', 'Schemas', 'Story', 'StoryOperation', 'EntryOperation', 'PraisesOperation', 'User', '$cookieStore',
+        function($interval, $cookies, $scope, $routeParams, $http, Schemas, Story, StoryOperation, EntryOperation, PraisesOperation, User, $cookieStore) {
 
             $scope.storyForCreateModel = {};
             $scope.entryRequestModel = {};
             $scope.nativeAuthModel = {};
-
-            $scope.loggedIn = ($cookies.Authorization != undefined);
+            $scope.cookies = $cookies;
 
             $http.defaults.headers.common['TimeZoneOffsetMinutes'] = new Date().getTimezoneOffset();
-            $http.defaults.headers.common['Authorization'] = $cookies.Authorization;
+
+            if ($cookies.coToken != null) {
+                $http.defaults.headers.common['Authorization'] = $cookies.coToken;
+            }
 
             $scope.storyFilter = null;
             $scope.modalContent = null;
@@ -201,7 +203,7 @@ coAuthorControllers.controller('mainController', [
                 $scope.storyFilter = v;
             };
 
-            $scope.showNewStoryModal = function loadNewStorySchemaFn() {
+            $scope.showAuthModal = function showAuthModal(fnForNoAuthModal) {
                 $scope.modalContent = 'modalLoading';
                 $("#modal").modal();
 
@@ -220,18 +222,27 @@ coAuthorControllers.controller('mainController', [
                     return;
                 }
 
-                if ($scope.storySchemaForCreateDisplay == null) {
-                    Schemas.getSchemaForCreate(function(res) {
-                        $scope.storySchemaForCreate = res;
-                        $scope.storySchemaForCreateDisplay = getSchemaDisplay(res);
+                if (fnForNoAuthModal != null) {
+                    fnForNoAuthModal();
+                }
+                ;
+            }
 
+            $scope.showNewStoryModal = function loadNewStorySchemaFn() {
+                $scope.showAuthModal(function() {
+                    if ($scope.storySchemaForCreateDisplay == null) {
+                        Schemas.getSchemaForCreate(function(res) {
+                            $scope.storySchemaForCreate = res;
+                            $scope.storySchemaForCreateDisplay = getSchemaDisplay(res);
+
+                            $scope.modalContent = 'newStory';
+                            setNewStoryValidation();
+                        });
+                    } else {
                         $scope.modalContent = 'newStory';
                         setNewStoryValidation();
-                    });
-                } else {
-                    $scope.modalContent = 'newStory';
-                    setNewStoryValidation();
-                }
+                    }
+                });
             };
 
             $scope.createStory = function createStoryFn() {
@@ -250,14 +261,6 @@ coAuthorControllers.controller('mainController', [
 
                     $scope.stories = res;
                 });
-            }
-
-            $scope.getPublicStoryClass = function() {
-                if ($scope.loggedIn) {
-                    return "col-md-6";
-                } else {
-                    return "col-md-12";
-                }
             }
 
             $scope.initStoryTextArea = function() {
@@ -411,16 +414,45 @@ coAuthorControllers.controller('mainController', [
 
             $scope.createNativeAccount = function() {
                 User.createNative($scope.nativeAuthModel, function(res) {
-                    $cookies.coToken = res.coToken;
+                    $scope.nativeAuthModel = null;
+                    $scope.assignCookies(res);
                     $('#modal').modal('hide');
                 });
             }
 
             $scope.logIn = function() {
                 User.logIn($scope.nativeAuthModel, function(res) {
-                    $cookies.coToken = res.coToken;
+                    $scope.nativeAuthModel = {};
+                    $scope.assignCookies(res);
                     $('#modal').modal('hide');
                 });
+            }
+
+            $scope.isLoggedIn = function() {
+                if ($cookies.coToken != null) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            $scope.logout = function() {
+                var wrapped = {};
+                wrapped['coToken'] = $cookies.coToken;
+
+                User.logout(wrapped, function(res) {
+                    $scope.clearCookies();
+                });
+            }
+
+            $scope.assignCookies = function(res) {
+                $cookies.username = res.username;
+                $cookies.coToken = res.coToken;
+            }
+
+            $scope.clearCookies = function() {
+                $cookieStore.remove("username");
+                $cookieStore.remove("coToken");
             }
         }
 ]);

@@ -22,4 +22,5 @@ public class Constants {
 	public static final Long EXPIRATION_PADDING = 5000L; // 5 seconds
     public static final String CREATE_NATIVE_USER_PATH = "/users/create-native";
     public static final String LOGIN_NATIVE_PATH = "/users/login";
+    public static final String LOGOUT_PATH = "/users/logout";
 }

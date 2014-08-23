@@ -17,6 +17,7 @@ import com.nwm.coauthor.Constants;
 import com.nwm.coauthor.exception.AuthenticationUnauthorizedException;
 import com.nwm.coauthor.exception.UsernameExistsException;
 import com.nwm.coauthor.service.manager.AuthenticationManagerImpl;
+import com.nwm.coauthor.service.resource.request.LogoutRequest;
 import com.nwm.coauthor.service.resource.request.NativeAuthRequest;
 import com.nwm.coauthor.service.resource.response.AuthedResponse;
 
@@ -36,5 +37,11 @@ public class AuthController extends BaseControllerImpl {
     @RequestMapping(value = Constants.LOGIN_NATIVE_PATH, method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<AuthedResponse> login(@RequestBody NativeAuthRequest creds) throws NoSuchAlgorithmException, UnsupportedEncodingException, UsernameExistsException, AuthenticationUnauthorizedException {
         return new ResponseEntity<AuthedResponse>(authenticationManager.loginNative(creds), HttpStatus.OK);
+    }
+    
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @RequestMapping(value = Constants.LOGOUT_PATH, method = RequestMethod.POST, consumes = "application/json")
+    public void logout(@RequestBody LogoutRequest logoutReq) {
+        authenticationManager.logout(logoutReq);
     }
 }

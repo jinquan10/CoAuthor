@@ -33,7 +33,21 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-xs-3"></div>
+            <div class="col-md-3 col-xs-3" ng-switch on="isLoggedIn()">
+                <div class="btn-group co-navbar" ng-switch-default>
+                    <button type="button" class="btn btn-default" ng-click="showAuthModal()">Login</button>
+                </div>
+
+                <div class="btn-group co-navbar" ng-switch-when="true">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        {{cookies.username}} <span class="caret"></span>
+                    </button>
+
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="pointer"><a ng-click="logout()">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </nav>
@@ -132,10 +146,9 @@
                             <!--                                 </span> -->
 
                             <div class="input-div">
-                                <i class="{{nativeAuthSchema[value.name].inputIcon}} input-icon"></i>
-                                <input ng-model="nativeAuthModel[value.name]" class="form-control input-field" ng-required="nativeAuthSchema[value.name].required"
-                                    ng-maxlength="{{nativeAuthSchema[value.name].maxLength}}" placeholder="{{nativeAuthSchema[value.name].hintText}}"
-                                    ng-minlength="{{nativeAuthSchema[value.name].minLength}}" type="{{nativeAuthSchema[value.name].inputType}}"></input>
+                                <i class="{{nativeAuthSchema[value.name].inputIcon}} input-icon"></i> <input ng-model="nativeAuthModel[value.name]" class="form-control input-field"
+                                    ng-required="nativeAuthSchema[value.name].required" ng-maxlength="{{nativeAuthSchema[value.name].maxLength}}"
+                                    placeholder="{{nativeAuthSchema[value.name].hintText}}" ng-minlength="{{nativeAuthSchema[value.name].minLength}}" type="{{nativeAuthSchema[value.name].inputType}}"></input>
                             </div>
                         </div>
                         </ng-form>

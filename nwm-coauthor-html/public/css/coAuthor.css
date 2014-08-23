@@ -581,3 +581,8 @@ pre {
 .margin-bottom-5px {
       margin-bottom: 5px;
 }
+
+.co-navbar {
+      margin-top: 8px;
+      margin-bottom: 8px;
+}
