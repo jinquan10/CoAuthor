@@ -41,7 +41,7 @@ public class AuthController extends BaseControllerImpl {
     
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @RequestMapping(value = Constants.LOGOUT_PATH, method = RequestMethod.POST, consumes = "application/json")
-    public void logout(@RequestBody LogoutRequest logoutReq) {
+    public void logout(@RequestBody LogoutRequest logoutReq) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         authenticationManager.logout(logoutReq);
     }
 }

@@ -1,7 +1,7 @@
 var coAuthorControllers = angular.module('coAuthorControllers', []);
 
 coAuthorControllers.controller('mainController', [
-        '$interval', '$cookies', '$scope', '$routeParams', '$http', 'Schemas', 'Story', 'StoryOperation', 'EntryOperation', 'PraisesOperation', 'User', '$cookieStore',
+        '$interval', '$cookies', '$scope', '$routeParams', '$http', 'Schemas', 'Story', 'StoryOperation', 'EntryOperation', 'PraisesOperation', 'User', '$cookieStore', 
         function($interval, $cookies, $scope, $routeParams, $http, Schemas, Story, StoryOperation, EntryOperation, PraisesOperation, User, $cookieStore) {
 
             $scope.storyForCreateModel = {};
@@ -26,6 +26,15 @@ coAuthorControllers.controller('mainController', [
 
             $scope.praisesSchema = null;
             $scope.praiseNumber = 3;
+
+            $('#modal').on('hidden.bs.modal', function(e) {
+                if ($scope.postAuthAction != null) {
+                    $scope.postAuthAction();
+                    $scope.postAuthAction = null;
+                    $scope.$apply();
+                }
+                ;
+            });
 
             function getPraisesSchema() {
                 if ($scope.praisesSchema == null) {
@@ -136,7 +145,7 @@ coAuthorControllers.controller('mainController', [
                 $scope.currStoryIndex = index;
 
                 $scope.modalContent = 'modalLoading';
-                $("#modal").modal();
+                $("#modal").modal('show');
 
                 StoryOperation.incrementViews({
                     id : storyId
@@ -203,11 +212,12 @@ coAuthorControllers.controller('mainController', [
                 $scope.storyFilter = v;
             };
 
-            $scope.showAuthModal = function showAuthModal(fnForNoAuthModal) {
-                $scope.modalContent = 'modalLoading';
-                $("#modal").modal();
-
+            $scope.showAuthModal = function showAuthModal(title, authedAction) {
                 if ($cookies.coToken == null) {
+                    $scope.postAuthAction = authedAction;
+                    $scope.authTitle = title;
+                    $scope.modalContent = 'modalLoading';
+
                     if ($scope.nativeAuthSchema == null) {
                         Schemas.authenticateNative(function(res) {
                             $scope.nativeAuthSchema = res;
@@ -219,27 +229,32 @@ coAuthorControllers.controller('mainController', [
                         $scope.modalContent = 'authenticate';
                     }
 
+                    $("#modal").modal('show');
+
                     return;
                 }
 
-                if (fnForNoAuthModal != null) {
-                    fnForNoAuthModal();
+                if (authedAction != null) {
+                    authedAction();
                 }
                 ;
             }
 
             $scope.showNewStoryModal = function loadNewStorySchemaFn() {
-                $scope.showAuthModal(function() {
+                $scope.showAuthModal('Signup or Login to create a new story', function() {
+                    $scope.modalContent = 'modalLoading';
                     if ($scope.storySchemaForCreateDisplay == null) {
                         Schemas.getSchemaForCreate(function(res) {
                             $scope.storySchemaForCreate = res;
                             $scope.storySchemaForCreateDisplay = getSchemaDisplay(res);
 
                             $scope.modalContent = 'newStory';
+                            $("#modal").modal('show');
                             setNewStoryValidation();
                         });
                     } else {
                         $scope.modalContent = 'newStory';
+                        $("#modal").modal('show');
                         setNewStoryValidation();
                     }
                 });
@@ -414,7 +429,7 @@ coAuthorControllers.controller('mainController', [
 
             $scope.createNativeAccount = function() {
                 User.createNative($scope.nativeAuthModel, function(res) {
-                    $scope.nativeAuthModel = null;
+                    $scope.nativeAuthModel = {};
                     $scope.assignCookies(res);
                     $('#modal').modal('hide');
                 });

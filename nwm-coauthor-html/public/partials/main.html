@@ -35,7 +35,7 @@
             </div>
             <div class="col-md-3 col-xs-3" ng-switch on="isLoggedIn()">
                 <div class="btn-group co-navbar" ng-switch-default>
-                    <button type="button" class="btn btn-default" ng-click="showAuthModal()">Login</button>
+                    <button type="button" class="btn btn-default" ng-click="showAuthModal('Login')">Login</button>
                 </div>
 
                 <div class="btn-group co-navbar" ng-switch-when="true">
@@ -135,7 +135,7 @@
         <div class="modal-content" ng-switch-when="authenticate">
             <form name="authForm">
                 <div class="modal-header">
-                    <div class="title">Authenticate</div>
+                    <div class="title">{{authTitle}}</div>
                 </div>
                 <div class="modal-body underscore">
                     <div ng-repeat="(indx, value) in nativeAuthSchemaForDisplay | orderBy:'displayOrder'" class="margin-bottom-5px">

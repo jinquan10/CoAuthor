@@ -76,7 +76,7 @@ public class AuthenticationManagerImpl {
         authenticationDAO.authenticateNative(Utils.encrypt(coToken));
     }
 
-    public void logout(LogoutRequest logoutReq) {
-        authenticationDAO.logout(logoutReq);
+    public void logout(LogoutRequest logoutReq) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        authenticationDAO.logout(Utils.encrypt(logoutReq.getCoToken()));
     }
 }
